@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "990964530406",
+    "project_id": "study247-c8c0c",
+    "storage_bucket": "study247-c8c0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990964530406:android:113ad190528a6d24eb4f27",
+        "android_client_info": {
+          "package_name": "com.tadyuh.study247"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990964530406-md32pes0bo01rmnaa0mh07tio20kv90f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tadyuh.study247",
+            "certificate_hash": "6d1ac01e391483f6ae6a58c146e8bfeae044c0b0"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjGLxecIw-v8kff2mxZdx0r_7-ib_bbiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990964530406-42e00sh3nn1oubtu33f5rnmrnbnmi0rv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "990964530406-fj3kc4j86uo12iee21tpv5ub4q3qp5on.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tadyuh.study247"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
