@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:study247/core/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/core/utils.dart';
-import 'package:study247/features/auth/repository/auth_repository.dart';
+import 'package:study247/utils/show_snack_bar.dart';
+import 'package:study247/features/auth/repositories/auth_repository.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserModel?>>(
@@ -25,16 +24,6 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
   Stream<User?> get authStateChanges =>
       _ref.watch(authProvider).authStateChanges();
 
-  Future<void> updateUser() async {
-    final userId = _ref.read(authProvider).currentUser!.uid;
-    final updatedUser = await _ref
-        .read(firestoreProvider)
-        .collection(FirebaseConstants.users)
-        .doc(userId)
-        .get();
-    state = AsyncData(UserModel.fromMap(updatedUser.data()!));
-  }
-
   Future<void> init() async {
     final firebaseUser = _ref.read(authProvider).currentUser;
     if (firebaseUser == null) {
@@ -43,13 +32,22 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     }
 
     final userId = firebaseUser.uid;
-    final snapshot = await _ref
-        .read(firestoreProvider)
-        .collection(FirebaseConstants.users)
-        .doc(userId)
-        .get();
-    final appUser = UserModel.fromMap(snapshot.data()!);
+    final userResult = await _ref.read(authRepositoryProvider).getUser(userId);
+    final appUser = switch (userResult) {
+      Success(value: final userModel) => userModel,
+      Failure() => null
+    };
     state = AsyncData(appUser);
+  }
+
+  Future<void> updateUser() async {
+    final userId = _ref.read(authProvider).currentUser!.uid;
+    final userResult = await _ref.read(authRepositoryProvider).getUser(userId);
+    final updatedUser = switch (userResult) {
+      Success(value: final userModel) => userModel,
+      Failure() => null
+    };
+    state = AsyncData(updatedUser);
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {

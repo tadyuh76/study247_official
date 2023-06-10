@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:study247/core/constants/firebase.dart';
-import 'package:study247/core/constants/shared.dart';
+import 'package:study247/constants/firebase.dart';
+import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
@@ -40,19 +40,19 @@ class AuthRepository {
       }
 
       if (userCredential.additionalUserInfo!.isNewUser) {
-        final newUser = UserModel(
-          uid: userCredential.user!.uid,
-          displayName: userCredential.user!.displayName ?? "",
-          email: userCredential.user!.email ?? "",
-          photoURL: userCredential.user!.photoURL ?? "",
-        );
-        _db
-            .collection(FirebaseConstants.users)
-            .doc(userCredential.user!.uid)
-            .set(newUser.toMap());
+        _uploadUserToDB(userCredential);
       }
 
       return Success(userCredential);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<UserModel, Exception>> getUser(String uid) async {
+    try {
+      final user = await _db.collection(FirebaseConstants.users).doc(uid).get();
+      return Success(UserModel.fromMap(user.data()!));
     } on Exception catch (e) {
       return Failure(e);
     }
@@ -66,5 +66,19 @@ class AuthRepository {
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  // private methods
+  Future<void> _uploadUserToDB(UserCredential userCredential) async {
+    final newUser = UserModel(
+      uid: userCredential.user!.uid,
+      displayName: userCredential.user!.displayName ?? "",
+      email: userCredential.user!.email ?? "",
+      photoURL: userCredential.user!.photoURL ?? "",
+    );
+    await _db
+        .collection(FirebaseConstants.users)
+        .doc(userCredential.user!.uid)
+        .set(newUser.toMap());
   }
 }

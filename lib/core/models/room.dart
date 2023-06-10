@@ -8,13 +8,15 @@ class Room {
   final String fileUrl;
   final String fileType;
   final String description;
-  final String pomodoroType;
-  final String pomodoroDuration;
-  final List<dynamic> tags;
+  final double pomodoroSessionNo;
+  final double pomodoroDuration;
+  final double pomodoroBreaktime;
+  final List<String> tags;
   final int maxParticipants;
   final int curParticipants;
   final String hostPhotoUrl;
   final String hostUid;
+
   Room({
     this.id,
     required this.name,
@@ -22,14 +24,33 @@ class Room {
     required this.fileUrl,
     required this.fileType,
     required this.description,
-    required this.pomodoroType,
+    required this.pomodoroSessionNo,
     required this.pomodoroDuration,
+    required this.pomodoroBreaktime,
     required this.tags,
     required this.maxParticipants,
     required this.curParticipants,
     required this.hostPhotoUrl,
     required this.hostUid,
   });
+
+  factory Room.empty() {
+    return Room(
+      name: "",
+      bannerColor: "blue",
+      fileUrl: "",
+      fileType: "",
+      description: "Vào học cùng mình nhé!",
+      pomodoroSessionNo: 0,
+      pomodoroDuration: 50,
+      pomodoroBreaktime: 10,
+      tags: [],
+      maxParticipants: 5,
+      curParticipants: 0,
+      hostPhotoUrl: "",
+      hostUid: "",
+    );
+  }
 
   Room copyWith({
     String? id,
@@ -38,9 +59,10 @@ class Room {
     String? fileUrl,
     String? fileType,
     String? description,
-    String? pomodoroType,
-    String? pomodoroDuration,
-    List<dynamic>? tags,
+    double? pomodoroSessionNo,
+    double? pomodoroDuration,
+    double? pomodoroBreaktime,
+    List<String>? tags,
     int? maxParticipants,
     int? curParticipants,
     String? hostPhotoUrl,
@@ -53,8 +75,9 @@ class Room {
       fileUrl: fileUrl ?? this.fileUrl,
       fileType: fileType ?? this.fileType,
       description: description ?? this.description,
-      pomodoroType: pomodoroType ?? this.pomodoroType,
+      pomodoroSessionNo: pomodoroSessionNo ?? this.pomodoroSessionNo,
       pomodoroDuration: pomodoroDuration ?? this.pomodoroDuration,
+      pomodoroBreaktime: pomodoroBreaktime ?? this.pomodoroBreaktime,
       tags: tags ?? this.tags,
       maxParticipants: maxParticipants ?? this.maxParticipants,
       curParticipants: curParticipants ?? this.curParticipants,
@@ -71,8 +94,9 @@ class Room {
       'fileUrl': fileUrl,
       'fileType': fileType,
       'description': description,
-      'pomodoroType': pomodoroType,
+      'pomodoroSessionNo': pomodoroSessionNo,
       'pomodoroDuration': pomodoroDuration,
+      'pomodoroBreaktime': pomodoroBreaktime,
       'tags': tags,
       'maxParticipants': maxParticipants,
       'curParticipants': curParticipants,
@@ -89,9 +113,10 @@ class Room {
       fileUrl: map['fileUrl'] as String,
       fileType: map['fileType'] as String,
       description: map['description'] as String,
-      pomodoroType: map['pomodoroType'] as String,
-      pomodoroDuration: map['pomodoroDuration'] as String,
-      tags: List<dynamic>.from((map['tags'] as List<dynamic>)),
+      pomodoroSessionNo: map['pomodoroSessionNo'] as double,
+      pomodoroDuration: map['pomodoroDuration'] as double,
+      pomodoroBreaktime: map['pomodoroBreaktime'] as double,
+      tags: List<String>.from((map['tags'] as List).map((e) => e.toString())),
       maxParticipants: map['maxParticipants'] as int,
       curParticipants: map['curParticipants'] as int,
       hostPhotoUrl: map['hostPhotoUrl'] as String,
@@ -101,7 +126,7 @@ class Room {
 
   @override
   String toString() {
-    return 'Room(id: $id, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, pomodoroType: $pomodoroType, pomodoroDuration: $pomodoroDuration, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid)';
+    return 'Room(id: $id, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, pomodoroSessionNo: $pomodoroSessionNo, pomodoroDuration: $pomodoroDuration, pomodoroBreaktime: $pomodoroBreaktime, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid)';
   }
 
   @override
@@ -114,8 +139,9 @@ class Room {
         other.fileUrl == fileUrl &&
         other.fileType == fileType &&
         other.description == description &&
-        other.pomodoroType == pomodoroType &&
+        other.pomodoroSessionNo == pomodoroSessionNo &&
         other.pomodoroDuration == pomodoroDuration &&
+        other.pomodoroBreaktime == pomodoroBreaktime &&
         listEquals(other.tags, tags) &&
         other.maxParticipants == maxParticipants &&
         other.curParticipants == curParticipants &&
@@ -131,8 +157,9 @@ class Room {
         fileUrl.hashCode ^
         fileType.hashCode ^
         description.hashCode ^
-        pomodoroType.hashCode ^
+        pomodoroSessionNo.hashCode ^
         pomodoroDuration.hashCode ^
+        pomodoroBreaktime.hashCode ^
         tags.hashCode ^
         maxParticipants.hashCode ^
         curParticipants.hashCode ^
