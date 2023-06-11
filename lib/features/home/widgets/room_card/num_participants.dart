@@ -38,7 +38,7 @@ class NumParticipants extends StatelessWidget {
                     style: const TextStyle(
                       color: Palette.black,
                       fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   TextSpan(

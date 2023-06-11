@@ -13,7 +13,7 @@ import "package:study247/features/room/screens/create_room_screen/widgets/steps/
 
 final steps = [
   (0, "Cơ bản", const Step1()),
-  (1, "Chức năng", const Step2()),
+  (1, "Chức năng", Step2()),
   (2, "Trang trí", const Step3()),
 ];
 
@@ -49,8 +49,8 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
 
     if (mounted) {
       context.pop();
-      context.go(
-        "/room/${ref.read(roomControllerProvider).asData!.value!.id.toString()}",
+      GoRouter.of(context).go(
+        "/${ref.read(roomControllerProvider).asData!.value!.id.toString()}",
       );
     }
     ref.read(roomInfoControllerProvider).reset();

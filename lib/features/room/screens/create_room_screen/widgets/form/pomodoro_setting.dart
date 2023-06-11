@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
-import 'package:study247/features/room/screens/create_room_screen/widgets/form/input_title.dart';
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/number_input.dart';
 
-class PomodoroSetting extends StatefulWidget {
-  final void Function(String?) onTap;
-  const PomodoroSetting({super.key, required this.onTap});
+class Step2 extends ConsumerStatefulWidget {
+  const Step2({super.key});
 
   @override
-  State<PomodoroSetting> createState() => _PomodoroSettingState();
+  ConsumerState<Step2> createState() => _PomodoroSettingState();
 }
 
-class _PomodoroSettingState extends State<PomodoroSetting> {
+class _PomodoroSettingState extends ConsumerState<Step2> {
   final _pomodoroDurationController = TextEditingController();
   final _pomodoroBreaktime = TextEditingController();
 
@@ -20,13 +20,15 @@ class _PomodoroSettingState extends State<PomodoroSetting> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // const InputTitle(title: 'Pomodoro nhóm'),
-        // const SizedBox(height: Constants.defaultPadding),
         NumberInput(
           controller: _pomodoroDurationController,
           hintText: "25",
           title: "Độ dài mỗi phiên học",
-          onEditingComplete: () {},
+          onEditingComplete: () => ref
+              .read(roomInfoControllerProvider)
+              .updateRoomInfo(
+                  pomodoroDuration:
+                      int.parse(_pomodoroDurationController.text)),
           maxValue: 90,
           minValue: 25,
           interval: 5,

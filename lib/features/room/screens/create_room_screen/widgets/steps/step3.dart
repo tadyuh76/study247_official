@@ -43,6 +43,7 @@ class _Step3State extends ConsumerState<Step3> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const InputTitle(title: 'Thẻ', optional: true),
+        const SizedBox(height: Constants.defaultPadding / 2),
         _renderTagController(),
         _renderTags(),
         const SizedBox(height: Constants.defaultPadding),
@@ -111,7 +112,7 @@ class _Step3State extends ConsumerState<Step3> {
         const Expanded(
           child: Text(
             'Chọn tối đa 3 thẻ để miêu tả chủ đề phòng học của bạn tốt hơn.',
-            style: TextStyle(color: Palette.darkGrey, fontSize: 12),
+            style: TextStyle(color: Palette.darkGrey, fontSize: 14),
           ),
         ),
         const SizedBox(width: Constants.defaultPadding),
@@ -121,14 +122,14 @@ class _Step3State extends ConsumerState<Step3> {
               TextSpan(
                 text: selectedTags.length.toString(),
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   color: Palette.darkGrey,
                 ),
               ),
               const TextSpan(
                 text: '/3',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   color: Palette.darkGrey,
                 ),
               ),

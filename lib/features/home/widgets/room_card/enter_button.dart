@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/utils/show_snack_bar.dart';
 
 class EnterButton extends ConsumerStatefulWidget {
   final Room room;
@@ -20,8 +19,8 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
     setState(() => joining = true);
 
     final roomId = widget.room.id!;
-    context.go("/room/$roomId");
-    showSnackBar(context, "Đã tham gia phòng học!");
+    GoRouter.of(context).push("/$roomId");
+    // showSnackBar(context, "Đã tham gia phòng học!");
   }
 
   @override
@@ -41,7 +40,7 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
                 'Vào phòng học',
                 style: TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                 ),
               ),

@@ -19,7 +19,7 @@ class InputTitle extends StatelessWidget {
           title.toUpperCase(),
           style: const TextStyle(
             color: Palette.darkGrey,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             fontSize: 12,
             letterSpacing: 1,
           ),
@@ -28,7 +28,7 @@ class InputTitle extends StatelessWidget {
         if (optional)
           const Text(
             '(Tùy chọn)',
-            style: TextStyle(color: Palette.darkGrey),
+            style: TextStyle(color: Palette.darkGrey, fontSize: 12),
           )
       ],
     );

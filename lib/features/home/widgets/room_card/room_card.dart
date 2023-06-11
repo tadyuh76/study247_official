@@ -86,7 +86,7 @@ class RoomCard extends StatelessWidget {
             textScaleFactor: 1,
             style: const TextStyle(
               color: Palette.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 16,
             ),
           ),

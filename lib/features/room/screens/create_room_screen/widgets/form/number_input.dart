@@ -52,6 +52,9 @@ class _NumberInputState extends State<NumberInput> {
     if (int.parse(value) >= widget.maxValue) {
       widget.controller.text = widget.maxValue.toString();
     }
+    if (int.parse(value) <= widget.minValue) {
+      widget.controller.text = widget.minValue.toString();
+    }
   }
 
   void _onEditingComplete() {
@@ -63,81 +66,78 @@ class _NumberInputState extends State<NumberInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InputTitle(title: widget.title),
-          const SizedBox(height: Constants.defaultPadding / 2),
-          Row(
-            children: [
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: Material(
-                  color: Palette.lightGrey,
-                  clipBehavior: Clip.hardEdge,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: InkWell(
-                    onTap: decreaseValue,
-                    child: const Icon(Icons.remove),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InputTitle(title: widget.title),
+        const SizedBox(height: Constants.defaultPadding / 2),
+        Row(
+          children: [
+            SizedBox(
+              height: 40,
+              width: 40,
+              child: Material(
+                color: Palette.lightGrey,
+                clipBehavior: Clip.hardEdge,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: InkWell(
+                  onTap: decreaseValue,
+                  child: const Icon(Icons.remove),
                 ),
               ),
-              const SizedBox(width: Constants.defaultPadding / 2),
-              SizedBox(
-                width: 80,
-                height: 40,
-                child: TextFormField(
-                  onTapOutside: (_) => _onEditingComplete(),
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  controller: widget.controller,
-                  onChanged: validate,
-                  decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    hintStyle: const TextStyle(
-                      color: Palette.lightGrey,
-                      fontSize: 12,
-                      height: 1,
+            ),
+            const SizedBox(width: Constants.defaultPadding / 2),
+            SizedBox(
+              width: 80,
+              height: 40,
+              child: TextFormField(
+                onTapOutside: (_) => _onEditingComplete(),
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: widget.controller,
+                onChanged: validate,
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: const TextStyle(
+                    color: Palette.lightGrey,
+                    fontSize: 12,
+                    height: 1,
+                  ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Palette.primary,
+                      width: 2,
+                      style: BorderStyle.solid,
                     ),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Palette.primary,
-                        width: 2,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Palette.darkGrey,
-                        width: 4,
-                        style: BorderStyle.solid,
-                      ),
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Palette.darkGrey,
+                      width: 4,
+                      style: BorderStyle.solid,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: Constants.defaultPadding / 2),
-              SizedBox(
-                height: 40,
-                width: 40,
-                child: Material(
-                  color: Palette.lightGrey,
-                  clipBehavior: Clip.hardEdge,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: InkWell(
-                    onTap: increaseValue,
-                    child: const Icon(Icons.add),
-                  ),
+            ),
+            const SizedBox(width: Constants.defaultPadding / 2),
+            SizedBox(
+              height: 40,
+              width: 40,
+              child: Material(
+                color: Palette.lightGrey,
+                clipBehavior: Clip.hardEdge,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: InkWell(
+                  onTap: increaseValue,
+                  child: const Icon(Icons.add),
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

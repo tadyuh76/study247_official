@@ -8,9 +8,9 @@ class Room {
   final String fileUrl;
   final String fileType;
   final String description;
-  final double pomodoroSessionNo;
-  final double pomodoroDuration;
-  final double pomodoroBreaktime;
+  final int pomodoroSessionNo;
+  final int pomodoroDuration;
+  final int pomodoroBreaktime;
   final List<String> tags;
   final int maxParticipants;
   final int curParticipants;
@@ -59,9 +59,9 @@ class Room {
     String? fileUrl,
     String? fileType,
     String? description,
-    double? pomodoroSessionNo,
-    double? pomodoroDuration,
-    double? pomodoroBreaktime,
+    int? pomodoroSessionNo,
+    int? pomodoroDuration,
+    int? pomodoroBreaktime,
     List<String>? tags,
     int? maxParticipants,
     int? curParticipants,
@@ -113,9 +113,9 @@ class Room {
       fileUrl: map['fileUrl'] as String,
       fileType: map['fileType'] as String,
       description: map['description'] as String,
-      pomodoroSessionNo: map['pomodoroSessionNo'] as double,
-      pomodoroDuration: map['pomodoroDuration'] as double,
-      pomodoroBreaktime: map['pomodoroBreaktime'] as double,
+      pomodoroSessionNo: map['pomodoroSessionNo'] as int,
+      pomodoroDuration: map['pomodoroDuration'] as int,
+      pomodoroBreaktime: map['pomodoroBreaktime'] as int,
       tags: List<String>.from((map['tags'] as List).map((e) => e.toString())),
       maxParticipants: map['maxParticipants'] as int,
       curParticipants: map['curParticipants'] as int,

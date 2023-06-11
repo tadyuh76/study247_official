@@ -34,7 +34,7 @@ class CreateCard extends StatelessWidget {
             const SizedBox(height: Constants.defaultPadding),
             CustomButton(
               text: "Tạo phòng học",
-              onTap: () => context.go("/create"),
+              onTap: () => GoRouter.of(context).go("/create"),
             ),
           ],
         ),

@@ -11,8 +11,8 @@ class RoomInfoController {
     String? name,
     String? bannerColor,
     String? description,
-    double? pomodoroDuration,
-    double? pomodoroBreaktime,
+    int? pomodoroDuration,
+    int? pomodoroBreaktime,
     int? maxParticipants,
     List<String>? tags,
   }) {
