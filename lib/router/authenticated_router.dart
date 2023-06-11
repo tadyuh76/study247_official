@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/features/home/home_screen.dart';
 import 'package:study247/features/room/screens/create_room_screen/create_room_screen.dart';
@@ -22,9 +21,9 @@ final authenticatedRouter = GoRouter(
       ],
     ),
     GoRoute(
-        path: "/room/:id",
-        pageBuilder: (context, state) => MaterialPage(
-              child: RoomScreen(roomId: state.pathParameters["id"]!),
-            )),
+      path: "/room/:id",
+      builder: (context, state) =>
+          RoomScreen(roomId: state.pathParameters["id"]!),
+    ),
   ],
 );

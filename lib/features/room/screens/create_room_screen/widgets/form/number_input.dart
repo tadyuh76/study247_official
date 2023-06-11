@@ -9,12 +9,19 @@ class NumberInput extends StatefulWidget {
   final String title;
   final String hintText;
   final VoidCallback onEditingComplete;
+  final int maxValue;
+  final int minValue;
+  final int interval;
+
   const NumberInput({
     super.key,
     required this.controller,
     required this.hintText,
     required this.title,
     required this.onEditingComplete,
+    required this.maxValue,
+    required this.minValue,
+    required this.interval,
   });
 
   @override
@@ -30,26 +37,26 @@ class _NumberInputState extends State<NumberInput> {
 
   void increaseValue() {
     String curVal = widget.controller.text;
-    if (int.parse(curVal) >= 50) return;
-    widget.controller.text = (int.parse(curVal) + 1).toString();
+    if (int.parse(curVal) >= widget.maxValue) return;
+    widget.controller.text = (int.parse(curVal) + widget.interval).toString();
   }
 
   void decreaseValue() {
     String curVal = widget.controller.text;
-    if (int.parse(curVal) <= 0) return;
-    widget.controller.text = (int.parse(curVal) - 1).toString();
+    if (int.parse(curVal) <= widget.minValue) return;
+    widget.controller.text = (int.parse(curVal) - widget.interval).toString();
   }
 
   void validate(String value) {
     if (value.isEmpty) return;
-    if (int.parse(value) >= 50) {
-      widget.controller.text = '50';
+    if (int.parse(value) >= widget.maxValue) {
+      widget.controller.text = widget.maxValue.toString();
     }
   }
 
   void _onEditingComplete() {
     if (widget.controller.text.isEmpty) {
-      widget.controller.text = '0';
+      widget.controller.text = widget.minValue.toString();
     }
     widget.onEditingComplete();
   }

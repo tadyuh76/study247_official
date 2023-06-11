@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
-import 'package:study247/features/room/controllers/create_room_controller.dart';
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/number_input.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/text_input.dart';
 
@@ -42,6 +42,9 @@ class _Step1State extends ConsumerState<Step1> {
           controller: _participantsController,
           hintText: "5",
           title: "Số lượng thành viên tối đa",
+          maxValue: 50,
+          minValue: 0,
+          interval: 1,
           onEditingComplete: () => ref
               .read(roomInfoControllerProvider)
               .updateRoomInfo(

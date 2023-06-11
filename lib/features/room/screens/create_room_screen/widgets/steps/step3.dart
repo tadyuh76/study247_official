@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/utils/hide_scroll_bar.dart';
-import 'package:study247/features/room/controllers/create_room_controller.dart';
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/input_title.dart';
 
 class Step3 extends ConsumerStatefulWidget {

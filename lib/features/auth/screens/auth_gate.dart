@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/error_screen.dart';
-import 'package:study247/core/shared/loading_screen.dart';
+import 'package:study247/core/shared/app_error.dart';
+import 'package:study247/core/shared/app_loading.dart';
 import 'package:study247/utils/unfocus.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/router/authenticated_router.dart';
@@ -27,6 +27,7 @@ class AuthGate extends ConsumerWidget {
                   PointerDeviceKind.touch,
                   PointerDeviceKind.stylus,
                   PointerDeviceKind.unknown,
+                  PointerDeviceKind.trackpad,
                 },
               ),
               theme: ThemeData(
@@ -41,8 +42,8 @@ class AuthGate extends ConsumerWidget {
                   : authenticatedRouter,
             );
           },
-          error: (error, stk) => const ErrorScreen(),
-          loading: () => const LoadingScreen(),
+          error: (error, stk) => const AppError(),
+          loading: () => const AppLoading(),
         );
   }
 }

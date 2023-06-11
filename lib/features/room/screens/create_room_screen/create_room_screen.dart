@@ -5,16 +5,16 @@ import 'package:study247/constants/common.dart';
 import "package:study247/core/palette.dart";
 import "package:study247/core/shared/widgets/custom_button.dart";
 import 'package:study247/utils/show_snack_bar.dart';
-import "package:study247/features/room/controllers/create_room_controller.dart";
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import "package:study247/features/room/controllers/room_controller.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step1.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step2.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step3.dart";
 
 final steps = [
-  (1, "Cơ bản", const Step1()),
-  (2, "Chức năng", const Step2()),
-  (3, "Trang trí", const Step3()),
+  (0, "Cơ bản", const Step1()),
+  (1, "Chức năng", const Step2()),
+  (2, "Trang trí", const Step3()),
 ];
 
 class CreateRoomScreen extends ConsumerStatefulWidget {

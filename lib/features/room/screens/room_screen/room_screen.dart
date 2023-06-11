@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:study247/core/shared/error_screen.dart';
-import 'package:study247/core/shared/loading_screen.dart';
+import 'package:study247/core/shared/app_error.dart';
+import 'package:study247/core/shared/app_loading.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 
 class RoomScreen extends ConsumerStatefulWidget {
@@ -16,10 +16,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   @override
   void initState() {
     super.initState();
-    ok();
+    getRoomById();
   }
 
-  Future<void> ok() async {
+  Future<void> getRoomById() async {
     await ref
         .read(roomControllerProvider.notifier)
         .getRoomById(context, widget.roomId);
@@ -31,8 +31,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       body: Center(
         child: ref.watch(roomControllerProvider).when(
               data: (room) => Text(room!.id.toString()),
-              error: (error, stk) => const ErrorScreen(),
-              loading: () => const LoadingScreen(),
+              error: (error, stk) => const AppError(),
+              loading: () => const AppLoading(),
             ),
       ),
     );

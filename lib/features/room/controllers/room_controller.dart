@@ -4,7 +4,7 @@ import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
-import 'package:study247/features/room/controllers/create_room_controller.dart';
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/repositories/room_repository.dart';
 
 final roomControllerProvider =
@@ -45,4 +45,6 @@ class RoomController extends StateNotifier<AsyncValue<Room?>> {
       state = AsyncData(Room.empty());
     }
   }
+
+  
 }
