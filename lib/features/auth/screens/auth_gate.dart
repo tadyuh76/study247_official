@@ -6,10 +6,10 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/app_error.dart';
 import 'package:study247/core/shared/app_loading.dart';
-import 'package:study247/utils/unfocus.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/router/authenticated_router.dart';
 import 'package:study247/router/unauthenticated_router.dart';
+import 'package:study247/utils/unfocus.dart';
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -19,6 +19,9 @@ class AuthGate extends ConsumerWidget {
     return ref.watch(authControllerProvider).when(
           data: (userModel) {
             return MaterialApp.router(
+              routerConfig: userModel == null
+                  ? unauthenticatedRouter
+                  : authenticatedRouter,
               builder: (context, child) => Unfocus(child: child!),
               debugShowCheckedModeBanner: false,
               scrollBehavior: const MaterialScrollBehavior().copyWith(
@@ -37,9 +40,6 @@ class AuthGate extends ConsumerWidget {
                 colorScheme:
                     ThemeData().colorScheme.copyWith(primary: Palette.primary),
               ),
-              routerConfig: userModel == null
-                  ? unauthenticatedRouter
-                  : authenticatedRouter,
             );
           },
           error: (error, stk) => const AppError(),

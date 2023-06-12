@@ -4,12 +4,12 @@ import "package:go_router/go_router.dart";
 import 'package:study247/constants/common.dart';
 import "package:study247/core/palette.dart";
 import "package:study247/core/shared/widgets/custom_button.dart";
-import 'package:study247/utils/show_snack_bar.dart';
-import 'package:study247/features/room/controllers/room_info_controller.dart';
 import "package:study247/features/room/controllers/room_controller.dart";
+import 'package:study247/features/room/controllers/room_info_controller.dart';
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step1.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step2.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step3.dart";
+import 'package:study247/utils/show_snack_bar.dart';
 
 final steps = [
   (0, "Cơ bản", const Step1()),
@@ -48,9 +48,8 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
     await ref.read(roomControllerProvider.notifier).createRoom(context);
 
     if (mounted) {
-      context.pop();
-      GoRouter.of(context).go(
-        "/${ref.read(roomControllerProvider).asData!.value!.id.toString()}",
+      context.go(
+        "/room/${ref.read(roomControllerProvider).asData!.value!.id.toString()}",
       );
     }
     ref.read(roomInfoControllerProvider).reset();

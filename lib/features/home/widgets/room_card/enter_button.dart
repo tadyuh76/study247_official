@@ -16,10 +16,10 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
   bool joining = false;
 
   void onTap([mounted = true]) async {
-    setState(() => joining = true);
+    // setState(() => joining = true);
 
     final roomId = widget.room.id!;
-    GoRouter.of(context).push("/$roomId");
+    context.go("/room/$roomId");
     // showSnackBar(context, "Đã tham gia phòng học!");
   }
 

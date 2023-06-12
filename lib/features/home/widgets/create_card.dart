@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/shared/widgets/custom_button.dart';
 
 class CreateCard extends StatelessWidget {
   const CreateCard({super.key});
@@ -34,7 +34,7 @@ class CreateCard extends StatelessWidget {
             const SizedBox(height: Constants.defaultPadding),
             CustomButton(
               text: "Tạo phòng học",
-              onTap: () => GoRouter.of(context).go("/create"),
+              onTap: () => context.go("/create"),
             ),
           ],
         ),

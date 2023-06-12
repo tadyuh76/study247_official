@@ -28,6 +28,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("hello"),
+      ),
       body: Center(
         child: ref.watch(roomControllerProvider).when(
               data: (room) => Text(room!.id.toString()),
