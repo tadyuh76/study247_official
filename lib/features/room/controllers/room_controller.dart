@@ -18,9 +18,13 @@ class RoomController extends StateNotifier<AsyncValue<Room?>> {
 
   Future<void> createRoom(BuildContext context) async {
     state = const AsyncLoading();
-    final roomInfo = _ref.read(roomInfoControllerProvider).room;
+    Room roomInfo = _ref.read(roomInfoControllerProvider).room;
     final hostUser = _ref.read(authControllerProvider).asData!.value!;
-    roomInfo.copyWith(hostUid: hostUser.uid, hostPhotoUrl: hostUser.photoURL);
+    roomInfo = roomInfo.copyWith(
+      hostUid: hostUser.uid,
+      hostPhotoUrl: hostUser.photoURL,
+      roomTimerStart: DateTime.now().toString(),
+    );
 
     final result = await _ref.read(roomRepositoryProvider).createRoom(roomInfo);
 
@@ -35,8 +39,6 @@ class RoomController extends StateNotifier<AsyncValue<Room?>> {
   }
 
   Future<void> getRoomById(context, String roomId) async {
-    // state = const AsyncLoading();
-
     final result = await _ref.read(roomRepositoryProvider).getRoomById(roomId);
     if (result case Success(value: final room)) {
       state = AsyncData(room);
@@ -45,6 +47,4 @@ class RoomController extends StateNotifier<AsyncValue<Room?>> {
       state = AsyncData(Room.empty());
     }
   }
-
-  
 }

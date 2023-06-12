@@ -9,4 +9,7 @@ class Palette {
   static const lightGrey = Color(0xFFF6F6F6);
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF000000);
+
+  static const complete = Color(0xFF6CA148);
+  static const error = Color(0xFFFF3939);
 }

@@ -3,18 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/app_error.dart';
-import 'package:study247/core/shared/app_loading.dart';
+import 'package:study247/core/shared/widgets/app_error.dart';
+import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/home/widgets/room_card/avatar.dart';
 
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
 
-  void onLogOut(BuildContext context) {
-    // AuthMethods().signOut();
-    // Navigator.of(context).pop();
-  }
+  void onLogOut(BuildContext context) {}
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

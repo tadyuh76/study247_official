@@ -8,12 +8,12 @@ class Step2 extends ConsumerStatefulWidget {
   const Step2({super.key});
 
   @override
-  ConsumerState<Step2> createState() => _PomodoroSettingState();
+  ConsumerState<Step2> createState() => _RoomTimerSettingState();
 }
 
-class _PomodoroSettingState extends ConsumerState<Step2> {
-  final _pomodoroDurationController = TextEditingController();
-  final _pomodoroBreaktime = TextEditingController();
+class _RoomTimerSettingState extends ConsumerState<Step2> {
+  final _roomTimerDurationController = TextEditingController();
+  final _roomTimerBreaktime = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,21 +21,21 @@ class _PomodoroSettingState extends ConsumerState<Step2> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         NumberInput(
-          controller: _pomodoroDurationController,
+          controller: _roomTimerDurationController,
           hintText: "25",
           title: "Độ dài mỗi phiên học",
           onEditingComplete: () => ref
               .read(roomInfoControllerProvider)
               .updateRoomInfo(
-                  pomodoroDuration:
-                      int.parse(_pomodoroDurationController.text)),
+                  roomTimerDuration:
+                      int.parse(_roomTimerDurationController.text)),
           maxValue: 90,
-          minValue: 25,
+          minValue: 20,
           interval: 5,
         ),
         const SizedBox(height: Constants.defaultPadding),
         NumberInput(
-          controller: _pomodoroBreaktime,
+          controller: _roomTimerBreaktime,
           hintText: "5",
           title: "Thời gian nghỉ mỗi phiên học",
           onEditingComplete: () {},

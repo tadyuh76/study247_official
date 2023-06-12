@@ -8,9 +8,10 @@ class Room {
   final String fileUrl;
   final String fileType;
   final String description;
-  final int pomodoroSessionNo;
-  final int pomodoroDuration;
-  final int pomodoroBreaktime;
+  final int roomTimerSessionNo;
+  final int roomTimerDuration;
+  final int roomTimerBreaktime;
+  final String roomTimerStart;
   final List<String> tags;
   final int maxParticipants;
   final int curParticipants;
@@ -24,9 +25,10 @@ class Room {
     required this.fileUrl,
     required this.fileType,
     required this.description,
-    required this.pomodoroSessionNo,
-    required this.pomodoroDuration,
-    required this.pomodoroBreaktime,
+    required this.roomTimerSessionNo,
+    required this.roomTimerDuration,
+    required this.roomTimerBreaktime,
+    required this.roomTimerStart,
     required this.tags,
     required this.maxParticipants,
     required this.curParticipants,
@@ -41,9 +43,10 @@ class Room {
       fileUrl: "",
       fileType: "",
       description: "Vào học cùng mình nhé!",
-      pomodoroSessionNo: 0,
-      pomodoroDuration: 50,
-      pomodoroBreaktime: 10,
+      roomTimerSessionNo: 0,
+      roomTimerDuration: 50,
+      roomTimerBreaktime: 10,
+      roomTimerStart: "",
       tags: [],
       maxParticipants: 5,
       curParticipants: 0,
@@ -59,9 +62,10 @@ class Room {
     String? fileUrl,
     String? fileType,
     String? description,
-    int? pomodoroSessionNo,
-    int? pomodoroDuration,
-    int? pomodoroBreaktime,
+    int? roomTimerSessionNo,
+    int? roomTimerDuration,
+    int? roomTimerBreaktime,
+    String? roomTimerStart,
     List<String>? tags,
     int? maxParticipants,
     int? curParticipants,
@@ -75,9 +79,10 @@ class Room {
       fileUrl: fileUrl ?? this.fileUrl,
       fileType: fileType ?? this.fileType,
       description: description ?? this.description,
-      pomodoroSessionNo: pomodoroSessionNo ?? this.pomodoroSessionNo,
-      pomodoroDuration: pomodoroDuration ?? this.pomodoroDuration,
-      pomodoroBreaktime: pomodoroBreaktime ?? this.pomodoroBreaktime,
+      roomTimerSessionNo: roomTimerSessionNo ?? this.roomTimerSessionNo,
+      roomTimerDuration: roomTimerDuration ?? this.roomTimerDuration,
+      roomTimerBreaktime: roomTimerBreaktime ?? this.roomTimerBreaktime,
+      roomTimerStart: roomTimerStart ?? this.roomTimerStart,
       tags: tags ?? this.tags,
       maxParticipants: maxParticipants ?? this.maxParticipants,
       curParticipants: curParticipants ?? this.curParticipants,
@@ -87,16 +92,17 @@ class Room {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'name': name,
       'bannerColor': bannerColor,
       'fileUrl': fileUrl,
       'fileType': fileType,
       'description': description,
-      'pomodoroSessionNo': pomodoroSessionNo,
-      'pomodoroDuration': pomodoroDuration,
-      'pomodoroBreaktime': pomodoroBreaktime,
+      'roomTimerSessionNo': roomTimerSessionNo,
+      'roomTimerDuration': roomTimerDuration,
+      'roomTimerBreaktime': roomTimerBreaktime,
+      'roomTimerStart': roomTimerStart,
       'tags': tags,
       'maxParticipants': maxParticipants,
       'curParticipants': curParticipants,
@@ -107,41 +113,44 @@ class Room {
 
   factory Room.fromMap(Map<String, dynamic> map) {
     return Room(
-      id: map['id'] != null ? map['id'] as String : null,
-      name: map['name'] as String,
-      bannerColor: map['bannerColor'] as String,
-      fileUrl: map['fileUrl'] as String,
-      fileType: map['fileType'] as String,
-      description: map['description'] as String,
-      pomodoroSessionNo: map['pomodoroSessionNo'] as int,
-      pomodoroDuration: map['pomodoroDuration'] as int,
-      pomodoroBreaktime: map['pomodoroBreaktime'] as int,
-      tags: List<String>.from((map['tags'] as List).map((e) => e.toString())),
-      maxParticipants: map['maxParticipants'] as int,
-      curParticipants: map['curParticipants'] as int,
-      hostPhotoUrl: map['hostPhotoUrl'] as String,
-      hostUid: map['hostUid'] as String,
+      id: map['id'],
+      name: map['name'] ?? '',
+      bannerColor: map['bannerColor'] ?? '',
+      fileUrl: map['fileUrl'] ?? '',
+      fileType: map['fileType'] ?? '',
+      description: map['description'] ?? '',
+      roomTimerSessionNo: map['roomTimerSessionNo']?.toInt() ?? 0,
+      roomTimerDuration: map['roomTimerDuration']?.toInt() ?? 0,
+      roomTimerBreaktime: map['roomTimerBreaktime']?.toInt() ?? 0,
+      roomTimerStart: map['roomTimerStart'] ?? '',
+      tags: List<String>.from(map['tags']),
+      maxParticipants: map['maxParticipants']?.toInt() ?? 0,
+      curParticipants: map['curParticipants']?.toInt() ?? 0,
+      hostPhotoUrl: map['hostPhotoUrl'] ?? '',
+      hostUid: map['hostUid'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Room(id: $id, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, pomodoroSessionNo: $pomodoroSessionNo, pomodoroDuration: $pomodoroDuration, pomodoroBreaktime: $pomodoroBreaktime, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid)';
+    return 'Room(id: $id, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, roomTimerSessionNo: $roomTimerSessionNo, roomTimerDuration: $roomTimerDuration, roomTimerBreaktime: $roomTimerBreaktime, roomTimerStart: $roomTimerStart, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid)';
   }
 
   @override
-  bool operator ==(covariant Room other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Room &&
+        other.id == id &&
         other.name == name &&
         other.bannerColor == bannerColor &&
         other.fileUrl == fileUrl &&
         other.fileType == fileType &&
         other.description == description &&
-        other.pomodoroSessionNo == pomodoroSessionNo &&
-        other.pomodoroDuration == pomodoroDuration &&
-        other.pomodoroBreaktime == pomodoroBreaktime &&
+        other.roomTimerSessionNo == roomTimerSessionNo &&
+        other.roomTimerDuration == roomTimerDuration &&
+        other.roomTimerBreaktime == roomTimerBreaktime &&
+        other.roomTimerStart == roomTimerStart &&
         listEquals(other.tags, tags) &&
         other.maxParticipants == maxParticipants &&
         other.curParticipants == curParticipants &&
@@ -157,9 +166,10 @@ class Room {
         fileUrl.hashCode ^
         fileType.hashCode ^
         description.hashCode ^
-        pomodoroSessionNo.hashCode ^
-        pomodoroDuration.hashCode ^
-        pomodoroBreaktime.hashCode ^
+        roomTimerSessionNo.hashCode ^
+        roomTimerDuration.hashCode ^
+        roomTimerBreaktime.hashCode ^
+        roomTimerStart.hashCode ^
         tags.hashCode ^
         maxParticipants.hashCode ^
         curParticipants.hashCode ^

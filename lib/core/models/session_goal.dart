@@ -1,8 +1,8 @@
-class Goal {
+class SessionGoal {
   final String text;
   bool completed;
 
-  Goal({
+  SessionGoal({
     required this.text,
     required this.completed,
   });
@@ -11,11 +11,11 @@ class Goal {
     completed = !completed;
   }
 
-  Goal copyWith({
+  SessionGoal copyWith({
     String? text,
     bool? completed,
   }) {
-    return Goal(
+    return SessionGoal(
       text: text ?? this.text,
       completed: completed ?? this.completed,
     );
@@ -28,8 +28,8 @@ class Goal {
     };
   }
 
-  factory Goal.fromMap(Map<String, dynamic> map) {
-    return Goal(
+  factory SessionGoal.fromMap(Map<String, dynamic> map) {
+    return SessionGoal(
       text: map['text'] as String,
       completed: map['completed'] as bool,
     );
@@ -39,7 +39,7 @@ class Goal {
   String toString() => 'Goal(text: $text, completed: $completed)';
 
   @override
-  bool operator ==(covariant Goal other) {
+  bool operator ==(covariant SessionGoal other) {
     if (identical(this, other)) return true;
 
     return other.text == text && other.completed == completed;
