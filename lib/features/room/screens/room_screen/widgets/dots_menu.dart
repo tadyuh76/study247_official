@@ -24,7 +24,7 @@ class _DotsMenuState extends State<DotsMenu> {
       context: context,
       builder: (context) => ExpandedMenu(onHideMenu: onHideMenu),
       barrierColor: Colors.transparent,
-      barrierDismissible: false,
+      barrierDismissible: true,
       useSafeArea: true,
     );
     expanding = true;

@@ -30,11 +30,7 @@ class RoomTimerController extends StateNotifier<RoomTimer> {
 
     Timer.periodic(const Duration(milliseconds: 1000), (timer) {
       final provider = _ref.read(remainTimeProvider.notifier);
-      if (provider.state < 0) {
-        provider.update((_) => state.remainTime);
-      }
       provider.update((i) => state.remainTime);
-      print(state.remainTime);
     });
   }
 }

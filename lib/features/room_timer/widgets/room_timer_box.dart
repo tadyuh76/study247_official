@@ -7,8 +7,7 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/features/room_timer/controllers/room_timer_controller.dart';
 import 'package:study247/features/room_timer/providers/remain_time_provider.dart';
-
-import '../../../utils/format_time.dart';
+import 'package:study247/utils/format_time.dart';
 
 class RoomTimerBox extends ConsumerWidget {
   final VoidCallback hideBox;
@@ -29,7 +28,6 @@ class RoomTimerBox extends ConsumerWidget {
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: ,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(

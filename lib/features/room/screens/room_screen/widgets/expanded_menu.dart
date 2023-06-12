@@ -23,52 +23,58 @@ class ExpandedMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: Constants.defaultPadding + kToolbarHeight,
-        right: Constants.defaultPadding / 2,
-      ),
-      child: Align(
-        alignment: Alignment.topRight,
-        child: Column(
-          children: [
-            SizedBox(
-              width: 60,
-              child: BlackBackgroundButton(
-                onTap: onHideMenu,
-                child: SvgPicture.asset(
-                  IconPaths.close,
-                  color: Palette.white,
-                  width: 32,
-                  height: 32,
+    return WillPopScope(
+      onWillPop: () async {
+        onHideMenu();
+        return true;
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: Constants.defaultPadding + kToolbarHeight,
+          right: Constants.defaultPadding / 2,
+        ),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: Column(
+            children: [
+              SizedBox(
+                width: 60,
+                child: BlackBackgroundButton(
+                  onTap: onHideMenu,
+                  child: SvgPicture.asset(
+                    IconPaths.close,
+                    color: Palette.white,
+                    width: 32,
+                    height: 32,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: Constants.defaultPadding / 2),
-            SizedBox(
-              width: 60,
-              child: BlackBackgroundButton(
-                child: SvgPicture.asset(
-                  IconPaths.music,
-                  color: Palette.white,
-                  width: 24,
-                  height: 24,
+              const SizedBox(height: Constants.defaultPadding / 2),
+              SizedBox(
+                width: 60,
+                child: BlackBackgroundButton(
+                  child: SvgPicture.asset(
+                    IconPaths.music,
+                    color: Palette.white,
+                    width: 24,
+                    height: 24,
+                  ),
+                  onTap: () => _showMusicBox(context),
                 ),
-                onTap: () => _showMusicBox(context),
               ),
-            ),
-            const SizedBox(height: Constants.defaultPadding / 2),
-            SizedBox(
-              width: 60,
-              child: BlackBackgroundButton(
-                child: Icon(
-                  Icons.image,
-                  color: Palette.white,
+              const SizedBox(height: Constants.defaultPadding / 2),
+              SizedBox(
+                width: 60,
+                child: BlackBackgroundButton(
+                  child: const Icon(
+                    Icons.image,
+                    color: Palette.white,
+                  ),
+                  onTap: () {},
                 ),
-                onTap: () {},
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

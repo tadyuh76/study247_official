@@ -121,10 +121,10 @@ class RoomTimer {
       roomTimerDuration: roomTimerDuration ?? this.roomTimerDuration,
       roomTimerBreaktime: roomTimerBreaktime ?? this.roomTimerBreaktime,
       roomTimerStart: roomTimerStart ?? this.roomTimerStart,
-      isStudying: this.isStudying,
-      isBreaktime: this.isBreaktime,
-      remainTime: this.remainTime,
-      timer: this.timer,
+      isStudying: isStudying,
+      isBreaktime: isBreaktime,
+      remainTime: remainTime,
+      timer: timer,
     );
   }
 
