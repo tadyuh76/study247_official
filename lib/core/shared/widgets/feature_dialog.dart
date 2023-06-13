@@ -19,13 +19,14 @@ class FeatureDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: kToolbarHeight + 100),
+      padding: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding)
+          .copyWith(top: kToolbarHeight + 100),
       child: Align(
         alignment: Alignment.topCenter,
         child: Material(
           color: Colors.transparent,
           child: Container(
-            width: 280,
+            // width: 280,
             padding: const EdgeInsets.all(Constants.defaultPadding),
             decoration: const BoxDecoration(
               color: Palette.white,

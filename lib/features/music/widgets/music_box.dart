@@ -11,7 +11,7 @@ class MusicBox extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final musicController = ref.watch(musicControllerProvider);
+    final musicController = ref.watch(audioControllerProvider);
 
     return FeatureDialog(
       title: "Nhạc nền",
@@ -19,7 +19,6 @@ class MusicBox extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const SizedBox(height: Constants.defaultPadding),
           const Divider(height: Constants.defaultPadding),
           _renderAudioController(musicController, "lofi", "🌠 Lofi"),
           _renderAudioController(musicController, "rain", "📚 Thư viện"),
@@ -30,7 +29,7 @@ class MusicBox extends ConsumerWidget {
   }
 
   Column _renderAudioController(
-    MusicController musicController,
+    AudioController musicController,
     String name,
     String title,
   ) {

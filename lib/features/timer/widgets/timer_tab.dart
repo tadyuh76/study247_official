@@ -4,8 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/black_background_button.dart';
-import 'package:study247/features/room_timer/controllers/room_timer_controller.dart';
-import 'package:study247/features/room_timer/providers/remain_time_provider.dart';
+import 'package:study247/features/room_timer/notifiers/personal_timer.dart';
+import 'package:study247/features/room_timer/notifiers/room_timer.dart';
+import 'package:study247/features/room_timer/notifiers/timer_type.dart';
+import 'package:study247/features/room_timer/widgets/personal_timer_box.dart';
 import 'package:study247/features/room_timer/widgets/room_timer_box.dart';
 import 'package:study247/utils/format_time.dart';
 
@@ -14,23 +16,30 @@ class RoomTimerTab extends ConsumerWidget {
     super.key,
   });
 
-  void _showRoomTimerBox(BuildContext context) {
+  void _showTimerBox(BuildContext context, WidgetRef ref) {
+    final timerType = ref.read(timerTypeProvider);
+
     showDialog(
       context: context,
-      builder: (context) => RoomTimerBox(
-        hideBox: Navigator.of(context).pop,
-      ),
+      builder: (context) => timerType == TimerType.room
+          ? RoomTimerBox(hideBox: Navigator.of(context).pop)
+          : PersonalTimerBox(hideBox: Navigator.of(context).pop),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: the timer only run when I init the controller
-    ref.read(roomTimerControllerProvider);
-    final remainTime = ref.watch(remainTimeProvider);
+    final timerType = ref.watch(timerTypeProvider);
+    RoomTimer? roomTimer;
+    PersonalTimer? personalTimer;
+    if (timerType == TimerType.room) {
+      roomTimer = ref.watch(roomTimerProvider);
+    } else {
+      personalTimer = ref.watch(personalTimerProvider);
+    }
 
     return BlackBackgroundButton(
-      onTap: () => _showRoomTimerBox(context),
+      onTap: () => _showTimerBox(context, ref),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -43,9 +52,15 @@ class RoomTimerTab extends ConsumerWidget {
                 color: Palette.white,
               ),
               const SizedBox(width: 5),
-              const Text(
-                "Tập trung",
-                style: TextStyle(
+              Text(
+                roomTimer == null
+                    ? personalTimer!.isStudying
+                        ? "Tập trung"
+                        : "Giải lao"
+                    : roomTimer.isStudying
+                        ? "Tập trung"
+                        : "Giải lao",
+                style: const TextStyle(
                   color: Palette.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w300,
@@ -55,7 +70,11 @@ class RoomTimerTab extends ConsumerWidget {
           ),
           const Spacer(),
           Text(
-            formatTime(remainTime),
+            formatTime(
+              roomTimer == null
+                  ? personalTimer!.remainTime
+                  : roomTimer.remainTime,
+            ),
             style: const TextStyle(
               color: Palette.white,
               fontSize: 14,

@@ -12,6 +12,7 @@ class NumberInput extends StatefulWidget {
   final int maxValue;
   final int minValue;
   final int interval;
+  final bool centered;
 
   const NumberInput({
     super.key,
@@ -22,6 +23,7 @@ class NumberInput extends StatefulWidget {
     required this.maxValue,
     required this.minValue,
     required this.interval,
+    this.centered = false,
   });
 
   @override
@@ -67,11 +69,14 @@ class _NumberInputState extends State<NumberInput> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: widget.centered
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
-        InputTitle(title: widget.title),
+        InputTitle(title: widget.title, centered: widget.centered),
         const SizedBox(height: Constants.defaultPadding / 2),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
               height: 40,

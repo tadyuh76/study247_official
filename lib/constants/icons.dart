@@ -8,4 +8,7 @@ class IconPaths {
   static const google = "assets/icons/google.svg";
   static const more = "assets/icons/more.svg";
   static const music = "assets/icons/music.svg";
+  static const pause = "assets/icons/pause.svg";
+  static const play = "assets/icons/play.svg";
+  static const reset = "assets/icons/reset.svg";
 }

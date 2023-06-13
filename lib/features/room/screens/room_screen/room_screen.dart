@@ -9,7 +9,7 @@ import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dots_menu.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/room_features/invite_button.dart';
-import 'package:study247/features/room_timer/widgets/room_timer_tab.dart';
+import 'package:study247/features/room_timer/widgets/timer_tab.dart';
 import 'package:study247/features/session_goals/widgets/session_goals_tab.dart';
 
 final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
