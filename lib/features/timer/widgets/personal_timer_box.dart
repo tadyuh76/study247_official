@@ -8,9 +8,9 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/number_input.dart';
-import 'package:study247/features/room_timer/notifiers/personal_timer.dart';
-import 'package:study247/features/room_timer/notifiers/timer_type.dart';
-import 'package:study247/features/room_timer/widgets/room_timer_box.dart';
+import 'package:study247/features/timer/notifiers/personal_timer.dart';
+import 'package:study247/features/timer/providers/timer_type.dart';
+import 'package:study247/features/timer/widgets/room_timer_box.dart';
 import 'package:study247/utils/format_time.dart';
 
 class PersonalTimerBox extends ConsumerWidget {

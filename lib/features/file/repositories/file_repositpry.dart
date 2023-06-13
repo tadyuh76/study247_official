@@ -1,0 +1,47 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:study247/constants/firebase.dart';
+import 'package:study247/core/models/file.dart';
+import 'package:study247/core/models/result.dart';
+import 'package:study247/core/providers/firebase_providers.dart';
+import 'package:study247/features/room/controllers/room_controller.dart';
+
+final fileRepositoryProvider = Provider((ref) => FileRepository(ref));
+
+class FileRepository {
+  final Ref _ref;
+  FileRepository(this._ref);
+
+  Future<Result<File, Exception>> pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'pdf', 'png', 'jpeg'],
+        allowMultiple: false,
+        withData: true,
+      );
+      if (result == null) return Failure(Exception("Không thể tải tệp"));
+
+      final file = result.files.first;
+      final fileBytes = file.bytes;
+      if (fileBytes == null) return Failure(Exception("Không thể tải tệp"));
+
+      final roomId = _ref.read(roomControllerProvider).asData!.value!.id;
+      final db = _ref.read(firestoreProvider);
+      final storage = _ref.read(storageProvider);
+
+      final fileDir = storage.ref('/files/$roomId/${file.name}');
+      final res = await fileDir.putData(fileBytes);
+      final fileUrl = await res.ref.getDownloadURL();
+
+      db
+          .collection(FirebaseConstants.rooms)
+          .doc(roomId)
+          .update({"fileUrl": fileUrl, "fileType": file.extension});
+
+      return Success(File(type: file.extension!, url: fileUrl));
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+}

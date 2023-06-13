@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/black_background_button.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
 import 'package:study247/features/session_goals/controllers/session_goals_controller.dart';
 import 'package:study247/features/session_goals/widgets/session_goals_box.dart';
 

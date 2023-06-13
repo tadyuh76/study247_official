@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
-import 'package:study247/features/room_timer/notifiers/room_timer.dart';
+import 'package:study247/features/timer/notifiers/room_timer.dart';
 
 final roomTimerRepositoryProvider = Provider((ref) => RoomTimerRepository(ref));
 

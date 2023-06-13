@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
-import 'package:study247/features/room_timer/repositories/room_timer_repository.dart';
+import 'package:study247/features/timer/repositories/room_timer_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final roomTimerProvider = ChangeNotifierProvider(

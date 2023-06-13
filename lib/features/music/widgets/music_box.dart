@@ -11,7 +11,7 @@ class MusicBox extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final musicController = ref.watch(audioControllerProvider);
+    final audioController = ref.watch(audioControllerProvider);
 
     return FeatureDialog(
       title: "Nhạc nền",
@@ -20,9 +20,9 @@ class MusicBox extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Divider(height: Constants.defaultPadding),
-          _renderAudioController(musicController, "lofi", "🌠 Lofi"),
-          _renderAudioController(musicController, "rain", "📚 Thư viện"),
-          _renderAudioController(musicController, "library", "🌧️ Mưa"),
+          _renderAudioController(audioController, "lofi", "🌠 Lofi"),
+          _renderAudioController(audioController, "rain", "📚 Thư viện"),
+          _renderAudioController(audioController, "library", "🌧️ Mưa"),
         ],
       ),
     );

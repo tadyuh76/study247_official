@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/black_background_button.dart';
-import 'package:study247/features/room_timer/notifiers/personal_timer.dart';
-import 'package:study247/features/room_timer/notifiers/room_timer.dart';
-import 'package:study247/features/room_timer/notifiers/timer_type.dart';
-import 'package:study247/features/room_timer/widgets/personal_timer_box.dart';
-import 'package:study247/features/room_timer/widgets/room_timer_box.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
+import 'package:study247/features/timer/notifiers/personal_timer.dart';
+import 'package:study247/features/timer/notifiers/room_timer.dart';
+import 'package:study247/features/timer/providers/timer_type.dart';
+import 'package:study247/features/timer/widgets/personal_timer_box.dart';
+import 'package:study247/features/timer/widgets/room_timer_box.dart';
 import 'package:study247/utils/format_time.dart';
 
 class RoomTimerTab extends ConsumerWidget {

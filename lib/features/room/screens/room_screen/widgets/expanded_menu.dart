@@ -5,7 +5,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/music/widgets/music_box.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/black_background_button.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
 
 class ExpandedMenu extends StatelessWidget {
   final VoidCallback onHideMenu;

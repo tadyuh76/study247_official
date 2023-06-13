@@ -4,6 +4,8 @@ class IconPaths {
   static const clock = "assets/icons/clock.svg";
   static const close = "assets/icons/close.svg";
   static const facebook = "assets/icons/facebook.svg";
+  static const fileAdd = "assets/icons/file_add.svg";
+  static const file = "assets/icons/file.svg";
   static const goal = "assets/icons/goal.svg";
   static const google = "assets/icons/google.svg";
   static const more = "assets/icons/more.svg";

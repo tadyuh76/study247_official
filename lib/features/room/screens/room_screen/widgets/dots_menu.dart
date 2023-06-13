@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/black_background_button.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/expanded_menu.dart';
 
 class DotsMenu extends StatefulWidget {

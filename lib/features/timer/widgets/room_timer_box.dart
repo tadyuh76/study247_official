@@ -5,9 +5,9 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
-import 'package:study247/features/room_timer/notifiers/room_timer.dart';
-import 'package:study247/features/room_timer/notifiers/timer_type.dart';
-import 'package:study247/features/room_timer/widgets/personal_timer_box.dart';
+import 'package:study247/features/timer/notifiers/room_timer.dart';
+import 'package:study247/features/timer/providers/timer_type.dart';
+import 'package:study247/features/timer/widgets/personal_timer_box.dart';
 import 'package:study247/utils/format_time.dart';
 
 class RoomTimerBox extends ConsumerWidget {

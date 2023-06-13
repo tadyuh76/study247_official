@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 
-class BlackBackgroundButton extends StatelessWidget {
+class CustomIconButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
-  const BlackBackgroundButton({
+  final double size;
+  const CustomIconButton({
     Key? key,
+    required this.size,
     required this.child,
     required this.onTap,
   }) : super(key: key);
@@ -16,13 +17,13 @@ class BlackBackgroundButton extends StatelessWidget {
     return Material(
       clipBehavior: Clip.hardEdge,
       color: Palette.black.withOpacity(0.7),
-      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderRadius: const BorderRadius.all(Radius.circular(50)),
       child: InkWell(
         splashColor: Palette.black,
         onTap: onTap,
-        child: Container(
-          height: 60,
-          padding: const EdgeInsets.all(Constants.defaultPadding / 2),
+        child: SizedBox(
+          height: size,
+          width: size,
           child: Center(child: child),
         ),
       ),
