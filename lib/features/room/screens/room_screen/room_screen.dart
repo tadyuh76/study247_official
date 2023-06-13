@@ -8,6 +8,7 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_icon_button.dart';
+import 'package:study247/features/chat/widgets/chat_view.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
 import 'package:study247/features/music/controllers/music_controller.dart';
@@ -47,7 +48,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         .read(roomControllerProvider.notifier)
         .getRoomById(context, widget.roomId);
     ref.read(roomTimerProvider.notifier).setup();
-    // ref.read(personalTimerProvider.notifier).initialize();
   }
 
   void _onLeftNavigatorTap() {
@@ -215,25 +215,30 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 }
 
 class ChatButton extends StatelessWidget {
-  const ChatButton({
-    super.key,
-  });
+  const ChatButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Container(
-        height: 60,
-        width: 60,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Palette.primary,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: SvgPicture.asset(
-          IconPaths.chats,
-          color: Palette.white,
+    return GestureDetector(
+      onTap: () => showDialog(
+        barrierColor: Colors.transparent,
+        context: context,
+        builder: (context) => const ChatView(),
+      ),
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: Container(
+          height: 60,
+          width: 60,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Palette.primary,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: SvgPicture.asset(
+            IconPaths.chats,
+            color: Palette.white,
+          ),
         ),
       ),
     );

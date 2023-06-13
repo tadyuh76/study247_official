@@ -8,7 +8,7 @@ class Message {
   final String senderPhotoURL;
   final String createdAt;
   final String type;
-  final String noteId;
+  String? noteId;
 
   Message({
     this.id,
@@ -44,7 +44,7 @@ class Message {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'text': text,
       'senderId': senderId,
@@ -58,14 +58,14 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
-      id: map['id'] != null ? map['id'] as String : null,
-      text: map['text'] as String,
-      senderId: map['senderId'] as String,
-      senderName: map['senderName'] as String,
-      senderPhotoURL: map['senderPhotoURL'] as String,
-      createdAt: map['createdAt'] as String,
-      type: map['type'] as String,
-      noteId: map['noteId'] as String,
+      id: map['id'],
+      text: map['text'] ?? '',
+      senderId: map['senderId'] ?? '',
+      senderName: map['senderName'] ?? '',
+      senderPhotoURL: map['senderPhotoURL'] ?? '',
+      createdAt: map['createdAt'] ?? '',
+      type: map['type'] ?? '',
+      noteId: map['noteId'],
     );
   }
 
@@ -75,10 +75,11 @@ class Message {
   }
 
   @override
-  bool operator ==(covariant Message other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Message &&
+        other.id == id &&
         other.text == text &&
         other.senderId == senderId &&
         other.senderName == senderName &&
