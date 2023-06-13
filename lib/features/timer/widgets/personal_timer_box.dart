@@ -40,6 +40,7 @@ class PersonalTimerBox extends ConsumerWidget {
           int.parse(_roomTimerBreaktimeController.text) * 60,
       personalTimerStart: DateTime.now().toString(),
     );
+    personalTimer.initialize();
     personalTimer.setup();
   }
 
@@ -198,7 +199,7 @@ class _ResetButton extends ConsumerWidget {
   const _ResetButton();
 
   void _onReset(WidgetRef ref) {
-    ref.read(personalTimerProvider).resetTimer();
+    ref.read(personalTimerProvider).reset();
     ref.read(timerTypeProvider.notifier).update((_) => TimerType.room);
   }
 

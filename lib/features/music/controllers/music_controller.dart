@@ -43,7 +43,11 @@ class AudioController extends ChangeNotifier {
   }
 
   void reset() {
-    audio.forEach((key, value) => value.player.dispose());
+    try {
+      audio.forEach((key, value) => value.player.dispose());
+    } catch (e) {
+      print("error disposing audios");
+    }
 
     audio = {
       "lofi": AudioModel(

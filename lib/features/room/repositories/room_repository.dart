@@ -18,9 +18,9 @@ class RoomRepository {
 
   Future<Result<String, Exception>> createRoom(Room room) async {
     try {
-      final createdRoom = await roomRef.add(room.toMap());
-      await createdRoom.update({"id": createdRoom.id});
-      return Success(createdRoom.id);
+      final roomId = roomRef.doc().id;
+      await roomRef.doc(roomId).set(room.copyWith(id: roomId).toMap());
+      return Success(roomId);
     } on Exception catch (e) {
       return Failure(e);
     }
@@ -34,6 +34,4 @@ class RoomRepository {
       return Failure(e);
     }
   }
-
-  
 }

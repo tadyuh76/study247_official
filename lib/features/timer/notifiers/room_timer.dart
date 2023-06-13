@@ -9,14 +9,14 @@ import 'package:study247/features/timer/repositories/room_timer_repository.dart'
 import 'package:study247/utils/show_snack_bar.dart';
 
 final roomTimerProvider = ChangeNotifierProvider(
-  (ref) => RoomTimer(ref)..setup(),
+  (ref) => RoomTimer(ref),
 );
 
 class RoomTimer extends ChangeNotifier {
   int roomTimerSessionNo = 1;
   int roomTimerDuration = 0;
   int roomTimerBreaktime = 0;
-  String roomTimerStart = "";
+  String roomTimerStart = DateTime.now().toString();
   bool isStudying = false;
   bool isPaused = false;
 
@@ -25,16 +25,7 @@ class RoomTimer extends ChangeNotifier {
 
   final Ref _ref;
 
-  RoomTimer(this._ref) {
-    final room = _ref.read(roomControllerProvider).asData!.value!;
-
-    roomTimerDuration = room.roomTimerDuration;
-    roomTimerBreaktime = room.roomTimerBreaktime;
-    roomTimerStart = room.roomTimerStart;
-    roomTimerSessionNo = room.roomTimerSessionNo;
-    isStudying = room.isStudying;
-    isPaused = room.isPaused;
-  }
+  RoomTimer(this._ref);
 
   Future<void> updateTimer() async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
@@ -46,6 +37,15 @@ class RoomTimer extends ChangeNotifier {
   }
 
   void setup() {
+    final room = _ref.read(roomControllerProvider).asData!.value!;
+
+    roomTimerDuration = room.roomTimerDuration;
+    roomTimerBreaktime = room.roomTimerBreaktime;
+    roomTimerStart = room.roomTimerStart;
+    roomTimerSessionNo = room.roomTimerSessionNo;
+    isStudying = room.isStudying;
+    isPaused = room.isPaused;
+
     if (isStudying) {
       setupStudyTimer();
       if (!isPaused) startStudying();
@@ -96,7 +96,6 @@ class RoomTimer extends ChangeNotifier {
         // );
         showSnackBar(globalKey.currentState!.context, "hết giờ học");
       }
-
       notifyListeners();
     });
   }
@@ -143,17 +142,17 @@ class RoomTimer extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetTimer() {
+  void reset() {
     roomTimerSessionNo = 0;
     roomTimerDuration = 0;
     roomTimerBreaktime = 0;
-    roomTimerStart = "";
+    roomTimerStart = DateTime.now().toString();
     isStudying = false;
     isPaused = false;
 
     remainTime = 0;
-    timer = Timer(const Duration(seconds: 1), () {});
-    updateTimer();
-    notifyListeners();
+    timer.cancel();
+    // timer = Timer(const Duration(seconds: 1), () {});
+    // notifyListeners();
   }
 }

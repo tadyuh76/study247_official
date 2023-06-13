@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:photo_view/photo_view.dart';
 
-class FileView extends ConsumerWidget {
+class FileView extends ConsumerStatefulWidget {
   const FileView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FileView> createState() => _FileViewState();
+}
+
+class _FileViewState extends ConsumerState<FileView>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return ref.watch(fileControllerProvider).when(
           error: (err, stk) => const ErrorScreen(),
           loading: () => const LoadingScreen(),
@@ -23,17 +34,55 @@ class FileView extends ConsumerWidget {
               return _renderPickFileUI(ref);
             }
 
-            return file.type == "pdf"
-                ? SfPdfViewer.network(file.url)
-                : PhotoView(
-                    imageProvider: NetworkImage(file.url),
-                    backgroundDecoration:
-                        const BoxDecoration(color: Palette.grey),
-                    minScale: PhotoViewComputedScale.contained,
-                    maxScale: 2.0,
-                  );
+            return Scaffold(
+              floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+              floatingActionButton: _renderActions(ref),
+              body: file.type == "pdf"
+                  ? SfPdfViewer.network(file.url)
+                  : PhotoView(
+                      imageProvider: NetworkImage(file.url),
+                      backgroundDecoration:
+                          const BoxDecoration(color: Palette.grey),
+                      minScale: PhotoViewComputedScale.contained,
+                      maxScale: 2.0,
+                    ),
+            );
           },
         );
+  }
+
+  Padding _renderActions(WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.only(top: Constants.defaultPadding),
+      child: Opacity(
+        opacity: 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BlackBackgroundButton(
+                onTap: ref.read(fileControllerProvider.notifier).reset,
+                width: 60,
+                child: SvgPicture.asset(
+                  IconPaths.close,
+                  color: Palette.white,
+                  width: 32,
+                  height: 32,
+                )),
+            const SizedBox(height: Constants.defaultPadding / 2),
+            BlackBackgroundButton(
+              onTap: ref.read(fileControllerProvider.notifier).pickFile,
+              width: 60,
+              child: SvgPicture.asset(
+                IconPaths.fileAdd,
+                color: Palette.white,
+                width: 32,
+                height: 32,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Center _renderPickFileUI(WidgetRef ref) {

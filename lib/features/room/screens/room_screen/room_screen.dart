@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_icon_button.dart';
+import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
+import 'package:study247/features/music/controllers/music_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
+import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dots_menu.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/room_features/invite_button.dart';
+import 'package:study247/features/session_goals/controllers/session_goals_controller.dart';
+import 'package:study247/features/timer/notifiers/personal_timer.dart';
+import 'package:study247/features/timer/notifiers/room_timer.dart';
+import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
 import 'package:study247/features/session_goals/widgets/session_goals_tab.dart';
 
@@ -25,16 +33,85 @@ class RoomScreen extends ConsumerStatefulWidget {
 }
 
 class _RoomScreenState extends ConsumerState<RoomScreen> {
+  final PageController _pageController = PageController();
+  bool _isSecondPage = false;
+
   @override
   void initState() {
     super.initState();
-    getRoomById();
+    _setup();
   }
 
-  Future<void> getRoomById() async {
+  Future<void> _setup() async {
     await ref
         .read(roomControllerProvider.notifier)
         .getRoomById(context, widget.roomId);
+    ref.read(roomTimerProvider.notifier).setup();
+    // ref.read(personalTimerProvider.notifier).initialize();
+  }
+
+  void _onLeftNavigatorTap() {
+    _pageController
+        .animateToPage(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuad,
+        )
+        .then(
+          (_) => setState(() => _isSecondPage = false),
+        );
+  }
+
+  void _onRightNavigatorTap() {
+    _pageController
+        .animateToPage(
+          1,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutQuad,
+        )
+        .then(
+          (_) => setState(() => _isSecondPage = true),
+        );
+  }
+
+  Future<bool> _onExitRoom() async {
+    showDialog(
+      context: context,
+      builder: (context) => LeaveDialog(
+        title: "Thoát phòng học",
+        child: const Text("Bạn có chắc chắn muốn rời khỏi phòng học?"),
+        onAccept: () {
+          if (ref.exists(timerTypeProvider)) {
+            ref.invalidate(timerTypeProvider);
+          }
+          if (ref.exists(fileControllerProvider)) {
+            ref.read(fileControllerProvider.notifier).reset();
+            ref.invalidate(fileControllerProvider);
+          }
+          if (ref.exists(sessionGoalsControllerProvider)) {
+            ref.read(sessionGoalsControllerProvider.notifier).reset();
+            ref.invalidate(sessionGoalsControllerProvider);
+          }
+          if (ref.exists(audioControllerProvider)) {
+            ref.read(audioControllerProvider.notifier).reset();
+            ref.invalidate(audioControllerProvider);
+          }
+          if (ref.exists(roomTimerProvider)) {
+            ref.read(roomTimerProvider.notifier).reset();
+            // ref.invalidate(roomTimerProvider);
+          }
+          if (ref.exists(personalTimerProvider)) {
+            ref.read(personalTimerProvider.notifier).reset();
+            // ref.invalidate(personalTimerProvider);
+          }
+          ref.read(roomControllerProvider.notifier).reset();
+          context
+            ..pop()
+            ..pop();
+        },
+      ),
+    );
+    return false;
   }
 
   @override
@@ -42,65 +119,56 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     return ref.watch(roomControllerProvider).when(
           error: (error, stk) => const ErrorScreen(),
           loading: () => const LoadingScreen(),
-          data: (room) => Scaffold(
-            extendBodyBehindAppBar: true,
-            appBar: _renderAppBar(),
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  PageView(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              "https://i.pinimg.com/originals/0d/09/97/0d09978f0fb05b5cce9a2c863cae56cc.jpg",
+          data: (room) => WillPopScope(
+            onWillPop: _onExitRoom,
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: _renderAppBar(),
+              body: SafeArea(
+                child: Stack(
+                  children: [
+                    PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                "https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                    Constants.defaultPadding / 2)
+                                .copyWith(top: Constants.defaultPadding),
+                            child: const Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    RoomTimerTab(),
+                                    SizedBox(
+                                      width: Constants.defaultPadding / 2,
+                                    ),
+                                    SessionGoalsTab(),
+                                    Spacer(),
+                                    DotsMenu()
+                                  ],
+                                ),
+                                Spacer(),
+                                ChatButton()
+                              ],
                             ),
                           ),
                         ),
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.all(Constants.defaultPadding / 2)
-                                  .copyWith(top: Constants.defaultPadding),
-                          child: Column(
-                            children: [
-                              const Row(
-                                children: [
-                                  RoomTimerTab(),
-                                  SizedBox(width: Constants.defaultPadding / 2),
-                                  SessionGoalsTab(),
-                                  Spacer(),
-                                  DotsMenu()
-                                ],
-                              ),
-                              const Spacer(),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                    color: Palette.primary,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    IconPaths.chats,
-                                    color: Palette.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const FileView()
-                    ],
-                  ),
-                  _renderNavigators()
-                ],
+                        const FileView()
+                      ],
+                    ),
+                    _renderNavigators()
+                  ],
+                ),
               ),
             ),
           ),
@@ -111,34 +179,22 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Constants.defaultPadding / 2,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomIconButton(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Constants.defaultPadding / 2,
+          ),
+          child: Align(
+            alignment:
+                _isSecondPage ? Alignment.centerLeft : Alignment.centerRight,
+            child: CustomIconButton(
               size: 32,
-              onTap: () {},
-              child: const Icon(
-                Icons.arrow_left,
+              onTap: _isSecondPage ? _onLeftNavigatorTap : _onRightNavigatorTap,
+              child: Icon(
+                _isSecondPage ? Icons.arrow_left : Icons.arrow_right,
                 size: 32,
                 color: Palette.white,
               ),
             ),
-            CustomIconButton(
-              size: 32,
-              onTap: () {},
-              child: const Icon(
-                Icons.arrow_right,
-                size: 32,
-                color: Palette.white,
-              ),
-            )
-          ],
-        ),
-      ),
+          )),
     );
   }
 
@@ -153,6 +209,32 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           const Spacer(),
           const InviteButton(),
         ],
+      ),
+    );
+  }
+}
+
+class ChatButton extends StatelessWidget {
+  const ChatButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        height: 60,
+        width: 60,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          color: Palette.primary,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: SvgPicture.asset(
+          IconPaths.chats,
+          color: Palette.white,
+        ),
       ),
     );
   }

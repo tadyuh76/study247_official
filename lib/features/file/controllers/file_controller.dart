@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/core/models/file.dart';
 import 'package:study247/core/models/result.dart';
-import 'package:study247/features/file/repositories/file_repositpry.dart';
+import 'package:study247/features/file/repositories/file_repository.dart';
 
 final fileControllerProvider =
     StateNotifierProvider<FileController, AsyncValue<File?>>(
@@ -20,5 +20,10 @@ class FileController extends StateNotifier<AsyncValue<File?>> {
     } else {
       state = const AsyncData(null);
     }
+  }
+
+  void reset() {
+    state = const AsyncData(null);
+    _ref.read(fileRepositoryProvider).removeFile();
   }
 }

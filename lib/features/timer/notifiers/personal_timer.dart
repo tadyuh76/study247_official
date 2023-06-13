@@ -34,8 +34,12 @@ class PersonalTimer extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setup() {
+  void initialize() {
     init = true;
+    // notifyListeners();
+  }
+
+  void setup() {
     isStudying = true;
 
     if (isStudying) {
@@ -134,18 +138,18 @@ class PersonalTimer extends ChangeNotifier {
     }
   }
 
-  void resetTimer() {
+  void reset() {
     personalTimerSessionNo = 0;
     personalTimerDuration = 0;
     personalTimerBreaktime = 0;
-    personalTimerStart = "";
+    personalTimerStart = DateTime.now().toString();
     isStudying = false;
     isPaused = false;
     init = false;
 
     remainTime = 0;
     timer.cancel();
-    timer = Timer(const Duration(seconds: 1), () {});
-    notifyListeners();
+    // timer = Timer(const Duration(seconds: 1), () {});
+    // notifyListeners();
   }
 }
