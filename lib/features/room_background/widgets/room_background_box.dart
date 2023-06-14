@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
@@ -7,29 +8,40 @@ import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/features/room_background/controllers/room_background_controller.dart';
 import 'package:study247/utils/youtube.dart';
 
-class RoomBackgroundBox extends StatefulWidget {
+class RoomBackgroundBox extends ConsumerStatefulWidget {
   const RoomBackgroundBox({super.key});
 
   @override
-  State<RoomBackgroundBox> createState() => _RoomBackgroundBoxState();
+  ConsumerState<RoomBackgroundBox> createState() => _RoomBackgroundBoxState();
 }
 
-class _RoomBackgroundBoxState extends State<RoomBackgroundBox> {
-  final _youtubeUrlController = TextEditingController();
-  int _selectingVideo = -1;
-
+class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
   Future<void> _checkClipboard() async {
     if (await Clipboard.hasStrings()) {
       final data = await Clipboard.getData("text/plain");
       final str = data!.text!;
       if (isYoutubeUrl(str)) {
-        _youtubeUrlController.text = str;
+        ref.read(roomBackgroundControllerProvider).urlController.text = str;
       }
     }
   }
 
+  void _onSubmitUrl() {
+    ref.read(roomBackgroundControllerProvider).loadVideoByURL();
+  }
+
+  void _onSelectRecommendedVideo(int index) {
+    ref.read(roomBackgroundControllerProvider).updateSelectingVideoIdx(index);
+    ref.read(roomBackgroundControllerProvider).loadVideoOnSelect();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = ref.watch(roomBackgroundControllerProvider);
+    // final videoController = provider.videoController;
+    final urlController = provider.urlController;
+    final selectingVideoIdx = provider.selectingVideoIdx;
+
     final size = MediaQuery.of(context).size;
 
     return FeatureDialog(
@@ -55,7 +67,7 @@ class _RoomBackgroundBoxState extends State<RoomBackgroundBox> {
                     Expanded(
                       child: TextField(
                         style: const TextStyle(fontSize: 14),
-                        controller: _youtubeUrlController,
+                        controller: urlController,
                         decoration: const InputDecoration(
                           hintText: "Youtube video URL",
                           hintStyle: TextStyle(color: Palette.darkGrey),
@@ -73,9 +85,22 @@ class _RoomBackgroundBoxState extends State<RoomBackgroundBox> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    IconButton(
-                      onPressed: _checkClipboard,
-                      icon: const Icon(Icons.paste, color: Palette.primary),
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Palette.primary,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: IconButton(
+                        onPressed: urlController.text.isEmpty
+                            ? _checkClipboard
+                            : () {},
+                        icon: Icon(
+                          urlController.text.isEmpty
+                              ? Icons.paste
+                              : Icons.check,
+                          color: Palette.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -88,40 +113,42 @@ class _RoomBackgroundBoxState extends State<RoomBackgroundBox> {
                 SizedBox(
                   height: size.width - 4 * Constants.defaultPadding,
                   child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 9,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () => setState(() => _selectingVideo = index),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Palette.lightGrey,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            color: _selectingVideo == index
-                                ? Palette.black
-                                : Palette.lightGrey,
-                            width: 3,
-                          ),
-                          image: DecorationImage(
-                            fit: BoxFit.fitHeight,
-                            image: NetworkImage(
-                              getYoutubeThumbnailUrl(
-                                  recommendYoutubeIds[index]),
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 9,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) {
+                        final isSelecting = selectingVideoIdx == index;
+                        return GestureDetector(
+                          onTap: () => _onSelectRecommendedVideo(index),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Palette.lightGrey,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              border: Border.all(
+                                color: isSelecting
+                                    ? Palette.black
+                                    : Palette.lightGrey,
+                                width: 3,
+                              ),
+                              image: DecorationImage(
+                                fit: BoxFit.fitHeight,
+                                image: NetworkImage(
+                                  getYoutubeThumbnailUrl(
+                                      recommendYoutubeIds[index]),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        );
+                      }),
                 ),
                 const SizedBox(height: Constants.defaultPadding),
               ],

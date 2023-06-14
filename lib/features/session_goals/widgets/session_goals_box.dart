@@ -88,6 +88,7 @@ class GoalList extends ConsumerWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 400),
       child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: goalList.length,
         shrinkWrap: true,
         itemBuilder: (context, index) => GoalWidget(goal: goalList[index]),

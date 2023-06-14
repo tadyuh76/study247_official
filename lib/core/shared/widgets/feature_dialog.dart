@@ -18,31 +18,53 @@ class FeatureDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding)
-          .copyWith(top: kToolbarHeight + 100),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            // width: 280,
-            padding: const EdgeInsets.all(Constants.defaultPadding),
-            decoration: const BoxDecoration(
-              color: Palette.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [BoxShadow(blurRadius: 4, color: Palette.darkGrey)],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [_renderHeader(), child],
+    return LayoutBuilder(builder: (context, constraints) {
+      final landscape = constraints.maxWidth > constraints.maxHeight;
+
+      return Padding(
+        padding: const EdgeInsets.all(Constants.defaultPadding).copyWith(
+          top: landscape ? Constants.defaultPadding : kToolbarHeight + 100,
+        ),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Material(
+            color: Colors.transparent,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 500),
+              child: Container(
+                width: landscape ? 400 : null,
+                padding: const EdgeInsets.all(Constants.defaultPadding),
+                decoration: const BoxDecoration(
+                  color: Palette.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(blurRadius: 4, color: Palette.darkGrey)
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _renderHeader(),
+                    const SizedBox(height: Constants.defaultPadding / 2),
+                    landscape
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                            child: child,
+                          ))
+                        : SizedBox(
+                            width: double.infinity,
+                            child: child,
+                          )
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Row _renderHeader() {

@@ -43,21 +43,30 @@ class ChatView extends ConsumerWidget {
               ),
               body: Column(
                 children: [
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 5),
-                      reverse: true,
-                      itemCount: chatList.length,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Constants.defaultPadding / 2,
-                      ),
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      itemBuilder: (context, index) =>
-                          MessageWidget(message: chatList[index]),
-                    ),
-                  ),
+                  chatList.isEmpty
+                      ? const Expanded(
+                          child: Center(
+                            child: Text(
+                              "Trống.",
+                              style: TextStyle(fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 5),
+                            reverse: true,
+                            itemCount: chatList.length,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Constants.defaultPadding / 2,
+                            ),
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            itemBuilder: (context, index) =>
+                                MessageWidget(message: chatList[index]),
+                          ),
+                        ),
                   ChatInput(),
                 ],
               ),

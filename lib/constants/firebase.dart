@@ -3,4 +3,5 @@ class FirebaseConstants {
   static const rooms = "rooms";
   static const messages = "messages";
   static const pinnedMessages = "pinnedMessages";
+  static const participants = "participants";
 }

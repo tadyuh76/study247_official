@@ -17,16 +17,21 @@ class InviteButton extends StatelessWidget {
         vertical: 8,
       ),
       decoration: const BoxDecoration(
-        color: Palette.primary,
+        color: Palette.white,
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(
         children: [
-          SvgPicture.asset(IconPaths.addPeople, width: 20, height: 20),
+          SvgPicture.asset(
+            IconPaths.addPeople,
+            width: 20,
+            height: 20,
+            color: Palette.primary,
+          ),
           const SizedBox(width: Constants.defaultPadding / 2),
           const Text(
             "Mời",
-            style: TextStyle(color: Palette.white, fontSize: 14),
+            style: TextStyle(color: Palette.primary, fontSize: 14),
           )
         ],
       ),

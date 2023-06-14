@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
+import 'package:study247/core/shared/widgets/black_background_button.dart';
 import 'package:study247/core/shared/widgets/custom_icon_button.dart';
 import 'package:study247/features/chat/controllers/chat_controller.dart';
 import 'package:study247/features/chat/controllers/chat_list_controller.dart';
@@ -18,12 +20,14 @@ import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dots_menu.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/room_features/invite_button.dart';
+import 'package:study247/features/room_background/controllers/room_background_controller.dart';
 import 'package:study247/features/session_goals/controllers/session_goals_controller.dart';
 import 'package:study247/features/timer/notifiers/personal_timer.dart';
 import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
 import 'package:study247/features/session_goals/widgets/session_goals_tab.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
 
@@ -46,10 +50,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Future<void> _setup() async {
-    await ref
-        .read(roomControllerProvider.notifier)
-        .getRoomById(context, widget.roomId);
-    ref.read(roomTimerProvider.notifier).setup();
+    ref.read(roomControllerProvider.notifier)
+      ..getRoomById(context, widget.roomId)
+      ..joinRoom(widget.roomId)
+          .whenComplete(() => ref.read(roomTimerProvider.notifier).setup());
   }
 
   void _onLeftNavigatorTap() {
@@ -77,6 +81,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Future<bool> _onExitRoom() async {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     showDialog(
       context: context,
       builder: (context) => LeaveDialog(
@@ -112,14 +117,42 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           if (ref.exists(selectingMessageProvider)) {
             ref.invalidate(selectingMessageProvider);
           }
-          ref.read(roomControllerProvider.notifier).reset();
+          if (ref.exists(roomBackgroundControllerProvider)) {
+            ref.read(roomBackgroundControllerProvider).urlController.clear();
+            ref.read(roomBackgroundControllerProvider).selectingVideoIdx = -1;
+            ref.read(roomBackgroundControllerProvider).videoController.reset();
+          }
+          if (ref.exists(roomControllerProvider)) {
+            // ref.read(roomControllerProvider.notifier).leaveRoom().whenComplete(
+            //       () => ref.read(roomControllerProvider.notifier).reset(),
+            //     );
+            ref.read(roomControllerProvider.notifier)
+              ..leaveRoom()
+              ..reset();
+          }
+          // globalKey.currentState?.dispose();
           context
             ..pop()
             ..pop();
         },
       ),
     );
+
     return false;
+  }
+
+  void _onFullScreen() {
+    SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
+    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  }
+
+  void _onPortrait() {
+    SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp],
+    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
   @override
@@ -129,46 +162,57 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           loading: () => const LoadingScreen(),
           data: (room) => WillPopScope(
             onWillPop: _onExitRoom,
-            child: Scaffold(
-              extendBodyBehindAppBar: true,
-              appBar: _renderAppBar(),
-              body: SafeArea(
-                child: Stack(
+            child: LayoutBuilder(builder: (context, constraints) {
+              final landscape = constraints.maxWidth > constraints.maxHeight;
+
+              return Scaffold(
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endDocked,
+                floatingActionButton:
+                    _renderFloatingActionButtons(landscape, context),
+                extendBodyBehindAppBar: true,
+                appBar: landscape ? null : _renderAppBar(),
+                body: Stack(
                   children: [
+                    SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: YoutubePlayer(
+                          controller: ref.watch(
+                            roomBackgroundControllerProvider
+                                .select((value) => value.videoController),
+                          ),
+                        ),
+                      ),
+                    ),
                     PageView(
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
-                              ),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.all(
+                            Constants.defaultPadding / 2,
+                          ).copyWith(
+                            top: landscape
+                                ? Constants.defaultPadding
+                                : Constants.defaultPadding / 2 +
+                                    kToolbarHeight +
+                                    kTextTabBarHeight,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                                    Constants.defaultPadding / 2)
-                                .copyWith(top: Constants.defaultPadding),
-                            child: const Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    RoomTimerTab(),
-                                    SizedBox(
-                                      width: Constants.defaultPadding / 2,
-                                    ),
-                                    SessionGoalsTab(),
-                                    Spacer(),
-                                    DotsMenu()
-                                  ],
-                                ),
-                                Spacer(),
-                                ChatButton()
-                              ],
-                            ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const RoomTimerTab(),
+                                  const SizedBox(
+                                    width: Constants.defaultPadding / 2,
+                                  ),
+                                  const SessionGoalsTab(),
+                                  if (!landscape) const Spacer(),
+                                  if (!landscape) const DotsMenu()
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                         const FileView()
@@ -177,10 +221,47 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                     _renderNavigators()
                   ],
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         );
+  }
+
+  Padding _renderFloatingActionButtons(bool landscape, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Constants.defaultPadding),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlackBackgroundButton(
+            width: 60,
+            onTap: landscape ? _onPortrait : _onFullScreen,
+            child: Icon(
+              landscape
+                  ? Icons.fullscreen_exit_rounded
+                  : Icons.fullscreen_rounded,
+              color: Palette.white,
+              size: 32,
+            ),
+          ),
+          if (!landscape) const SizedBox(width: Constants.defaultPadding / 2),
+          if (!landscape)
+            BlackBackgroundButton(
+              width: 60,
+              onTap: () => showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (context) => const ChatView(),
+              ),
+              child: SvgPicture.asset(
+                IconPaths.chats,
+                color: Palette.white,
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Align _renderNavigators() {
@@ -208,9 +289,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
   AppBar _renderAppBar() {
     return AppBar(
-      backgroundColor: Palette.white,
+      backgroundColor: Palette.black.withOpacity(0.5),
+      foregroundColor: Palette.white,
       titleSpacing: Constants.defaultPadding,
-      elevation: 3,
+      elevation: 0,
       title: Row(
         children: [
           Text(ref.read(roomControllerProvider).asData!.value!.name),
@@ -227,27 +309,16 @@ class ChatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return BlackBackgroundButton(
+      width: 60,
       onTap: () => showDialog(
         barrierColor: Colors.transparent,
         context: context,
         builder: (context) => const ChatView(),
       ),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: Container(
-          height: 60,
-          width: 60,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Palette.primary,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: SvgPicture.asset(
-            IconPaths.chats,
-            color: Palette.white,
-          ),
-        ),
+      child: SvgPicture.asset(
+        IconPaths.chats,
+        color: Palette.white,
       ),
     );
   }

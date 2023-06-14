@@ -61,66 +61,63 @@ class PersonalTimerBox extends ConsumerWidget {
           ? "Tập trung (Cá nhân)"
           : "Giải lao (Cá nhân)",
       iconPath: IconPaths.clock,
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: Constants.defaultPadding,
-              ),
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: CircularPercentIndicator(
-                  radius: 100,
-                  percent: percent,
-                  progressColor: Palette.primary,
-                  backgroundColor: Palette.lightGrey,
-                  lineWidth: 12,
-                  circularStrokeCap: CircularStrokeCap.round,
-                  center: Text(
-                    formatTime(personalTimer.remainTime),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Palette.primary,
-                      fontSize: 32,
-                    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: Constants.defaultPadding,
+            ),
+            child: SizedBox(
+              height: 200,
+              width: 200,
+              child: CircularPercentIndicator(
+                radius: 100,
+                percent: percent,
+                progressColor: Palette.primary,
+                backgroundColor: Palette.lightGrey,
+                lineWidth: 12,
+                circularStrokeCap: CircularStrokeCap.round,
+                center: Text(
+                  formatTime(personalTimer.remainTime),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Palette.primary,
+                    fontSize: 32,
                   ),
                 ),
               ),
             ),
-            // const SizedBox(height: Constants.defaultPadding),
-            const Row(
+          ),
+          // const SizedBox(height: Constants.defaultPadding),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _PlayPauseButton(),
+              SizedBox(width: Constants.defaultPadding / 2),
+              _ResetButton(),
+            ],
+          ),
+          const SizedBox(height: Constants.defaultPadding),
+          GestureDetector(
+            onTap: () => _switchToRoomTimer(context, ref),
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _PlayPauseButton(),
-                SizedBox(width: Constants.defaultPadding / 2),
-                _ResetButton(),
+                Icon(Icons.repeat),
+                SizedBox(width: 5),
+                Text(
+                  "Chuyển sang đồng hồ nhóm",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Palette.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
               ],
             ),
-            const SizedBox(height: Constants.defaultPadding),
-            GestureDetector(
-              onTap: () => _switchToRoomTimer(context, ref),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.repeat),
-                  SizedBox(width: 5),
-                  Text(
-                    "Chuyển sang đồng hồ nhóm",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Palette.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

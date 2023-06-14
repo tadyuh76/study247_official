@@ -40,57 +40,54 @@ class RoomTimerBox extends ConsumerWidget {
     return FeatureDialog(
       title: roomTimer.isStudying ? "Tập trung" : "Giải lao",
       iconPath: IconPaths.clock,
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: Constants.defaultPadding,
-              ),
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: CircularPercentIndicator(
-                  radius: 100,
-                  percent: percent,
-                  progressColor: Palette.primary,
-                  backgroundColor: Palette.lightGrey,
-                  lineWidth: 12,
-                  circularStrokeCap: CircularStrokeCap.round,
-                  center: Text(
-                    formatTime(roomTimer.remainTime),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Palette.primary,
-                      fontSize: 32,
-                    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: Constants.defaultPadding,
+            ),
+            child: SizedBox(
+              height: 200,
+              width: 200,
+              child: CircularPercentIndicator(
+                radius: 100,
+                percent: percent,
+                progressColor: Palette.primary,
+                backgroundColor: Palette.lightGrey,
+                lineWidth: 12,
+                circularStrokeCap: CircularStrokeCap.round,
+                center: Text(
+                  formatTime(roomTimer.remainTime),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Palette.primary,
+                    fontSize: 32,
                   ),
                 ),
               ),
             ),
-            // const SizedBox(height: Constants.defaultPadding),
-            GestureDetector(
-              onTap: () => _switchToPersonalTimer(context, ref),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.repeat),
-                  SizedBox(width: 5),
-                  Text(
-                    "Chuyển sang đồng hồ cá nhân",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Palette.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )
-                ],
-              ),
+          ),
+          // const SizedBox(height: Constants.defaultPadding),
+          GestureDetector(
+            onTap: () => _switchToPersonalTimer(context, ref),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.repeat),
+                SizedBox(width: 5),
+                Text(
+                  "Chuyển sang đồng hồ cá nhân",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Palette.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
