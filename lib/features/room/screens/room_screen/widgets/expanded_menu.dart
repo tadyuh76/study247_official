@@ -6,6 +6,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/music/widgets/music_box.dart';
 import 'package:study247/core/shared/widgets/black_background_button.dart';
+import 'package:study247/features/room_background/widgets/room_background_box.dart';
 
 class ExpandedMenu extends StatelessWidget {
   final VoidCallback onHideMenu;
@@ -18,6 +19,13 @@ class ExpandedMenu extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => const MusicBox(),
+    );
+  }
+
+  void _showRoomBackgroundBox(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => RoomBackgroundBox(),
     );
   }
 
@@ -37,40 +45,35 @@ class ExpandedMenu extends StatelessWidget {
           alignment: Alignment.topRight,
           child: Column(
             children: [
-              SizedBox(
+              BlackBackgroundButton(
                 width: 60,
-                child: BlackBackgroundButton(
-                  onTap: onHideMenu,
-                  child: SvgPicture.asset(
-                    IconPaths.close,
-                    color: Palette.white,
-                    width: 32,
-                    height: 32,
-                  ),
+                onTap: onHideMenu,
+                child: SvgPicture.asset(
+                  IconPaths.close,
+                  color: Palette.white,
+                  width: 32,
+                  height: 32,
                 ),
               ),
               const SizedBox(height: Constants.defaultPadding / 2),
-              SizedBox(
+              BlackBackgroundButton(
                 width: 60,
-                child: BlackBackgroundButton(
-                  child: SvgPicture.asset(
-                    IconPaths.music,
-                    color: Palette.white,
-                    width: 24,
-                    height: 24,
-                  ),
-                  onTap: () => _showMusicBox(context),
+                child: SvgPicture.asset(
+                  IconPaths.music,
+                  color: Palette.white,
+                  width: 24,
+                  height: 24,
                 ),
+                onTap: () => _showMusicBox(context),
               ),
               const SizedBox(height: Constants.defaultPadding / 2),
-              SizedBox(
+              BlackBackgroundButton(
+                onTap: () => _showRoomBackgroundBox(context),
                 width: 60,
-                child: BlackBackgroundButton(
-                  child: const Icon(
-                    Icons.image,
-                    color: Palette.white,
-                  ),
-                  onTap: () {},
+                child: SvgPicture.asset(
+                  IconPaths.image,
+                  width: 32,
+                  color: Palette.white,
                 ),
               ),
             ],

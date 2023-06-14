@@ -8,9 +8,13 @@ class IconPaths {
   static const file = "assets/icons/file.svg";
   static const goal = "assets/icons/goal.svg";
   static const google = "assets/icons/google.svg";
+  static const image = "assets/icons/image.svg";
   static const more = "assets/icons/more.svg";
   static const music = "assets/icons/music.svg";
   static const pause = "assets/icons/pause.svg";
+  static const pin = "assets/icons/pin.svg";
   static const play = "assets/icons/play.svg";
+  static const reply = "assets/icons/reply.svg";
   static const reset = "assets/icons/reset.svg";
+  static const unpin = "assets/icons/unpin.svg";
 }

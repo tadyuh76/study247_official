@@ -1,14 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 class Message {
-  String? id;
+  final String? id;
   final String text;
   final String senderId;
   final String senderName;
   final String senderPhotoURL;
   final String createdAt;
   final String type;
-  String? noteId;
+  final String? noteId;
+  final String? replyingName;
+  final String? replyingPhotoURL;
+  final String? replyingText;
 
   Message({
     this.id,
@@ -19,6 +20,9 @@ class Message {
     required this.createdAt,
     required this.type,
     required this.noteId,
+    this.replyingName,
+    this.replyingPhotoURL,
+    this.replyingText,
   });
 
   Message copyWith({
@@ -30,6 +34,9 @@ class Message {
     String? createdAt,
     String? type,
     String? noteId,
+    String? replyingName,
+    String? replyingPhotoURL,
+    String? replyingText,
   }) {
     return Message(
       id: id ?? this.id,
@@ -40,6 +47,9 @@ class Message {
       createdAt: createdAt ?? this.createdAt,
       type: type ?? this.type,
       noteId: noteId ?? this.noteId,
+      replyingName: replyingName ?? this.replyingName,
+      replyingPhotoURL: replyingPhotoURL ?? this.replyingPhotoURL,
+      replyingText: replyingText ?? this.replyingText,
     );
   }
 
@@ -53,6 +63,9 @@ class Message {
       'createdAt': createdAt,
       'type': type,
       'noteId': noteId,
+      'replyingName': replyingName,
+      'replyingPhotoURL': replyingPhotoURL,
+      'replyingText': replyingText,
     };
   }
 
@@ -66,12 +79,15 @@ class Message {
       createdAt: map['createdAt'] ?? '',
       type: map['type'] ?? '',
       noteId: map['noteId'],
+      replyingName: map['replyingName'],
+      replyingPhotoURL: map['replyingPhotoURL'],
+      replyingText: map['replyingText'],
     );
   }
 
   @override
   String toString() {
-    return 'Message(id: $id, text: $text, senderId: $senderId, senderName: $senderName, senderPhotoURL: $senderPhotoURL, createdAt: $createdAt, type: $type, noteId: $noteId)';
+    return 'Message(id: $id, text: $text, senderId: $senderId, senderName: $senderName, senderPhotoURL: $senderPhotoURL, createdAt: $createdAt, type: $type, noteId: $noteId, replyingName: $replyingName, replyingPhotoURL: $replyingPhotoURL, replyingText: $replyingText)';
   }
 
   @override
@@ -86,7 +102,10 @@ class Message {
         other.senderPhotoURL == senderPhotoURL &&
         other.createdAt == createdAt &&
         other.type == type &&
-        other.noteId == noteId;
+        other.noteId == noteId &&
+        other.replyingName == replyingName &&
+        other.replyingPhotoURL == replyingPhotoURL &&
+        other.replyingText == replyingText;
   }
 
   @override
@@ -98,6 +117,9 @@ class Message {
         senderPhotoURL.hashCode ^
         createdAt.hashCode ^
         type.hashCode ^
-        noteId.hashCode;
+        noteId.hashCode ^
+        replyingName.hashCode ^
+        replyingPhotoURL.hashCode ^
+        replyingText.hashCode;
   }
 }

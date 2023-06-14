@@ -19,7 +19,7 @@ class MusicBox extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Divider(height: Constants.defaultPadding),
+          const SizedBox(height: Constants.defaultPadding),
           _renderAudioController(audioController, "lofi", "🌠 Lofi"),
           _renderAudioController(audioController, "rain", "📚 Thư viện"),
           _renderAudioController(audioController, "library", "🌧️ Mưa"),
@@ -36,7 +36,6 @@ class MusicBox extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: Constants.defaultPadding / 2),
         Text(title, style: const TextStyle(fontSize: 14)),
         Row(
           children: [
@@ -56,6 +55,7 @@ class MusicBox extends ConsumerWidget {
             ),
           ],
         ),
+        const SizedBox(height: Constants.defaultPadding / 2),
       ],
     );
   }

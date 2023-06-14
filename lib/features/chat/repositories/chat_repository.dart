@@ -24,6 +24,41 @@ class ChatRepository {
       await messageRef.set(message.copyWith(id: messageRef.id).toMap());
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
+      print("[error]: sending message: $e");
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> pinMessage(Message message) async {
+    try {
+      final db = _ref.read(firestoreProvider);
+      final roomId = _ref.read(roomControllerProvider).asData!.value!.id;
+      await db
+          .collection(FirebaseConstants.rooms)
+          .doc(roomId)
+          .collection(FirebaseConstants.pinnedMessages)
+          .doc(message.id)
+          .set(message.toMap());
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> unpinMessage(Message message) async {
+    try {
+      final db = _ref.read(firestoreProvider);
+      final roomId = _ref.read(roomControllerProvider).asData!.value!.id;
+      await db
+          .collection(FirebaseConstants.rooms)
+          .doc(roomId)
+          .collection(FirebaseConstants.pinnedMessages)
+          .doc(message.id)
+          .delete();
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
       return Failure(e);
     }
   }

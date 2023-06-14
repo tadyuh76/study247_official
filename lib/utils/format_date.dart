@@ -3,13 +3,18 @@ String formatDate(String dateStr) {
   final date = DateTime.parse(dateStr);
   final now = DateTime.now();
 
-  if (date.day != now.day && date.month != now.month && date.year != now.year) {
-    final day = twoDigits(date.day);
-    final month = twoDigits(date.month);
-    return "$day/$month";
+  if (date.day == now.day && date.month == now.month && date.year == now.year) {
+    final hour = twoDigits(date.hour);
+    final minute = twoDigits(date.minute);
+    return "$hour:$minute";
+  }
+  if (date.day == now.day - 1 &&
+      date.month == now.month &&
+      date.year == now.year) {
+    return "Hôm qua";
   }
 
-  final hour = twoDigits(date.hour);
-  final minute = twoDigits(date.minute);
-  return "$hour:$minute";
+  final day = twoDigits(date.day);
+  final month = twoDigits(date.month);
+  return "$day/$month";
 }

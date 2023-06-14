@@ -13,14 +13,13 @@ class ChatInput extends StatelessWidget {
   final _messageController = TextEditingController();
 
   void _sendMessage(WidgetRef ref) {
-    final replyingMessage = ref.read(selectedMessage);
-    if (replyingMessage != null) {
-      //TODO: implementing this feature
-    } else {
-      final content = _messageController.text.trim();
-      if (content.isEmpty) return;
-      ref.read(chatControllerProvider).sendMessage(content: content);
-    }
+    final content = _messageController.text.trim();
+    if (content.isEmpty) return;
+
+    final replying = ref.read(selectingMessageProvider) != null;
+    ref
+        .read(chatControllerProvider)
+        .sendMessage(content: content, replying: replying);
   }
 
   @override
@@ -88,7 +87,7 @@ class MessageReplyBox extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final replyingMessage = ref.watch(selectedMessage);
+    final replyingMessage = ref.watch(selectingMessageProvider);
     if (replyingMessage == null) return const SizedBox.shrink();
 
     return Stack(
@@ -140,8 +139,9 @@ class MessageReplyBox extends ConsumerWidget {
               ),
               GestureDetector(
                 child: const Icon(Icons.close_rounded, color: Palette.darkGrey),
-                onTap: () =>
-                    ref.read(selectedMessage.notifier).update((state) => null),
+                onTap: () => ref
+                    .read(selectingMessageProvider.notifier)
+                    .update((state) => null),
               )
             ],
           ),

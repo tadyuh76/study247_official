@@ -8,6 +8,8 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_icon_button.dart';
+import 'package:study247/features/chat/controllers/chat_controller.dart';
+import 'package:study247/features/chat/controllers/chat_list_controller.dart';
 import 'package:study247/features/chat/widgets/chat_view.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
@@ -103,6 +105,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           if (ref.exists(personalTimerProvider)) {
             ref.read(personalTimerProvider.notifier).reset();
             // ref.invalidate(personalTimerProvider);
+          }
+          if (ref.exists(chatListController)) {
+            ref.invalidate(chatListController);
+          }
+          if (ref.exists(selectingMessageProvider)) {
+            ref.invalidate(selectingMessageProvider);
           }
           ref.read(roomControllerProvider.notifier).reset();
           context
