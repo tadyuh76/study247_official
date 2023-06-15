@@ -4,4 +4,6 @@ class FirebaseConstants {
   static const messages = "messages";
   static const pinnedMessages = "pinnedMessages";
   static const participants = "participants";
+  static const documents = "documents";
+  static const folders = "folders";
 }

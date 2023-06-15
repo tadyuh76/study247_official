@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class Note {
+class Document {
   String? id;
   final String title;
   final String text;
@@ -8,7 +8,7 @@ class Note {
   final String color;
   final String folderName;
 
-  Note({
+  Document({
     this.id,
     required this.title,
     required this.text,
@@ -17,7 +17,7 @@ class Note {
     required this.folderName,
   });
 
-  Note copyWith({
+  Document copyWith({
     String? id,
     String? title,
     String? text,
@@ -25,7 +25,7 @@ class Note {
     String? color,
     String? folderName,
   }) {
-    return Note(
+    return Document(
       id: id ?? this.id,
       title: title ?? this.title,
       text: text ?? this.text,
@@ -46,8 +46,8 @@ class Note {
     };
   }
 
-  factory Note.fromMap(Map<String, dynamic> map) {
-    return Note(
+  factory Document.fromMap(Map<String, dynamic> map) {
+    return Document(
       id: map['id'] != null ? map['id'] as String : null,
       title: map['title'] as String,
       text: map['text'] as String,
@@ -63,7 +63,7 @@ class Note {
   }
 
   @override
-  bool operator ==(covariant Note other) {
+  bool operator ==(covariant Document other) {
     if (identical(this, other)) return true;
 
     return other.id == id &&

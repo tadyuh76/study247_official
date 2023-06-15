@@ -32,7 +32,7 @@ const tags = [
 class Constants {
   static const double defaultPadding = 20;
   static const appName = "Study247";
-  static const fontName = "Lexend";
+  static const appFontName = "Lexend";
 
   static const authFailedMessage = "Đăng nhập không thành công";
   static const failedMessage = "Đã có lỗi xảy ra";

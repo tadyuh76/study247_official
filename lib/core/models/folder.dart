@@ -1,67 +1,55 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 class Folder {
   String? id;
   final String name;
   final String color;
-  final int numOfDocs;
 
   Folder({
     this.id,
     required this.name,
     required this.color,
-    required this.numOfDocs,
   });
 
   Folder copyWith({
     String? id,
     String? name,
     String? color,
-    int? numOfDocs,
   }) {
     return Folder(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
-      numOfDocs: numOfDocs ?? this.numOfDocs,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'name': name,
       'color': color,
-      'numOfDocs': numOfDocs,
     };
   }
 
   factory Folder.fromMap(Map<String, dynamic> map) {
     return Folder(
-      id: map['id'] != null ? map['id'] as String : null,
-      name: map['name'] as String,
-      color: map['color'] as String,
-      numOfDocs: map['numOfDocs'] as int,
+      id: map['id'],
+      name: map['name'] ?? '',
+      color: map['color'] ?? '',
     );
   }
 
   @override
-  String toString() {
-    return 'Folder(id: $id, name: $name, color: $color, numOfDocs: $numOfDocs)';
-  }
+  String toString() => 'Folder(id: $id, name: $name, color: $color)';
 
   @override
-  bool operator ==(covariant Folder other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Folder &&
+        other.id == id &&
         other.name == name &&
-        other.color == color &&
-        other.numOfDocs == numOfDocs;
+        other.color == color;
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^ name.hashCode ^ color.hashCode ^ numOfDocs.hashCode;
-  }
+  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode;
 }

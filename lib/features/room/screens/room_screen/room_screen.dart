@@ -275,6 +275,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             alignment:
                 _isSecondPage ? Alignment.centerLeft : Alignment.centerRight,
             child: CustomIconButton(
+              backgroundColor: Palette.black.withOpacity(0.7),
               size: 32,
               onTap: _isSecondPage ? _onLeftNavigatorTap : _onRightNavigatorTap,
               child: Icon(
