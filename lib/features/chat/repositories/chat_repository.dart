@@ -24,7 +24,6 @@ class ChatRepository {
       await messageRef.set(message.copyWith(id: messageRef.id).toMap());
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
-      print("[error]: sending message: $e");
       return Failure(e);
     }
   }

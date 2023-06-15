@@ -60,7 +60,7 @@ class PinnedMessagesDialog extends ConsumerWidget {
 
                     return Column(
                       children: [
-                        Text(
+                        const Text(
                           "Tin nhắn đã ghim",
                           style: TextStyle(
                               fontSize: 16,

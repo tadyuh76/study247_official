@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/input_title.dart';
 
-class TextInput extends StatelessWidget {
+class AppTextInput extends StatelessWidget {
   final String title;
   final String hintText;
   final TextEditingController controller;
   final VoidCallback onEditingComplete;
 
-  const TextInput({
+  const AppTextInput({
     Key? key,
     required this.title,
     required this.hintText,

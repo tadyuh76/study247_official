@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/utils/hide_scroll_bar.dart';
+import 'package:study247/core/shared/widgets/color_picker.dart';
 import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/input_title.dart';
 
@@ -15,7 +15,8 @@ class Step3 extends ConsumerStatefulWidget {
 
 class _Step3State extends ConsumerState<Step3> {
   List<String> selectedTags = [];
-  String selectedColor = "blue";
+  int _selectingColorIdx = 0;
+  String get selectedColor => bannerColors.keys.toList()[_selectingColorIdx];
 
   void onTagSelect(String tag) {
     if (selectedTags.contains(tag)) {
@@ -31,9 +32,11 @@ class _Step3State extends ConsumerState<Step3> {
     setState(() {});
   }
 
-  void onColorSelect(String color) {
-    selectedColor = color;
-    ref.read(roomInfoControllerProvider).updateRoomInfo(bannerColor: color);
+  void _onSelectColor(int index) {
+    _selectingColorIdx = index;
+    ref
+        .read(roomInfoControllerProvider)
+        .updateRoomInfo(bannerColor: selectedColor);
     setState(() {});
   }
 
@@ -49,59 +52,11 @@ class _Step3State extends ConsumerState<Step3> {
         const SizedBox(height: Constants.defaultPadding),
         const InputTitle(title: 'Màu ảnh bìa'),
         const SizedBox(height: Constants.defaultPadding / 2),
-        _renderColorList(),
-      ],
-    );
-  }
-
-  SizedBox _renderColorList() {
-    return SizedBox(
-      height: 50,
-      child: HideScrollBar(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: bannerColors
-                .map((colorName, color) {
-                  final selected = selectedColor == colorName;
-                  return MapEntry(
-                    colorName,
-                    GestureDetector(
-                      onTap: () => onColorSelect(colorName),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          right: Constants.defaultPadding / 2,
-                        ),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 100),
-                          height: selected ? 50 : 30,
-                          width: selected ? 50 : 30,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: color,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(50),
-                              ),
-                            ),
-                            child: selected
-                                ? const Icon(
-                                    Icons.check_rounded,
-                                    color: Palette.white,
-                                    size: 24,
-                                  )
-                                : null,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                })
-                .values
-                .toList(),
-          ),
+        ColorPicker(
+          selectingColorIdx: _selectingColorIdx,
+          onSelect: _onSelectColor,
         ),
-      ),
+      ],
     );
   }
 

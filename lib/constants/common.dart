@@ -37,4 +37,14 @@ class Constants {
   static const authFailedMessage = "Đăng nhập không thành công";
   static const failedMessage = "Đã có lỗi xảy ra";
   static const successMessage = "success";
+
+  static const flashcardForward = " >>";
+  static const flashcardBackward = " <<";
+  static const flashcardDouble = " <>";
+
+  static const flashcardForwardSymbol = " \u2964 ";
+  static const flashcardBackwardSymbol = " \u2962 ";
+  static const flashcardDoubleSymbol = " \u21cb ";
+
+  static const documentHeadingSymbol = "#";
 }

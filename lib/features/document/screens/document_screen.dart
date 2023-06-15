@@ -1,27 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/widgets/app_error.dart';
-import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/core/shared/widgets/custom_icon_button.dart';
-import 'package:study247/features/document/controllers/document_list_controller.dart';
-import 'package:study247/features/document/controllers/folder_list_controller.dart';
+import 'package:study247/features/document/screens/document_tab.dart';
+import 'package:study247/features/document/screens/folder_tab.dart';
 import 'package:study247/features/document/widgets/document_create_dialog.dart';
-import 'package:study247/features/document/widgets/document_widget.dart';
 
-class DocumentScreen extends ConsumerWidget {
+class DocumentScreen extends ConsumerStatefulWidget {
   const DocumentScreen({super.key});
+
+  @override
+  ConsumerState<DocumentScreen> createState() => _DocumentScreenState();
+}
+
+class _DocumentScreenState extends ConsumerState<DocumentScreen> {
+  int _currentTabIdx = 0;
+  bool get _isDocumentTab => _currentTabIdx == 0;
+  final _pageController = PageController();
 
   void _showCreateDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => const DocumentCreateDialog(),
+      barrierDismissible: true,
+    );
+  }
+
+  void _changeTab(int index) {
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: CustomIconButton(
         onTap: () => _showCreateDialog(context),
@@ -32,103 +46,49 @@ class DocumentScreen extends ConsumerWidget {
           color: Palette.white,
         ),
       ),
-      appBar: _renderAppBar(),
+      appBar: _renderAppBar(context),
       body: PageView(
+        scrollDirection: Axis.horizontal,
+        controller: _pageController,
+        onPageChanged: (index) => setState(() => _currentTabIdx = index),
         physics: const NeverScrollableScrollPhysics(),
         children: const [DocumentTab(), FolderTab()],
       ),
     );
   }
 
-  AppBar _renderAppBar() {
+  AppBar _renderAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Palette.white,
       elevation: 0,
-      title: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text("Tài liệu", style: TextStyle(color: Palette.primary)),
-          Text("  -  ", style: TextStyle(color: Palette.darkGrey)),
-          Text("Thư mục", style: TextStyle(color: Palette.darkGrey)),
+          GestureDetector(
+            onTap: () => _changeTab(0),
+            child: Text(
+              "Tài liệu",
+              style: TextStyle(
+                color: _isDocumentTab ? Palette.primary : Palette.darkGrey,
+                fontWeight:
+                    _isDocumentTab ? FontWeight.w500 : FontWeight.normal,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _changeTab(1),
+            child: Text(
+              "Thư mục",
+              style: TextStyle(
+                color: !_isDocumentTab ? Palette.primary : Palette.darkGrey,
+                fontWeight:
+                    !_isDocumentTab ? FontWeight.w500 : FontWeight.normal,
+                fontSize: 20,
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class DocumentTab extends ConsumerWidget {
-  const DocumentTab({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.all(Constants.defaultPadding),
-      child: SizedBox.expand(
-        child: Column(
-          children: [
-            ref.watch(documentListControllerProvider).when(
-                  error: (err, stk) => const AppError(),
-                  loading: () => const AppLoading(),
-                  data: (documentList) {
-                    if (documentList.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "Trống.",
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return DocumentWidget(document: documentList[index]);
-                      },
-                    );
-                  },
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FolderTab extends ConsumerWidget {
-  const FolderTab({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.all(Constants.defaultPadding),
-      child: SizedBox.expand(
-        child: Column(
-          children: [
-            ref.watch(folderListControllerProvider).when(
-                  error: (err, stk) => const AppError(),
-                  loading: () => const AppLoading(),
-                  data: (documentList) {
-                    if (documentList.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "Trống.",
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        return DocumentWidget(document: documentList[index]);
-                      },
-                    );
-                  },
-                ),
-          ],
-        ),
       ),
     );
   }

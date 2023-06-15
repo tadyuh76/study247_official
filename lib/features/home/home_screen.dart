@@ -27,7 +27,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _menuController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
@@ -59,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       children: [
         const CustomDrawer(),
         AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInCubic,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
@@ -80,11 +80,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Palette.white,
-              title: const Text(Constants.appName, style: TextStyle()),
+              title: const Text(
+                Constants.appName,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
               centerTitle: true,
               titleSpacing: 0,
               elevation: 0,
               leading: IconButton(
+                splashRadius: 25,
                 onPressed: _onMenuTap,
                 icon: AnimatedIcon(
                   icon: AnimatedIcons.menu_arrow,

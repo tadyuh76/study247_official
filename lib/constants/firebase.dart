@@ -6,4 +6,5 @@ class FirebaseConstants {
   static const participants = "participants";
   static const documents = "documents";
   static const folders = "folders";
+  static const flashcards = "flashcards";
 }

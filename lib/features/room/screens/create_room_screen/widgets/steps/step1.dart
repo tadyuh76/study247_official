@@ -29,7 +29,7 @@ class _Step1State extends ConsumerState<Step1> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextInput(
+        AppTextInput(
           title: "Tên phòng học",
           hintText: "Học cùng mình!",
           controller: _nameController,
@@ -51,7 +51,7 @@ class _Step1State extends ConsumerState<Step1> {
                   maxParticipants: int.parse(_participantsController.text)),
         ),
         const SizedBox(height: Constants.defaultPadding * 2),
-        TextInput(
+        AppTextInput(
           title: "Mô tả",
           hintText: "Cùng học nào",
           controller: _descriptionController,

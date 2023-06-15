@@ -102,9 +102,9 @@ class _FileViewState extends ConsumerState<FileView>
                 width: 120,
                 height: 120,
                 padding: const EdgeInsets.all(Constants.defaultPadding / 2),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Palette.black,
-                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
                 ),
                 child: SvgPicture.asset(
                   IconPaths.fileAdd,

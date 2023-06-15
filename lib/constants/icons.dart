@@ -6,6 +6,7 @@ class IconPaths {
   static const facebook = "assets/icons/facebook.svg";
   static const fileAdd = "assets/icons/file_add.svg";
   static const file = "assets/icons/file.svg";
+  static const flashcards = "assets/icons/flashcards.svg";
   static const goal = "assets/icons/goal.svg";
   static const google = "assets/icons/google.svg";
   static const image = "assets/icons/image.svg";
@@ -16,5 +17,7 @@ class IconPaths {
   static const play = "assets/icons/play.svg";
   static const reply = "assets/icons/reply.svg";
   static const reset = "assets/icons/reset.svg";
+  static const share = "assets/icons/share.svg";
+  static const trashBin = "assets/icons/trash_bin.svg";
   static const unpin = "assets/icons/unpin.svg";
 }

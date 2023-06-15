@@ -1,14 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 class Flashcard {
   String? id;
   final String front;
   final String back;
-  final int ease;
-  final int currentInterval;
+  final double ease;
+  final double currentInterval;
   final String title;
-  final String noteName;
-  final String folderName;
+  final String documentName;
 
   Flashcard({
     this.id,
@@ -17,20 +14,17 @@ class Flashcard {
     required this.ease,
     required this.currentInterval,
     required this.title,
-    required this.noteName,
-    required this.folderName,
+    required this.documentName,
   });
 
-  Flashcard copyWith({
-    String? id,
-    String? front,
-    String? back,
-    int? ease,
-    int? currentInterval,
-    String? title,
-    String? noteName,
-    String? folderName,
-  }) {
+  Flashcard copyWith(
+      {String? id,
+      String? front,
+      String? back,
+      double? ease,
+      double? currentInterval,
+      String? title,
+      String? documentName}) {
     return Flashcard(
       id: id ?? this.id,
       front: front ?? this.front,
@@ -38,54 +32,51 @@ class Flashcard {
       ease: ease ?? this.ease,
       currentInterval: currentInterval ?? this.currentInterval,
       title: title ?? this.title,
-      noteName: noteName ?? this.noteName,
-      folderName: folderName ?? this.folderName,
+      documentName: documentName ?? this.documentName,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'front': front,
       'back': back,
       'ease': ease,
       'currentInterval': currentInterval,
       'title': title,
-      'noteName': noteName,
-      'folderName': folderName,
+      'documentName': documentName,
     };
   }
 
   factory Flashcard.fromMap(Map<String, dynamic> map) {
     return Flashcard(
-      id: map['id'] != null ? map['id'] as String : null,
-      front: map['front'] as String,
-      back: map['back'] as String,
-      ease: map['ease'] as int,
-      currentInterval: map['currentInterval'] as int,
-      title: map['title'] as String,
-      noteName: map['noteName'] as String,
-      folderName: map['folderName'] as String,
+      id: map['id'],
+      front: map['front'] ?? '',
+      back: map['back'] ?? '',
+      ease: map['ease']?.toDouble() ?? 0.0,
+      currentInterval: map['currentInterval']?.toDouble() ?? 0.0,
+      title: map['title'] ?? '',
+      documentName: map['documentName'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Flashcard(id: $id, front: $front, back: $back, ease: $ease, currentInterval: $currentInterval, title: $title, noteName: $noteName, folderName: $folderName)';
+    return 'Flashcard(id: $id, front: $front, back: $back, ease: $ease, currentInterval: $currentInterval, title: $title, documentName: $documentName)';
   }
 
   @override
-  bool operator ==(covariant Flashcard other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Flashcard &&
+        other.id == id &&
         other.front == front &&
         other.back == back &&
         other.ease == ease &&
         other.currentInterval == currentInterval &&
         other.title == title &&
-        other.noteName == noteName &&
-        other.folderName == folderName;
+        other.documentName == documentName;
   }
 
   @override
@@ -96,7 +87,6 @@ class Flashcard {
         ease.hashCode ^
         currentInterval.hashCode ^
         title.hashCode ^
-        noteName.hashCode ^
-        folderName.hashCode;
+        documentName.hashCode;
   }
 }

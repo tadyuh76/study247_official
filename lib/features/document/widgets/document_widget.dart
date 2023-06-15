@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
@@ -13,7 +13,9 @@ class DocumentWidget extends ConsumerWidget {
     required this.document,
   }) : super(key: key);
 
-  void _onNoteTab(BuildContext context, WidgetRef ref) {}
+  void _onNoteTab(BuildContext context, WidgetRef ref) {
+    context.go("/document/${document.id}");
+  }
 
   void _showDocumentEditDialog(BuildContext context) {}
 
@@ -23,13 +25,16 @@ class DocumentWidget extends ConsumerWidget {
       padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
       child: Material(
         color: bannerColors[document.color],
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () => _onNoteTab(context, ref),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(Constants.defaultPadding),
+            padding: const EdgeInsets.symmetric(
+              horizontal: Constants.defaultPadding,
+              vertical: Constants.defaultPadding * 2,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -37,13 +42,14 @@ class DocumentWidget extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(
+                    Expanded(
                       child: Text(
                         document.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Palette.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -58,19 +64,26 @@ class DocumentWidget extends ConsumerWidget {
                     )
                   ],
                 ),
-                // if (hasFolderName)
-                //   Text(
-                //     document.folderName,
-                //     style: const TextStyle(fontSize: 14, color: Palette.white),
-                //   ),
+                if (document.folderName.isNotEmpty)
+                  Text(
+                    document.folderName,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Palette.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
                 const SizedBox(height: Constants.defaultPadding),
                 Text(
                   document.text,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Palette.white, fontSize: 14),
+                  style: const TextStyle(
+                    color: Palette.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
-                const SizedBox(height: Constants.defaultPadding),
               ],
             ),
           ),

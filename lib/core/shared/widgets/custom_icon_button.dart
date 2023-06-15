@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:study247/core/palette.dart';
-
 class CustomIconButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
