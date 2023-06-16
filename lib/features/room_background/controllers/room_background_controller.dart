@@ -9,10 +9,10 @@ const recommendYoutubeIds = [
   "gvqhjyjiguM",
   "X2-EVyGFWqA",
   "Z_JU4NE90gI",
-  "8FMBtusLdPU",
-  "cLOP0Kr36ZA",
-  "y27-OpyQJeE",
-  "iMj3NNCNmBE",
+  "KZvRN5RHvC0",
+  "YQc4WT0yDH4",
+  "Y58kN2CmFwA",
+  "p5vZBOVTUww",
   "B6eL_N0N5KI",
   "1oahTaVIQvk"
 ];

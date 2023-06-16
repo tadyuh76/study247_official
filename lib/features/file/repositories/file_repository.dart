@@ -28,7 +28,7 @@ class FileRepository {
       if (fileBytes == null) return Failure(Exception("Không thể tải tệp"));
 
       final roomId = _ref.read(roomControllerProvider).asData!.value!.id;
-      final db = _ref.read(firestoreProvider);
+      // final db = _ref.read(firestoreProvider);
       final storage = _ref.read(storageProvider);
 
       // upload to Firebase and get download URL
@@ -36,10 +36,10 @@ class FileRepository {
       final res = await fileDir.putData(fileBytes);
       final fileUrl = await res.ref.getDownloadURL();
 
-      db
-          .collection(FirebaseConstants.rooms)
-          .doc(roomId)
-          .update({"fileUrl": fileUrl, "fileType": file.extension});
+      // db
+      //     .collection(FirebaseConstants.rooms)
+      //     .doc(roomId)
+      //     .update({"fileUrl": fileUrl, "fileType": file.extension});
 
       return Success(File(type: file.extension!, url: fileUrl));
     } on Exception catch (e) {

@@ -8,6 +8,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
+import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/utils/show_snack_bar.dart';
@@ -23,7 +24,6 @@ class DocumentEditScreen extends ConsumerStatefulWidget {
 class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   final _titleController = TextEditingController();
   final _documentController = _DocCustomController();
-  int _flashcardsCreated = 0;
   bool saved = true;
   bool saving = false;
 
@@ -34,17 +34,13 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   }
 
   Future<void> _setUpDocument() async {
-    int created = 0;
     final document = await ref
         .read(documentControllerProvider.notifier)
-        .fetchDocumentById(widget.documentId)
-        .whenComplete(() async => created = await ref
-            .read(flashcardListControllerProvider.notifier)
-            .getFlashcardList());
+        .fetchDocumentById(widget.documentId);
 
     _titleController.text = document!.title;
     _documentController.text = document.text;
-    setState(() => _flashcardsCreated = created);
+    // setState(() => _flashcardsCreated = created);
   }
 
   void _onTitleChanged(String newTitle) {
@@ -67,13 +63,13 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     setState(() => saving = true);
     final documentText = _documentController.text.trim();
     final documentTitle = _titleController.text.trim();
-    final created = await ref
+    await ref
         .read(documentControllerProvider.notifier)
         .saveDocument(context, widget.documentId, documentTitle, documentText);
 
     // if (mounted) {
     setState(() {
-      _flashcardsCreated = created;
+      // _flashcardsCreated = created;
       saved = true;
       saving = false;
     });
@@ -87,12 +83,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       return;
     }
 
-    // final res = await _dbMethods.shareDocumentWithRoom(widget.note, roomId);
-    // if (mounted) {
-    //   if (res == "success") {
-    //     showSnackBar(globalKey.currentState!.context, "Đã chia sẻ thành công!");
-    //   }
-    // }
+    ref.read(documentControllerProvider.notifier).shareDocumentToRoom(context);
   }
 
   Future<bool> _onExit() async {
@@ -104,7 +95,9 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
         onAccept: () async {
           await _onSaved();
           if (mounted) {
-            context.go("/");
+            context
+              ..pop()
+              ..pop();
           }
         },
         title: "Thoát chỉnh sửa",
@@ -132,7 +125,12 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   void _deleteDocument() {
     ref
         .read(documentControllerProvider.notifier)
-        .deleteDocument(context, widget.documentId);
+        .deleteFolder(context, widget.documentId);
+    if (mounted) {
+      context
+        ..pop()
+        ..pop();
+    }
   }
 
   @override
@@ -280,12 +278,26 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
         child: Material(
           color: Colors.transparent,
           child: Consumer(builder: (context, ref, child) {
+            final flashcardCreated = ref
+                    .watch(flashcardListControllerProvider)
+                    .asData
+                    ?.value
+                    .length ??
+                0;
+
             return GestureDetector(
-              onTap: _flashcardsCreated == 0
+              onTap: flashcardCreated == 0
                   ? () => showSnackBar(
-                      context, "Không tìm thấy flashcard để ôn tập")
+                        context,
+                        "Không tìm thấy flashcard để ôn tập",
+                      )
                   : () =>
-                      context.go("/document/${widget.documentId}/flashcards"),
+                      // context.go("/document/${widget.documentId}/flashcards"),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AllFlashcardsScreen(),
+                        ),
+                      ),
               child: SizedBox(
                 width: 24 + 10,
                 child: Stack(
@@ -296,7 +308,8 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
                       width: 24,
                       height: 24,
                     ),
-                    if (_flashcardsCreated != 0) _renderFlashcardsBadge()
+                    if (flashcardCreated != 0)
+                      _renderFlashcardsBadge(flashcardCreated)
                   ],
                 ),
               ),
@@ -307,7 +320,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     ];
   }
 
-  Widget _renderFlashcardsBadge() {
+  Widget _renderFlashcardsBadge(int flashcardCreated) {
     return Positioned(
       top: 10,
       right: 0,
@@ -320,7 +333,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         child: Text(
-          "$_flashcardsCreated",
+          "$flashcardCreated",
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Palette.white,

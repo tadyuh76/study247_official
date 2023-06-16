@@ -199,19 +199,16 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                                     kToolbarHeight +
                                     kTextTabBarHeight,
                           ),
-                          child: Column(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  const RoomTimerTab(),
-                                  const SizedBox(
-                                    width: Constants.defaultPadding / 2,
-                                  ),
-                                  const SessionGoalsTab(),
-                                  if (!landscape) const Spacer(),
-                                  if (!landscape) const DotsMenu()
-                                ],
+                              const RoomTimerTab(),
+                              const SizedBox(
+                                width: Constants.defaultPadding / 2,
                               ),
+                              const SessionGoalsTab(),
+                              if (!landscape) const Spacer(),
+                              if (!landscape) const DotsMenu()
                             ],
                           ),
                         ),

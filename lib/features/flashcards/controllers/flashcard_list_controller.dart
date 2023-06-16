@@ -1,32 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/flashcard.dart';
-import 'package:study247/core/models/result.dart';
-import 'package:study247/features/flashcards/repositories/flashcard_list_repository.dart';
+import 'package:study247/core/providers/firebase_providers.dart';
+import 'package:study247/features/auth/controllers/auth_controller.dart';
+import 'package:study247/features/document/controllers/document_controller.dart';
 
-final flashcardListControllerProvider =
-    StateNotifierProvider<FlashcardListController, AsyncValue<List<Flashcard>>>(
-  (ref) => FlashcardListController(ref),
+final flashcardListControllerProvider = StreamProvider(
+  (ref) => FlashcardListController(ref).getFlashcardList(),
 );
 
-class FlashcardListController
-    extends StateNotifier<AsyncValue<List<Flashcard>>> {
+class FlashcardListController {
   final Ref _ref;
-  FlashcardListController(this._ref) : super(const AsyncLoading());
+  FlashcardListController(this._ref) : super();
 
-  Future<int> getFlashcardList() async {
-    final result =
-        await _ref.read(flashcardListRepositoryProvider).getFlashcardList();
-    if (result case Success(value: final flashcardList)) {
-      state = AsyncData(flashcardList);
-      print(state);
-      return flashcardList.length;
-    } else if (result case Failure(:final failure)) {
-      state = AsyncError(failure, StackTrace.current);
-    }
-    return 0;
-  }
+  Stream<List<Flashcard>> getFlashcardList() {
+    final db = _ref.read(firestoreProvider);
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    final documentId = _ref.watch(documentControllerProvider).asData!.value!.id;
 
-  void updateFlashcardList(List<Flashcard> flashcardList) {
-    state = AsyncData(flashcardList);
+    final snapshots = db
+        .collection(FirebaseConstants.users)
+        .doc(userId)
+        .collection(FirebaseConstants.documents)
+        .doc(documentId)
+        .collection(FirebaseConstants.flashcards)
+        .snapshots();
+    final flashcardList = snapshots.map(
+      (event) => event.docs.map((e) => Flashcard.fromMap(e.data())).toList(),
+    );
+    return flashcardList;
   }
 }

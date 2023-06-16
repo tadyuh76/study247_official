@@ -127,7 +127,9 @@ class MessageReplyBox extends ConsumerWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      replyingMessage.text,
+                      replyingMessage.type == "document"
+                          ? "Đã gửi một tài liệu."
+                          : replyingMessage.text,
                       style: const TextStyle(
                         color: Palette.darkGrey,
                         fontSize: 12,

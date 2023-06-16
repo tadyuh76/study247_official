@@ -3,9 +3,12 @@ class IconPaths {
   static const chats = "assets/icons/chats.svg";
   static const clock = "assets/icons/clock.svg";
   static const close = "assets/icons/close.svg";
+  static const color = "assets/icons/color.svg";
+  static const document = "assets/icons/document.svg";
   static const facebook = "assets/icons/facebook.svg";
   static const fileAdd = "assets/icons/file_add.svg";
   static const file = "assets/icons/file.svg";
+  static const folderAdd = "assets/icons/folder_add.svg";
   static const flashcards = "assets/icons/flashcards.svg";
   static const goal = "assets/icons/goal.svg";
   static const google = "assets/icons/google.svg";

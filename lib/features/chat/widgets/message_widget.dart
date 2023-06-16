@@ -5,7 +5,10 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/message.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/chat/controllers/chat_controller.dart';
+import 'package:study247/features/document/controllers/document_controller.dart';
+import 'package:study247/features/document/screens/document_edit_screen.dart';
 import 'package:study247/features/home/widgets/room_card/avatar.dart';
 import 'package:study247/utils/format_date.dart';
 
@@ -76,7 +79,9 @@ class MessageWidget extends ConsumerWidget {
                     ),
                     Flexible(
                       child: Text(
-                        ": ${message.replyingText!}",
+                        message.replyingText?.contains("[TITLE]:") ?? false
+                            ? ": Đã gửi một tài liệu."
+                            : ": ${message.replyingText}",
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Palette.darkGrey,
@@ -139,21 +144,101 @@ class MessageWidget extends ConsumerWidget {
                           ],
                         ),
                         // const SizedBox(height: 3),
-                        Flexible(
-                          child: Text(
-                            message.text,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w300,
-                              height: 1.5,
+                        if (message.type == "text")
+                          Flexible(
+                            child: Text(
+                              message.text,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                height: 1.5,
+                              ),
                             ),
                           ),
-                        ),
+                        if (message.type == "document")
+                          _MessageWithDocument(message: message)
                       ],
                     ),
                   )
                 ],
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MessageWithDocument extends ConsumerWidget {
+  final Message message;
+
+  const _MessageWithDocument({required this.message});
+
+  void _onDocumentTap(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(authControllerProvider).asData!.value!.uid;
+    if (message.senderId == userId) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DocumentEditScreen(documentId: message.noteId!),
+        ),
+      );
+      return;
+    }
+
+    ref
+        .read(documentControllerProvider.notifier)
+        .copyDocument(message.text)
+        .then((documentId) => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    DocumentEditScreen(documentId: documentId),
+              ),
+            ));
+  }
+
+  void _onDocumentHold(WidgetRef ref) {
+    if (ref.read(selectingMessageProvider) == null) {
+      ref.read(selectingMessageProvider.notifier).update((state) => message);
+    } else {
+      ref.read(selectingMessageProvider.notifier).update((state) => null);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.only(top: Constants.defaultPadding / 2),
+      child: Material(
+        color: Palette.primary,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onLongPress: () => _onDocumentHold(ref),
+          onTap: () => _onDocumentTap(context, ref),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.all(Constants.defaultPadding),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.edit_document,
+                  color: Palette.white,
+                  size: 64,
+                ),
+                const SizedBox(width: Constants.defaultPadding),
+                Expanded(
+                  child: Text(
+                    message.text
+                        .split("[TEXT]:")[0]
+                        .substring("[TITLE]:".length),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Palette.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

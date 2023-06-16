@@ -71,6 +71,8 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
                 ),
               );
             }
+
+            flashcardList.shuffle();
             return Scaffold(
               appBar: AppBar(
                 elevation: 0,
@@ -78,24 +80,7 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
                 foregroundColor: Palette.black,
                 centerTitle: true,
                 titleSpacing: 0,
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _BackgroundText(text: flashcardList.length.toString()),
-                    Flexible(
-                      child: Text(
-                        " ${flashcardList[0].documentName}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Palette.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                title: const Text("Ôn tập Flashcard"),
               ),
               body: PageView.builder(
                 controller: _pageController,
@@ -144,55 +129,64 @@ class _FlashcardPageState extends State<_FlashcardPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Text(
+            "Đang ôn tài liệu:",
+            style: TextStyle(fontSize: 14, color: Palette.darkGrey),
+          ),
+          Text(
+            widget.curCard.documentName,
+            style: const TextStyle(fontSize: 18),
+          ),
           const SizedBox(height: Constants.defaultPadding),
-          _BackgroundText(text: widget.curCard.documentName),
-          const SizedBox(height: Constants.defaultPadding / 2),
-          if (widget.curCard.title != "")
-            Text(
-              "\u2022  ${widget.curCard.title}",
-              style: defaultTextStyle.copyWith(fontWeight: FontWeight.w500),
-            ),
-          const SizedBox(height: 5),
-          if (!showAnswer)
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              runSpacing: 5,
-              children: [
-                Text(
-                  "    \u2022  ${widget.curCard.front}",
-                  style: defaultTextStyle,
-                ),
-                Text(
-                  " \u2794 ",
-                  style: defaultTextStyle.copyWith(
-                    color: Palette.primary,
-                  ),
-                ),
-                const Text("?")
-              ],
-            ),
-          if (showAnswer)
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "    \u2022  ${widget.curCard.front}",
-                    style: defaultTextStyle,
-                  ),
-                  TextSpan(
-                    text: " \u2794 ",
-                    style: defaultTextStyle.copyWith(color: Palette.primary),
-                  ),
-                  TextSpan(
-                    text: widget.curCard.back,
-                    style: defaultTextStyle.copyWith(
-                      fontWeight: FontWeight.w500,
+          const SizedBox(height: Constants.defaultPadding),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: Constants.defaultPadding,
+              ),
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Palette.lightGrey,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Palette.grey,
+                      offset: Offset(4, 4),
+                      blurRadius: 8,
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                padding: const EdgeInsets.all(Constants.defaultPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.curCard.title,
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Palette.darkGrey),
+                    ),
+                    const SizedBox(height: Constants.defaultPadding * 2),
+                    Text(
+                      widget.curCard.front,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: Constants.defaultPadding),
+                    Text(
+                      showAnswer ? widget.curCard.back : "...",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: showAnswer ? Palette.black : Palette.darkGrey,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          const Spacer(),
+          ),
+          const SizedBox(height: Constants.defaultPadding),
           if (!showAnswer)
             CustomButton(
               text: "Hiện đáp án",

@@ -88,9 +88,9 @@ class DocumentRepository {
         final newRef =
             documentRef.collection(FirebaseConstants.flashcards).doc();
         newRef.set(f1.copyWith(id: newRef.id).toMap());
-        _ref.read(flashcardListControllerProvider.notifier).updateFlashcardList(
-          [...currentflashcardList, f1.copyWith(id: newRef.id)],
-        );
+        // _ref.read(flashcardListControllerProvider.notifier).updateFlashcardList(
+        //   [...currentflashcardList, f1.copyWith(id: newRef.id)],
+        // );
         return true;
       });
 
@@ -129,8 +129,8 @@ class DocumentRepository {
       }
 
       final newFlashcard = Flashcard(
-        front: sides[0],
-        back: sides[1],
+        front: sides[0].trim(),
+        back: sides[1].trim(),
         ease: 1.3,
         currentInterval: 1,
         title: curTitle,
@@ -167,6 +167,46 @@ class DocumentRepository {
     }
   }
 
+  Future<Result<Document, Exception>> fetchDocumentByUserId(
+    String documentId,
+    String userId,
+  ) async {
+    try {
+      final db = _ref.read(firestoreProvider);
+      final snapshot = await db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.documents)
+          .doc(documentId)
+          .get();
+      return Success(Document.fromMap(snapshot.data() as Map<String, dynamic>));
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<void> editDocument(Document document) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    await _ref
+        .read(firestoreProvider)
+        .collection(FirebaseConstants.users)
+        .doc(userId)
+        .collection(FirebaseConstants.documents)
+        .doc(document.id)
+        .set(document.toMap());
+  }
+
+  Future<void> editFolder(Folder folder) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    await _ref
+        .read(firestoreProvider)
+        .collection(FirebaseConstants.users)
+        .doc(userId)
+        .collection(FirebaseConstants.folders)
+        .doc(folder.id)
+        .set(folder.toMap());
+  }
+
   Future<Result<String, Exception>> deleteDocument(String documentId) async {
     try {
       final db = _ref.read(firestoreProvider);
@@ -177,6 +217,27 @@ class DocumentRepository {
           .collection(FirebaseConstants.documents)
           .doc(documentId)
           .delete();
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> deleteFolder(String folderName) async {
+    try {
+      final db = _ref.read(firestoreProvider);
+      final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+      final folderRef = db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.folders);
+
+      final toDelete =
+          await folderRef.where("name", isEqualTo: folderName).get();
+      for (final doc in toDelete.docs) {
+        folderRef.doc(doc.id).delete();
+      }
 
       return const Success(Constants.successMessage);
     } on Exception catch (e) {

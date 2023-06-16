@@ -53,7 +53,9 @@ class _FileViewState extends ConsumerState<FileView>
 
   Padding _renderActions(WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.only(top: Constants.defaultPadding),
+      padding: const EdgeInsets.only(
+        top: Constants.defaultPadding / 2 + kToolbarHeight + kTextTabBarHeight,
+      ),
       child: Opacity(
         opacity: 0.8,
         child: Column(

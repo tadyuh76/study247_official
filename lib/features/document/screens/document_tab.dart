@@ -37,7 +37,9 @@ class DocumentTab extends ConsumerWidget {
                         itemCount: documentList.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return DocumentWidget(document: documentList[index]);
+                          return DocumentWidget(
+                            document: documentList[index],
+                          );
                         },
                       ),
                     );
