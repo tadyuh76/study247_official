@@ -23,8 +23,8 @@ class DocumentEditScreen extends ConsumerStatefulWidget {
 class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   final _titleController = TextEditingController();
   final _documentController = _DocCustomController();
-  int flashcardsCreated = 0;
-  bool saved = false;
+  int _flashcardsCreated = 0;
+  bool saved = true;
   bool saving = false;
 
   @override
@@ -34,13 +34,17 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   }
 
   Future<void> _setUpDocument() async {
+    int created = 0;
     final document = await ref
         .read(documentControllerProvider.notifier)
-        .fetchDocumentById(widget.documentId);
-    ref.read(flashcardListControllerProvider.notifier).getFlashcardList();
+        .fetchDocumentById(widget.documentId)
+        .whenComplete(() async => created = await ref
+            .read(flashcardListControllerProvider.notifier)
+            .getFlashcardList());
 
     _titleController.text = document!.title;
     _documentController.text = document.text;
+    setState(() => _flashcardsCreated = created);
   }
 
   void _onTitleChanged(String newTitle) {
@@ -63,12 +67,13 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     setState(() => saving = true);
     final documentText = _documentController.text.trim();
     final documentTitle = _titleController.text.trim();
-    await ref
+    final created = await ref
         .read(documentControllerProvider.notifier)
         .saveDocument(context, widget.documentId, documentTitle, documentText);
 
     // if (mounted) {
     setState(() {
+      _flashcardsCreated = created;
       saved = true;
       saving = false;
     });
@@ -139,7 +144,6 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("rerender");
     return WillPopScope(
       onWillPop: _onExit,
       child: Scaffold(
@@ -197,15 +201,29 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
                   ),
                 ),
                 // const SizedBox(height: Constants.defaultPadding),
-                Text(
-                  // "$lastEditHour - $lastEditDay",
-                  "Hôm nay",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Palette.darkGrey,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
+                Consumer(builder: (context, ref, child) {
+                  final lastEditTime = DateTime.parse(
+                    ref
+                            .watch(documentControllerProvider)
+                            .asData
+                            ?.value
+                            ?.lastEdit ??
+                        DateTime.now().toString(),
+                  );
+                  final lastEditHour =
+                      "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
+                  final lastEditDay =
+                      "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
+
+                  return Text(
+                    "$lastEditHour - $lastEditDay",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Palette.darkGrey,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  );
+                }),
                 const SizedBox(height: Constants.defaultPadding / 2),
                 TextField(
                   maxLengthEnforcement: MaxLengthEnforcement.none,
@@ -250,7 +268,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
           splashRadius: 24,
           onPressed: () => _shareNote(context, ref),
           icon: SvgPicture.asset(
-            "assets/icons/share.svg",
+            IconPaths.share,
             height: 24,
             width: 24,
           ),
@@ -261,29 +279,57 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
             const EdgeInsets.only(right: Constants.defaultPadding, left: 5),
         child: Material(
           color: Colors.transparent,
-          child: GestureDetector(
-            onTap: flashcardsCreated == 0
-                ? () =>
-                    showSnackBar(context, "Không tìm thấy flashcard để ôn tập")
-                : () => context.go("/document/${widget.documentId}/flashcards"),
-            child: SizedBox(
-              width: 24 + 10,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  SvgPicture.asset(
-                    IconPaths.flashcards,
-                    width: 24,
-                    height: 24,
-                  ),
-                  // if (flashcardsCreated != 0) _renderFlashcardsBadge()
-                ],
+          child: Consumer(builder: (context, ref, child) {
+            return GestureDetector(
+              onTap: _flashcardsCreated == 0
+                  ? () => showSnackBar(
+                      context, "Không tìm thấy flashcard để ôn tập")
+                  : () =>
+                      context.go("/document/${widget.documentId}/flashcards"),
+              child: SizedBox(
+                width: 24 + 10,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      IconPaths.flashcards,
+                      width: 24,
+                      height: 24,
+                    ),
+                    if (_flashcardsCreated != 0) _renderFlashcardsBadge()
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ),
     ];
+  }
+
+  Widget _renderFlashcardsBadge() {
+    return Positioned(
+      top: 10,
+      right: 0,
+      child: Container(
+        width: 16,
+        height: 16,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          color: Palette.primary,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Text(
+          "$_flashcardsCreated",
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Palette.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
   }
 }
 

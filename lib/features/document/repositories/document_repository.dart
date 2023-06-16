@@ -70,30 +70,31 @@ class DocumentRepository {
           .doc(userId)
           .collection(FirebaseConstants.documents)
           .doc(documentId);
-      documentRef.update({"title": documentTitle, "text": documentText});
+      documentRef.update({
+        "title": documentTitle,
+        "text": documentText,
+        "lastEdit": DateTime.now().toString(),
+      });
 
       final currentflashcardList =
           _ref.read(flashcardListControllerProvider).asData?.value ?? [];
       final newFlashcardList = _createFlashcards(documentText, documentTitle);
-
-      int newFlashcards = 0;
-      for (final f1 in newFlashcardList) {
-        bool repeated = false;
+      final filteredFlashcardList = newFlashcardList.where((f1) {
         for (final f2 in currentflashcardList) {
           if (isFlashcardRepeated(f1, f2)) {
-            repeated = true;
-            break;
+            return false;
           }
         }
-        if (repeated) continue;
-
         final newRef =
             documentRef.collection(FirebaseConstants.flashcards).doc();
-        await newRef.set(f1.copyWith(id: newRef.id).toMap());
-        newFlashcards++;
-      }
+        newRef.set(f1.copyWith(id: newRef.id).toMap());
+        _ref.read(flashcardListControllerProvider.notifier).updateFlashcardList(
+          [...currentflashcardList, f1.copyWith(id: newRef.id)],
+        );
+        return true;
+      });
 
-      return Success(currentflashcardList.length + newFlashcards);
+      return Success(filteredFlashcardList.length);
     } on Exception catch (e) {
       return Failure(e);
     }

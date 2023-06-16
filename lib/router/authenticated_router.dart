@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:study247/core/shared/widgets/bottom_navigator_wrapper.dart';
 import 'package:study247/features/document/screens/document_edit_screen.dart';
+import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/room/screens/create_room_screen/create_room_screen.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 
@@ -23,6 +24,12 @@ final authenticatedRouter = GoRouter(
           path: "document/:id",
           builder: (context, state) =>
               DocumentEditScreen(documentId: state.pathParameters["id"]!),
+          routes: [
+            GoRoute(
+              path: "flashcards",
+              builder: (context, _) => const AllFlashcardsScreen(),
+            )
+          ],
         ),
       ],
     ),

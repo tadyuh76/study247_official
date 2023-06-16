@@ -13,13 +13,20 @@ class FlashcardListController
   final Ref _ref;
   FlashcardListController(this._ref) : super(const AsyncLoading());
 
-  Future<void> getFlashcardList() async {
+  Future<int> getFlashcardList() async {
     final result =
         await _ref.read(flashcardListRepositoryProvider).getFlashcardList();
     if (result case Success(value: final flashcardList)) {
       state = AsyncData(flashcardList);
+      print(state);
+      return flashcardList.length;
     } else if (result case Failure(:final failure)) {
       state = AsyncError(failure, StackTrace.current);
     }
+    return 0;
+  }
+
+  void updateFlashcardList(List<Flashcard> flashcardList) {
+    state = AsyncData(flashcardList);
   }
 }

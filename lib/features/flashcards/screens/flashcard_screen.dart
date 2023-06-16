@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/flashcard.dart';
 import 'package:study247/core/palette.dart';
@@ -7,6 +8,7 @@ import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
+import 'package:study247/features/flashcards/widgets/complete_dialog.dart';
 
 const defaultTextStyle = TextStyle(
   color: Palette.black,
@@ -15,8 +17,7 @@ const defaultTextStyle = TextStyle(
 );
 
 class AllFlashcardsScreen extends ConsumerStatefulWidget {
-  final String noteId;
-  const AllFlashcardsScreen({super.key, required this.noteId});
+  const AllFlashcardsScreen({super.key});
 
   @override
   ConsumerState<AllFlashcardsScreen> createState() =>
@@ -35,29 +36,10 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
     final newPage = _pageController.page;
     if (curPage == newPage && mounted) {
       // TODO: implement saving new flashcards
-      // showCustomDialog(
-      //   context: context,
-      //   dialog: CustomDialog(
-      //     title: "Hoàn thành ôn tập!",
-      //     child: Column(
-      //       children: [
-      //         Lottie.asset(
-      //           "assets/lottie/loading_complete.json",
-      //           repeat: false,
-      //           animate: true,
-      //           height: 200,
-      //           width: 200,
-      //         ),
-      //         const SizedBox(height: Constants.defaultPadding),
-      //         CustomButton(
-      //           text: "Trở lại",
-      //           primary: true,
-      //           onTap: Navigator.of(context).pop,
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // );
+      showDialog(
+        context: context,
+        builder: (context) => CompleteDiaglog(hideDialog: context.pop),
+      );
     }
   }
 
@@ -168,7 +150,7 @@ class _FlashcardPageState extends State<_FlashcardPage> {
           if (widget.curCard.title != "")
             Text(
               "\u2022  ${widget.curCard.title}",
-              style: defaultTextStyle.copyWith(fontWeight: FontWeight.bold),
+              style: defaultTextStyle.copyWith(fontWeight: FontWeight.w500),
             ),
           const SizedBox(height: 5),
           if (!showAnswer)
@@ -186,7 +168,7 @@ class _FlashcardPageState extends State<_FlashcardPage> {
                     color: Palette.primary,
                   ),
                 ),
-                const _BackgroundText(text: "?")
+                const Text("?")
               ],
             ),
           if (showAnswer)
@@ -204,7 +186,7 @@ class _FlashcardPageState extends State<_FlashcardPage> {
                   TextSpan(
                     text: widget.curCard.back,
                     style: defaultTextStyle.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -263,7 +245,7 @@ class _BackgroundText extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: const BoxDecoration(
-        color: Palette.grey,
+        color: Palette.lightGrey,
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
       child: Padding(
@@ -276,7 +258,7 @@ class _BackgroundText extends StatelessWidget {
           style: const TextStyle(
             color: Palette.black,
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             height: 1.4,
           ),
         ),
