@@ -99,13 +99,13 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
         await _ref.read(documentRepositoryProvider).deleteFolder(folderName);
     if (result case Success()) {
       if (context.mounted) {
-        context.pop();
-        context.pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
         showSnackBar(context, "Đã xoá thư mục.");
       }
     } else {
       if (context.mounted) {
-        context.pop();
+        Navigator.of(context).pop();
         showSnackBar(context, "Đã có lỗi xảy ra trong quá trình xoá thư mục!");
       }
     }
@@ -116,9 +116,9 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
         await _ref.read(documentRepositoryProvider).deleteDocument(documentId);
     if (result case Success()) {
       if (context.mounted) {
-        context
-          ..pop()
-          ..pop();
+        // context
+        //   ..pop()
+        //   ..pop();
         showSnackBar(context, "Đã xoá tài liệu.");
       }
     } else {

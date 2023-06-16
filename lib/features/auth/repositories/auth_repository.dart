@@ -49,6 +49,46 @@ class AuthRepository {
     }
   }
 
+  Future<Result<String, Exception>> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final userCred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCred.user != null && userCred.additionalUserInfo!.isNewUser) {
+        _uploadUserToDB(userCred);
+      }
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> signUpWithEmailAndPassword(
+    String email,
+    String password,
+    String displayName,
+  ) async {
+    try {
+      final userCred = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCred.user != null && userCred.additionalUserInfo!.isNewUser) {
+        userCred.user!.updateDisplayName(displayName);
+        _uploadUserToDB(userCred, displayName);
+      }
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<UserModel, Exception>> getUser(String uid) async {
     try {
       final user = await _db.collection(FirebaseConstants.users).doc(uid).get();
@@ -69,10 +109,11 @@ class AuthRepository {
   }
 
   // private methods
-  Future<void> _uploadUserToDB(UserCredential userCredential) async {
+  Future<void> _uploadUserToDB(UserCredential userCredential,
+      [String? displayName]) async {
     final newUser = UserModel(
       uid: userCredential.user!.uid,
-      displayName: userCredential.user!.displayName ?? "",
+      displayName: displayName ?? userCredential.user!.displayName ?? "",
       email: userCredential.user!.email ?? "",
       photoURL: userCredential.user!.photoURL ?? "",
     );

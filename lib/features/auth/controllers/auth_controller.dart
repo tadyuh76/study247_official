@@ -65,6 +65,48 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     }
   }
 
+  Future<void> signInWithEmailAndPassword(
+      BuildContext context, String email, String password) async {
+    final result = await _ref
+        .read(authRepositoryProvider)
+        .signInWithEmailAndPassword(email, password);
+
+    if (result case Success()) {
+      await updateUser();
+
+      if (mounted) {
+        showSnackBar(context, "Đã đăng nhập thành công!");
+      }
+    } else if (result case Failure(failure: final failure)) {
+      if (mounted) {
+        showSnackBar(context, failure.toString());
+      }
+    }
+  }
+
+  Future<void> signUpWithEmailAndPassword(
+    BuildContext context,
+    String email,
+    String password,
+    String displayName,
+  ) async {
+    final result = await _ref
+        .read(authRepositoryProvider)
+        .signUpWithEmailAndPassword(email, password, displayName);
+
+    if (result case Success()) {
+      await updateUser();
+
+      if (mounted) {
+        showSnackBar(context, "Đã đăng nhập thành công!");
+      }
+    } else if (result case Failure(failure: final failure)) {
+      if (mounted) {
+        showSnackBar(context, failure.toString());
+      }
+    }
+  }
+
   Future<void> signOut(BuildContext context) async {
     final result = await _ref.read(authRepositoryProvider).signOut();
     if (result case Success()) {

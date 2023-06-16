@@ -9,7 +9,6 @@ import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/router/authenticated_router.dart';
 import 'package:study247/router/unauthenticated_router.dart';
-import 'package:study247/utils/unfocus.dart';
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -22,7 +21,7 @@ class AuthGate extends ConsumerWidget {
               routerConfig: userModel == null
                   ? unauthenticatedRouter
                   : authenticatedRouter,
-              builder: (context, child) => Unfocus(child: child!),
+              // builder: (context, child) => Unfocus(child: child!),
               debugShowCheckedModeBanner: false,
               scrollBehavior: const MaterialScrollBehavior().copyWith(
                 dragDevices: {

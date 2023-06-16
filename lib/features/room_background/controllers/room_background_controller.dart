@@ -53,6 +53,7 @@ class RoomBackgroundController extends ChangeNotifier {
     isBackgroundImage = false;
     selectingVideoIdx = -1;
     final text = urlController.text.trim();
+
     if (isYoutubeUrl(text)) {
       final videoId = getYoutubeId(text);
       videoController.load(videoId);

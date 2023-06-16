@@ -125,7 +125,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   void _deleteDocument() {
     ref
         .read(documentControllerProvider.notifier)
-        .deleteFolder(context, widget.documentId);
+        .deleteDocument(context, widget.documentId);
     if (mounted) {
       context
         ..pop()

@@ -52,7 +52,9 @@ class CustomDrawer extends ConsumerWidget {
                       TabItem(
                         text: 'Đăng xuất',
                         iconName: 'log_out',
-                        onTap: () {},
+                        onTap: () => ref
+                            .read(authControllerProvider.notifier)
+                            .signOut(context),
                       ),
                     ],
                   ),

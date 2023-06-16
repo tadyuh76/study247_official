@@ -230,33 +230,3 @@ class _FlashcardPageState extends State<_FlashcardPage> {
     );
   }
 }
-
-class _BackgroundText extends StatelessWidget {
-  final String text;
-  const _BackgroundText({Key? key, required this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: Palette.lightGrey,
-        borderRadius: BorderRadius.all(Radius.circular(6)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 5,
-          horizontal: Constants.defaultPadding / 2,
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Palette.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            height: 1.4,
-          ),
-        ),
-      ),
-    );
-  }
-}

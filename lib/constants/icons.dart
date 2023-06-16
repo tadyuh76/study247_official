@@ -12,6 +12,7 @@ class IconPaths {
   static const flashcards = "assets/icons/flashcards.svg";
   static const goal = "assets/icons/goal.svg";
   static const google = "assets/icons/google.svg";
+  static const home = "assets/icons/home.svg";
   static const image = "assets/icons/image.svg";
   static const more = "assets/icons/more.svg";
   static const music = "assets/icons/music.svg";

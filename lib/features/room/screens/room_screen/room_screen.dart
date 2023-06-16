@@ -27,6 +27,7 @@ import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
 import 'package:study247/features/session_goals/widgets/session_goals_tab.dart';
+import 'package:study247/utils/unfocus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
@@ -165,58 +166,60 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             child: LayoutBuilder(builder: (context, constraints) {
               final landscape = constraints.maxWidth > constraints.maxHeight;
 
-              return Scaffold(
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endDocked,
-                floatingActionButton:
-                    _renderFloatingActionButtons(landscape, context),
-                extendBodyBehindAppBar: true,
-                appBar: landscape ? null : _renderAppBar(),
-                body: Stack(
-                  children: [
-                    SizedBox.expand(
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: YoutubePlayer(
-                          controller: ref.watch(
-                            roomBackgroundControllerProvider
-                                .select((value) => value.videoController),
+              return Unfocus(
+                child: Scaffold(
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.endDocked,
+                  floatingActionButton:
+                      _renderFloatingActionButtons(landscape, context),
+                  extendBodyBehindAppBar: true,
+                  appBar: landscape ? null : _renderAppBar(),
+                  body: Stack(
+                    children: [
+                      SizedBox.expand(
+                        child: FittedBox(
+                          fit: BoxFit.cover,
+                          child: YoutubePlayer(
+                            controller: ref.watch(
+                              roomBackgroundControllerProvider
+                                  .select((value) => value.videoController),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    PageView(
-                      controller: _pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(
-                            Constants.defaultPadding / 2,
-                          ).copyWith(
-                            top: landscape
-                                ? Constants.defaultPadding
-                                : Constants.defaultPadding / 2 +
-                                    kToolbarHeight +
-                                    kTextTabBarHeight,
+                      PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(
+                              Constants.defaultPadding / 2,
+                            ).copyWith(
+                              top: landscape
+                                  ? Constants.defaultPadding
+                                  : Constants.defaultPadding / 2 +
+                                      kToolbarHeight +
+                                      kTextTabBarHeight,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const RoomTimerTab(),
+                                const SizedBox(
+                                  width: Constants.defaultPadding / 2,
+                                ),
+                                const SessionGoalsTab(),
+                                if (!landscape) const Spacer(),
+                                if (!landscape) const DotsMenu()
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const RoomTimerTab(),
-                              const SizedBox(
-                                width: Constants.defaultPadding / 2,
-                              ),
-                              const SessionGoalsTab(),
-                              if (!landscape) const Spacer(),
-                              if (!landscape) const DotsMenu()
-                            ],
-                          ),
-                        ),
-                        const FileView()
-                      ],
-                    ),
-                    _renderNavigators()
-                  ],
+                          const FileView()
+                        ],
+                      ),
+                      _renderNavigators()
+                    ],
+                  ),
                 ),
               );
             }),

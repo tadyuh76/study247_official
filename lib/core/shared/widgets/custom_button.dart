@@ -3,9 +3,17 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 
 class CustomButton extends StatelessWidget {
+  final bool primary;
   final String text;
   final VoidCallback onTap;
-  const CustomButton({super.key, required this.text, required this.onTap});
+  final bool loading;
+  const CustomButton({
+    super.key,
+    required this.text,
+    required this.onTap,
+    this.primary = false,
+    this.loading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +22,26 @@ class CustomButton extends StatelessWidget {
       child: Container(
         padding:
             const EdgeInsets.symmetric(vertical: Constants.defaultPadding / 2),
-        decoration: const BoxDecoration(
-          color: Palette.white,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: primary ? Palette.primary : Palette.white,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              color: Palette.primary,
-              fontSize: 16,
-            ),
-          ),
+          child: loading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Palette.white,
+                  ))
+              : Text(
+                  text,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: primary ? Palette.white : Palette.primary,
+                    fontSize: 16,
+                  ),
+                ),
         ),
       ),
     );
