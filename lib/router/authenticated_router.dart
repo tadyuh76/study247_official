@@ -16,9 +16,11 @@ final authenticatedRouter = GoRouter(
           builder: (context, state) => const CreateRoomScreen(),
         ),
         GoRoute(
-          path: "room/:id",
-          builder: (context, state) =>
-              RoomScreen(roomId: state.pathParameters["id"]!),
+          path: "room/:roomId/:meetingId",
+          builder: (context, state) => RoomScreen(
+            roomId: state.pathParameters["roomId"]!,
+            meetingId: state.pathParameters["meetingId"]!,
+          ),
         ),
         GoRoute(
           path: "document/:id",

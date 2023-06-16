@@ -4,8 +4,8 @@ import 'package:study247/core/models/room.dart';
 final roomInfoControllerProvider = StateProvider((ref) => RoomInfoController());
 
 class RoomInfoController {
-  Room _room = Room.empty();
-  Room get room => _room;
+  RoomModel _room = RoomModel.empty();
+  RoomModel get room => _room;
 
   void updateRoomInfo({
     String? name,
@@ -28,6 +28,6 @@ class RoomInfoController {
   }
 
   void reset() {
-    _room = Room.empty();
+    _room = RoomModel.empty();
   }
 }

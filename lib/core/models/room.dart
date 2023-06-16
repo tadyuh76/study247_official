@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart';
 
-class Room {
+class RoomModel {
   String? id;
+  final String meetingId;
   final String name;
   final String bannerColor;
   final String fileUrl;
@@ -20,8 +21,9 @@ class Room {
   final bool isStudying;
   final bool isPaused;
 
-  Room({
+  RoomModel({
     this.id,
+    required this.meetingId,
     required this.name,
     required this.bannerColor,
     required this.fileUrl,
@@ -40,8 +42,9 @@ class Room {
     required this.isPaused,
   });
 
-  factory Room.empty() {
-    return Room(
+  factory RoomModel.empty() {
+    return RoomModel(
+      meetingId: "",
       name: "",
       bannerColor: "blue",
       fileUrl: "",
@@ -61,8 +64,9 @@ class Room {
     );
   }
 
-  Room copyWith({
+  RoomModel copyWith({
     String? id,
+    String? meetingId,
     String? name,
     String? bannerColor,
     String? fileUrl,
@@ -80,8 +84,9 @@ class Room {
     bool? isStudying,
     bool? isPaused,
   }) {
-    return Room(
+    return RoomModel(
       id: id ?? this.id,
+      meetingId: meetingId ?? this.meetingId,
       name: name ?? this.name,
       bannerColor: bannerColor ?? this.bannerColor,
       fileUrl: fileUrl ?? this.fileUrl,
@@ -104,6 +109,7 @@ class Room {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'meetingId': meetingId,
       'name': name,
       'bannerColor': bannerColor,
       'fileUrl': fileUrl,
@@ -123,9 +129,10 @@ class Room {
     };
   }
 
-  factory Room.fromMap(Map<String, dynamic> map) {
-    return Room(
+  factory RoomModel.fromMap(Map<String, dynamic> map) {
+    return RoomModel(
       id: map['id'],
+      meetingId: map['meetingId'] ?? '',
       name: map['name'] ?? '',
       bannerColor: map['bannerColor'] ?? '',
       fileUrl: map['fileUrl'] ?? '',
@@ -147,15 +154,16 @@ class Room {
 
   @override
   String toString() {
-    return 'Room(id: $id, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid, roomTimerSessionNo: $roomTimerSessionNo, roomTimerDuration: $roomTimerDuration, roomTimerBreaktime: $roomTimerBreaktime, roomTimerStart: $roomTimerStart, isStudying: $isStudying, isPaused: $isPaused)';
+    return 'Room(id: $id, meetingId: $meetingId, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid, roomTimerSessionNo: $roomTimerSessionNo, roomTimerDuration: $roomTimerDuration, roomTimerBreaktime: $roomTimerBreaktime, roomTimerStart: $roomTimerStart, isStudying: $isStudying, isPaused: $isPaused)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Room &&
+    return other is RoomModel &&
         other.id == id &&
+        other.meetingId == meetingId &&
         other.name == name &&
         other.bannerColor == bannerColor &&
         other.fileUrl == fileUrl &&
@@ -177,6 +185,7 @@ class Room {
   @override
   int get hashCode {
     return id.hashCode ^
+        meetingId.hashCode ^
         name.hashCode ^
         bannerColor.hashCode ^
         fileUrl.hashCode ^

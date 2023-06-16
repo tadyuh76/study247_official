@@ -19,7 +19,7 @@ class RoomRepository {
 
   CollectionReference get roomRef => _db.collection(FirebaseConstants.rooms);
 
-  Future<Result<String, Exception>> createRoom(Room room) async {
+  Future<Result<String, Exception>> createRoom(RoomModel room) async {
     try {
       final roomId = roomRef.doc().id;
       await roomRef.doc(roomId).set(room.copyWith(id: roomId).toMap());
@@ -29,10 +29,10 @@ class RoomRepository {
     }
   }
 
-  Future<Result<Room, Exception>> getRoomById(String roomId) async {
+  Future<Result<RoomModel, Exception>> getRoomById(String roomId) async {
     try {
       final room = await roomRef.doc(roomId).get();
-      return Success(Room.fromMap(room.data() as Map<String, dynamic>));
+      return Success(RoomModel.fromMap(room.data() as Map<String, dynamic>));
     } on Exception catch (e) {
       return Failure(e);
     }
@@ -49,6 +49,7 @@ class RoomRepository {
           .collection(FirebaseConstants.participants)
           .doc(user.uid)
           .set(user.toMap());
+
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
@@ -58,7 +59,7 @@ class RoomRepository {
   Future<Result<String, Exception>> leaveRoom(String roomId) async {
     try {
       final currentRoomRef = roomRef.doc(roomId);
-      final currentRoom = Room.fromMap(
+      final currentRoom = RoomModel.fromMap(
           (await currentRoomRef.get()).data() as Map<String, dynamic>);
       if (currentRoom.curParticipants == 1) {
         await currentRoomRef.delete();

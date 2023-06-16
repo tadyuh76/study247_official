@@ -5,7 +5,7 @@ import 'package:study247/core/models/room.dart';
 import 'package:study247/core/palette.dart';
 
 class EnterButton extends ConsumerStatefulWidget {
-  final Room room;
+  final RoomModel room;
   const EnterButton({super.key, required this.room});
 
   @override
@@ -19,7 +19,7 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
     // setState(() => joining = true);
 
     final roomId = widget.room.id!;
-    context.go("/room/$roomId");
+    context.go("/room/$roomId/${widget.room.meetingId}");
     // showSnackBar(context, "Đã tham gia phòng học!");
   }
 

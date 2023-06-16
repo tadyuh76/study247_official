@@ -8,7 +8,7 @@ import 'package:study247/features/home/widgets/room_card/num_participants.dart';
 import 'package:study247/features/home/widgets/room_card/room_tags.dart';
 
 class RoomCard extends StatelessWidget {
-  final Room room;
+  final RoomModel room;
   const RoomCard({super.key, required this.room});
 
   @override

@@ -9,17 +9,19 @@ import '../../../core/models/room.dart';
 final roomListRepositoryProvider = Provider((ref) {
   final db = ref.read(firestoreProvider);
   return RoomListRepository(db);
-} );
+});
 
 class RoomListRepository {
   final FirebaseFirestore _db;
   RoomListRepository(this._db);
-    CollectionReference get roomRef => _db.collection(FirebaseConstants.rooms);
+  CollectionReference get roomRef => _db.collection(FirebaseConstants.rooms);
 
-    Future<Result<List<Room>, Exception>> getRoomList() async {
+  Future<Result<List<RoomModel>, Exception>> getRoomList() async {
     try {
       final snapshot = await roomRef.get();
-      final roomList = snapshot.docs.map((e) => Room.fromMap(e.data() as Map<String, dynamic>)).toList();
+      final roomList = snapshot.docs
+          .map((e) => RoomModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
       return Success(roomList);
     } on Exception catch (e) {
       return Failure(e);

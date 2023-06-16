@@ -46,10 +46,10 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
 
   Future<void> _onSubmit() async {
     await ref.read(roomControllerProvider.notifier).createRoom(context);
-    final roomId = ref.read(roomControllerProvider).asData!.value!.id;
+    final room = ref.read(roomControllerProvider).asData!.value!;
 
     if (mounted) {
-      context.go("/room/$roomId");
+      context.go("/room/${room.id}/${room.meetingId}");
     }
     ref.read(roomInfoControllerProvider).reset();
   }

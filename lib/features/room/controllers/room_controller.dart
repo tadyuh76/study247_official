@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
+import 'package:study247/features/meeting/controllers/meeting_controler.dart';
 import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
@@ -12,19 +13,23 @@ import 'package:study247/features/room/repositories/room_repository.dart';
 import '../../../constants/firebase.dart';
 
 final roomControllerProvider =
-    StateNotifierProvider<RoomController, AsyncValue<Room?>>(
+    StateNotifierProvider<RoomController, AsyncValue<RoomModel?>>(
   (ref) => RoomController(ref),
 );
 
-class RoomController extends StateNotifier<AsyncValue<Room?>> {
+class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
   final Ref _ref;
   RoomController(this._ref) : super(const AsyncLoading());
 
   Future<void> createRoom(BuildContext context) async {
     state = const AsyncLoading();
-    Room roomInfo = _ref.read(roomInfoControllerProvider).room;
+
+    RoomModel roomInfo = _ref.read(roomInfoControllerProvider).room;
     final hostUser = _ref.read(authControllerProvider).asData!.value!;
+    final meetingId =
+        await _ref.read(meetingControllerProvider).createMeeting();
     roomInfo = roomInfo.copyWith(
+      meetingId: meetingId,
       hostUid: hostUser.uid,
       hostPhotoUrl: hostUser.photoURL,
       roomTimerStart: DateTime.now().toString(),
@@ -52,11 +57,11 @@ class RoomController extends StateNotifier<AsyncValue<Room?>> {
       state = AsyncData(room);
     } else {
       showSnackBar(context, "Phòng học đã bị xóa hoặc không tồn tại");
-      state = AsyncData(Room.empty());
+      state = AsyncData(RoomModel.empty());
     }
   }
 
-  Future<void> updateRoom(Room room) async {
+  Future<void> updateRoom(RoomModel room) async {
     final db = _ref.read(firestoreProvider);
     await db.collection(FirebaseConstants.rooms).doc(room.id).set(room.toMap());
     state = AsyncData(room);

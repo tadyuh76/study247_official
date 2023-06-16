@@ -1,0 +1,215 @@
+Date : 2023-06-16 22:28:39
+Directory : d:\Projects\study247\lib
+Total : 118 files,  8390 codes, 126 comments, 840 blanks, all 9356 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |        118 |      8,390 |        126 |        840 |      9,356 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                   |        118 |      8,390 |        126 |        840 |      9,356 |
+| . (Files)                                                                                           |          2 |         79 |         12 |          9 |        100 |
+| constants                                                                                           |          3 |         82 |          0 |         10 |         92 |
+| core                                                                                                |         22 |      1,032 |          3 |        123 |      1,158 |
+| core (Files)                                                                                        |          1 |         12 |          0 |          4 |         16 |
+| core\models                                                                                         |         10 |        679 |          3 |         82 |        764 |
+| core\providers                                                                                      |          1 |          8 |          0 |          2 |         10 |
+| core\shared                                                                                         |         10 |        333 |          0 |         35 |        368 |
+| core\shared\screens                                                                                 |          2 |         22 |          0 |          6 |         28 |
+| core\shared\widgets                                                                                 |          8 |        311 |          0 |         29 |        340 |
+| features                                                                                            |         83 |      7,053 |        111 |        677 |      7,841 |
+| features\auth                                                                                       |          5 |        645 |          4 |         55 |        704 |
+| features\auth\controllers                                                                           |          1 |        104 |          0 |         17 |        121 |
+| features\auth\repositories                                                                          |          1 |        110 |          1 |         15 |        126 |
+| features\auth\screens                                                                               |          3 |        431 |          3 |         23 |        457 |
+| features\chat                                                                                       |          8 |        695 |          2 |         54 |        751 |
+| features\chat\controllers                                                                           |          3 |        101 |          0 |         14 |        115 |
+| features\chat\repositories                                                                          |          1 |         57 |          0 |          8 |         65 |
+| features\chat\widgets                                                                               |          4 |        537 |          2 |         32 |        571 |
+| features\document                                                                                   |         17 |      1,781 |         38 |        167 |      1,986 |
+| features\document\controllers                                                                       |          4 |        254 |         23 |         37 |        314 |
+| features\document\repositories                                                                      |          2 |        221 |          3 |         25 |        249 |
+| features\document\screens                                                                           |          6 |        707 |          9 |         62 |        778 |
+| features\document\widgets                                                                           |          5 |        599 |          3 |         43 |        645 |
+| features\file                                                                                       |          3 |        197 |          6 |         23 |        226 |
+| features\file\controllers                                                                           |          1 |         25 |          0 |          5 |         30 |
+| features\file\repositories                                                                          |          1 |         48 |          6 |         10 |         64 |
+| features\file\widgets                                                                               |          1 |        124 |          0 |          8 |        132 |
+| features\flashcards                                                                                 |          4 |        301 |         22 |         28 |        351 |
+| features\flashcards\controllers                                                                     |          1 |         29 |          0 |          5 |         34 |
+| features\flashcards\repositories                                                                    |          1 |         33 |          0 |          5 |         38 |
+| features\flashcards\screens                                                                         |          1 |        196 |         22 |         15 |        233 |
+| features\flashcards\widgets                                                                         |          1 |         43 |          0 |          3 |         46 |
+| features\history                                                                                    |          1 |          8 |          0 |          3 |         11 |
+| features\history\screens                                                                            |          1 |          8 |          0 |          3 |         11 |
+| features\home                                                                                       |          8 |        653 |          2 |         45 |        700 |
+| features\home (Files)                                                                               |          1 |        207 |          0 |         13 |        220 |
+| features\home\widgets                                                                               |          7 |        446 |          2 |         32 |        480 |
+| features\home\widgets (Files)                                                                       |          2 |        193 |          0 |         11 |        204 |
+| features\home\widgets\room_card                                                                     |          5 |        253 |          2 |         21 |        276 |
+| features\meeting                                                                                    |          1 |         18 |          0 |          5 |         23 |
+| features\meeting\controllers                                                                        |          1 |         18 |          0 |          5 |         23 |
+| features\music                                                                                      |          2 |        115 |          0 |         13 |        128 |
+| features\music\controllers                                                                          |          1 |         57 |          0 |          8 |         65 |
+| features\music\widgets                                                                              |          1 |         58 |          0 |          5 |         63 |
+| features\room                                                                                       |         21 |      1,502 |          9 |        153 |      1,664 |
+| features\room\controllers                                                                           |          3 |        116 |          0 |         23 |        139 |
+| features\room\repositories                                                                          |          2 |         92 |          0 |         14 |        106 |
+| features\room\screens                                                                               |         16 |      1,294 |          9 |        116 |      1,419 |
+| features\room\screens\create_room_screen                                                            |          9 |        621 |          0 |         60 |        681 |
+| features\room\screens\create_room_screen (Files)                                                    |          1 |         87 |          0 |         13 |        100 |
+| features\room\screens\create_room_screen\widgets                                                    |          8 |        534 |          0 |         47 |        581 |
+| features\room\screens\create_room_screen\widgets (Files)                                            |          1 |         34 |          0 |          3 |         37 |
+| features\room\screens\create_room_screen\widgets\form                                               |          4 |        272 |          0 |         22 |        294 |
+| features\room\screens\create_room_screen\widgets\steps                                              |          3 |        228 |          0 |         22 |        250 |
+| features\room\screens\room_screen                                                                   |          7 |        673 |          9 |         56 |        738 |
+| features\room\screens\room_screen (Files)                                                           |          1 |        365 |          8 |         25 |        398 |
+| features\room\screens\room_screen\widgets                                                           |          6 |        308 |          1 |         31 |        340 |
+| features\room\screens\room_screen\widgets (Files)                                                   |          4 |        213 |          1 |         24 |        238 |
+| features\room\screens\room_screen\widgets\dialogs                                                   |          1 |         57 |          0 |          4 |         61 |
+| features\room\screens\room_screen\widgets\room_features                                             |          1 |         38 |          0 |          3 |         41 |
+| features\room_background                                                                            |          2 |        241 |          1 |         18 |        260 |
+| features\room_background\controllers                                                                |          1 |         62 |          1 |          8 |         71 |
+| features\room_background\widgets                                                                    |          1 |        179 |          0 |         10 |        189 |
+| features\session_goals                                                                              |          4 |        245 |          0 |         23 |        268 |
+| features\session_goals\controllers                                                                  |          1 |         28 |          0 |          7 |         35 |
+| features\session_goals\widgets                                                                      |          3 |        217 |          0 |         16 |        233 |
+| features\timer                                                                                      |          7 |        652 |         27 |         90 |        769 |
+| features\timer\notifiers                                                                            |          2 |        237 |         25 |         53 |        315 |
+| features\timer\providers                                                                            |          1 |          3 |          0 |          3 |          6 |
+| features\timer\repositories                                                                         |          1 |         28 |          0 |          7 |         35 |
+| features\timer\widgets                                                                              |          3 |        384 |          2 |         27 |        413 |
+| router                                                                                              |          2 |         55 |          0 |          4 |         59 |
+| utils                                                                                               |          6 |         89 |          0 |         17 |        106 |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                            | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Projects\study247\lib\constants\common.dart                                                      | Dart     |         45 |          0 |          8 |         53 |
+| d:\Projects\study247\lib\constants\firebase.dart                                                    | Dart     |         10 |          0 |          1 |         11 |
+| d:\Projects\study247\lib\constants\icons.dart                                                       | Dart     |         27 |          0 |          1 |         28 |
+| d:\Projects\study247\lib\core\models\audio.dart                                                     | Dart     |         10 |          0 |          4 |         14 |
+| d:\Projects\study247\lib\core\models\document.dart                                                  | Dart     |         76 |          1 |         10 |         87 |
+| d:\Projects\study247\lib\core\models\file.dart                                                      | Dart     |         38 |          0 |          8 |         46 |
+| d:\Projects\study247\lib\core\models\flashcard.dart                                                 | Dart     |         84 |          0 |          9 |         93 |
+| d:\Projects\study247\lib\core\models\folder.dart                                                    | Dart     |         47 |          0 |          9 |         56 |
+| d:\Projects\study247\lib\core\models\message.dart                                                   | Dart     |        117 |          0 |          9 |        126 |
+| d:\Projects\study247\lib\core\models\result.dart                                                    | Dart     |         11 |          0 |          3 |         14 |
+| d:\Projects\study247\lib\core\models\room.dart                                                      | Dart     |        195 |          1 |         11 |        207 |
+| d:\Projects\study247\lib\core\models\session_goal.dart                                              | Dart     |         41 |          0 |         10 |         51 |
+| d:\Projects\study247\lib\core\models\user.dart                                                      | Dart     |         60 |          1 |          9 |         70 |
+| d:\Projects\study247\lib\core\palette.dart                                                          | Dart     |         12 |          0 |          4 |         16 |
+| d:\Projects\study247\lib\core\providers\firebase_providers.dart                                     | Dart     |          8 |          0 |          2 |         10 |
+| d:\Projects\study247\lib\core\shared\screens\error_screen.dart                                      | Dart     |         11 |          0 |          3 |         14 |
+| d:\Projects\study247\lib\core\shared\screens\loading_screen.dart                                    | Dart     |         11 |          0 |          3 |         14 |
+| d:\Projects\study247\lib\core\shared\widgets\app_error.dart                                         | Dart     |          8 |          0 |          3 |         11 |
+| d:\Projects\study247\lib\core\shared\widgets\app_loading.dart                                       | Dart     |          8 |          0 |          3 |         11 |
+| d:\Projects\study247\lib\core\shared\widgets\black_background_button.dart                           | Dart     |         33 |          0 |          3 |         36 |
+| d:\Projects\study247\lib\core\shared\widgets\bottom_navigator_wrapper.dart                          | Dart     |         39 |          0 |          6 |         45 |
+| d:\Projects\study247\lib\core\shared\widgets\color_picker.dart                                      | Dart     |         57 |          0 |          3 |         60 |
+| d:\Projects\study247\lib\core\shared\widgets\custom_button.dart                                     | Dart     |         47 |          0 |          3 |         50 |
+| d:\Projects\study247\lib\core\shared\widgets\custom_icon_button.dart                                | Dart     |         31 |          0 |          3 |         34 |
+| d:\Projects\study247\lib\core\shared\widgets\feature_dialog.dart                                    | Dart     |         88 |          0 |          5 |         93 |
+| d:\Projects\study247\lib\features\auth\controllers\auth_controller.dart                             | Dart     |        104 |          0 |         17 |        121 |
+| d:\Projects\study247\lib\features\auth\repositories\auth_repository.dart                            | Dart     |        110 |          1 |         15 |        126 |
+| d:\Projects\study247\lib\features\auth\screens\auth_gate.dart                                       | Dart     |         44 |          1 |          4 |         49 |
+| d:\Projects\study247\lib\features\auth\screens\sign_in_screen.dart                                  | Dart     |        193 |          2 |         10 |        205 |
+| d:\Projects\study247\lib\features\auth\screens\sign_up_screen.dart                                  | Dart     |        194 |          0 |          9 |        203 |
+| d:\Projects\study247\lib\features\chat\controllers\chat_controller.dart                             | Dart     |         53 |          0 |          6 |         59 |
+| d:\Projects\study247\lib\features\chat\controllers\chat_list_controller.dart                        | Dart     |         24 |          0 |          4 |         28 |
+| d:\Projects\study247\lib\features\chat\controllers\pinned_messages_controller.dart                  | Dart     |         24 |          0 |          4 |         28 |
+| d:\Projects\study247\lib\features\chat\repositories\chat_repository.dart                            | Dart     |         57 |          0 |          8 |         65 |
+| d:\Projects\study247\lib\features\chat\widgets\chat_input.dart                                      | Dart     |        145 |          0 |         10 |        155 |
+| d:\Projects\study247\lib\features\chat\widgets\chat_view.dart                                       | Dart     |         74 |          0 |          4 |         78 |
+| d:\Projects\study247\lib\features\chat\widgets\message_widget.dart                                  | Dart     |        232 |          2 |         14 |        248 |
+| d:\Projects\study247\lib\features\chat\widgets\pinned_messages_dialog.dart                          | Dart     |         86 |          0 |          4 |         90 |
+| d:\Projects\study247\lib\features\document\controllers\document_controller.dart                     | Dart     |        177 |         23 |         22 |        222 |
+| d:\Projects\study247\lib\features\document\controllers\document_list_controller.dart                | Dart     |         25 |          0 |          5 |         30 |
+| d:\Projects\study247\lib\features\document\controllers\documents_folder_controller.dart             | Dart     |         27 |          0 |          5 |         32 |
+| d:\Projects\study247\lib\features\document\controllers\folder_list_controller.dart                  | Dart     |         25 |          0 |          5 |         30 |
+| d:\Projects\study247\lib\features\document\repositories\document_repository.dart                    | Dart     |        221 |          3 |         24 |        248 |
+| d:\Projects\study247\lib\features\document\repositories\folder_controller.dart                      | Dart     |          0 |          0 |          1 |          1 |
+| d:\Projects\study247\lib\features\document\screens\document_edit_screen.dart                        | Dart     |        372 |          9 |         35 |        416 |
+| d:\Projects\study247\lib\features\document\screens\document_folder_screen.dart                      | Dart     |         90 |          0 |          6 |         96 |
+| d:\Projects\study247\lib\features\document\screens\document_screen.dart                             | Dart     |         88 |          0 |          8 |         96 |
+| d:\Projects\study247\lib\features\document\screens\document_tab.dart                                | Dart     |         50 |          0 |          4 |         54 |
+| d:\Projects\study247\lib\features\document\screens\folder_tab.dart                                  | Dart     |         48 |          0 |          4 |         52 |
+| d:\Projects\study247\lib\features\document\screens\select_folder_screen.dart                        | Dart     |         59 |          0 |          5 |         64 |
+| d:\Projects\study247\lib\features\document\widgets\document_create_dialog.dart                      | Dart     |        153 |          0 |         13 |        166 |
+| d:\Projects\study247\lib\features\document\widgets\document_settings_dialog.dart                    | Dart     |        139 |          1 |         10 |        150 |
+| d:\Projects\study247\lib\features\document\widgets\document_widget.dart                             | Dart     |         92 |          1 |          5 |         98 |
+| d:\Projects\study247\lib\features\document\widgets\folder_settings_dialog.dart                      | Dart     |        130 |          1 |         10 |        141 |
+| d:\Projects\study247\lib\features\document\widgets\folder_widget.dart                               | Dart     |         85 |          0 |          5 |         90 |
+| d:\Projects\study247\lib\features\file\controllers\file_controller.dart                             | Dart     |         25 |          0 |          5 |         30 |
+| d:\Projects\study247\lib\features\file\repositories\file_repository.dart                            | Dart     |         48 |          6 |         10 |         64 |
+| d:\Projects\study247\lib\features\file\widgets\file_view.dart                                       | Dart     |        124 |          0 |          8 |        132 |
+| d:\Projects\study247\lib\features\flashcards\controllers\flashcard_list_controller.dart             | Dart     |         29 |          0 |          5 |         34 |
+| d:\Projects\study247\lib\features\flashcards\repositories\flashcard_list_repository.dart            | Dart     |         33 |          0 |          5 |         38 |
+| d:\Projects\study247\lib\features\flashcards\screens\flashcard_screen.dart                          | Dart     |        196 |         22 |         15 |        233 |
+| d:\Projects\study247\lib\features\flashcards\widgets\complete_dialog.dart                           | Dart     |         43 |          0 |          3 |         46 |
+| d:\Projects\study247\lib\features\history\screens\history_screen.dart                               | Dart     |          8 |          0 |          3 |         11 |
+| d:\Projects\study247\lib\features\home\home_screen.dart                                             | Dart     |        207 |          0 |         13 |        220 |
+| d:\Projects\study247\lib\features\home\widgets\create_card.dart                                     | Dart     |         42 |          0 |          3 |         45 |
+| d:\Projects\study247\lib\features\home\widgets\custom_drawer.dart                                   | Dart     |        151 |          0 |          8 |        159 |
+| d:\Projects\study247\lib\features\home\widgets\room_card\avatar.dart                                | Dart     |         20 |          0 |          3 |         23 |
+| d:\Projects\study247\lib\features\home\widgets\room_card\enter_button.dart                          | Dart     |         45 |          2 |          7 |         54 |
+| d:\Projects\study247\lib\features\home\widgets\room_card\num_participants.dart                      | Dart     |         57 |          0 |          3 |         60 |
+| d:\Projects\study247\lib\features\home\widgets\room_card\room_card.dart                             | Dart     |         93 |          0 |          5 |         98 |
+| d:\Projects\study247\lib\features\home\widgets\room_card\room_tags.dart                             | Dart     |         38 |          0 |          3 |         41 |
+| d:\Projects\study247\lib\features\meeting\controllers\meeting_controler.dart                        | Dart     |         18 |          0 |          5 |         23 |
+| d:\Projects\study247\lib\features\music\controllers\music_controller.dart                           | Dart     |         57 |          0 |          8 |         65 |
+| d:\Projects\study247\lib\features\music\widgets\music_box.dart                                      | Dart     |         58 |          0 |          5 |         63 |
+| d:\Projects\study247\lib\features\room\controllers\room_controller.dart                             | Dart     |         67 |          0 |         13 |         80 |
+| d:\Projects\study247\lib\features\room\controllers\room_info_controller.dart                        | Dart     |         29 |          0 |          5 |         34 |
+| d:\Projects\study247\lib\features\room\controllers\room_list_controller.dart                        | Dart     |         20 |          0 |          5 |         25 |
+| d:\Projects\study247\lib\features\room\repositories\room_list_repository.dart                       | Dart     |         26 |          0 |          5 |         31 |
+| d:\Projects\study247\lib\features\room\repositories\room_repository.dart                            | Dart     |         66 |          0 |          9 |         75 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\create_room_screen.dart           | Dart     |         87 |          0 |         13 |        100 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\form\input_title.dart     | Dart     |         38 |          0 |          3 |         41 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\form\number_input.dart    | Dart     |        139 |          0 |         10 |        149 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\form\room_timer.dart      | Dart     |         45 |          0 |          5 |         50 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\form\text_input.dart      | Dart     |         50 |          0 |          4 |         54 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\input_title.dart          | Dart     |         34 |          0 |          3 |         37 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\steps\step1.dart          | Dart     |         60 |          0 |          6 |         66 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\steps\step2.dart          | Dart     |         45 |          0 |          5 |         50 |
+| d:\Projects\study247\lib\features\room\screens\create_room_screen\widgets\steps\step3.dart          | Dart     |        123 |          0 |         11 |        134 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\room_screen.dart                         | Dart     |        365 |          8 |         25 |        398 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\dialogs\leave_dialog.dart        | Dart     |         57 |          0 |          4 |         61 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\dots_menu.dart                   | Dart     |         45 |          0 |          7 |         52 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\expanded_menu.dart               | Dart     |         86 |          0 |          5 |         91 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\meeting_controls.dart            | Dart     |         27 |          0 |          4 |         31 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\participant_tile.dart            | Dart     |         55 |          1 |          8 |         64 |
+| d:\Projects\study247\lib\features\room\screens\room_screen\widgets\room_features\invite_button.dart | Dart     |         38 |          0 |          3 |         41 |
+| d:\Projects\study247\lib\features\room_background\controllers\room_background_controller.dart       | Dart     |         62 |          1 |          8 |         71 |
+| d:\Projects\study247\lib\features\room_background\widgets\room_background_box.dart                  | Dart     |        179 |          0 |         10 |        189 |
+| d:\Projects\study247\lib\features\session_goals\controllers\session_goals_controller.dart           | Dart     |         28 |          0 |          7 |         35 |
+| d:\Projects\study247\lib\features\session_goals\widgets\session_goal_widget.dart                    | Dart     |         57 |          0 |          3 |         60 |
+| d:\Projects\study247\lib\features\session_goals\widgets\session_goals_box.dart                      | Dart     |         91 |          0 |          8 |         99 |
+| d:\Projects\study247\lib\features\session_goals\widgets\session_goals_tab.dart                      | Dart     |         69 |          0 |          5 |         74 |
+| d:\Projects\study247\lib\features\timer\notifiers\personal_timer.dart                               | Dart     |        117 |         13 |         26 |        156 |
+| d:\Projects\study247\lib\features\timer\notifiers\room_timer.dart                                   | Dart     |        120 |         12 |         27 |        159 |
+| d:\Projects\study247\lib\features\timer\providers\timer_type.dart                                   | Dart     |          3 |          0 |          3 |          6 |
+| d:\Projects\study247\lib\features\timer\repositories\room_timer_repository.dart                     | Dart     |         28 |          0 |          7 |         35 |
+| d:\Projects\study247\lib\features\timer\widgets\personal_timer_box.dart                             | Dart     |        210 |          1 |         15 |        226 |
+| d:\Projects\study247\lib\features\timer\widgets\room_timer_box.dart                                 | Dart     |         88 |          1 |          6 |         95 |
+| d:\Projects\study247\lib\features\timer\widgets\timer_tab.dart                                      | Dart     |         86 |          0 |          6 |         92 |
+| d:\Projects\study247\lib\firebase_options.dart                                                      | Dart     |         59 |         12 |          5 |         76 |
+| d:\Projects\study247\lib\main.dart                                                                  | Dart     |         20 |          0 |          4 |         24 |
+| d:\Projects\study247\lib\router\authenticated_router.dart                                           | Dart     |         38 |          0 |          2 |         40 |
+| d:\Projects\study247\lib\router\unauthenticated_router.dart                                         | Dart     |         17 |          0 |          2 |         19 |
+| d:\Projects\study247\lib\utils\format_date.dart                                                     | Dart     |         18 |          0 |          3 |         21 |
+| d:\Projects\study247\lib\utils\format_time.dart                                                     | Dart     |          8 |          0 |          2 |         10 |
+| d:\Projects\study247\lib\utils\hide_scroll_bar.dart                                                 | Dart     |         12 |          0 |          3 |         15 |
+| d:\Projects\study247\lib\utils\show_snack_bar.dart                                                  | Dart     |          5 |          0 |          2 |          7 |
+| d:\Projects\study247\lib\utils\unfocus.dart                                                         | Dart     |         13 |          0 |          3 |         16 |
+| d:\Projects\study247\lib\utils\youtube.dart                                                         | Dart     |         33 |          0 |          4 |         37 |
+| Total                                                                                               |          |      8,390 |        126 |        840 |      9,356 |
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -4,10 +4,10 @@ import 'package:study247/core/models/room.dart';
 import 'package:study247/features/room/repositories/room_list_repository.dart';
 
 final roomListControllerProvider =
-    StateNotifierProvider<RoomListController, AsyncValue<List<Room>>>(
+    StateNotifierProvider<RoomListController, AsyncValue<List<RoomModel>>>(
         (ref) => RoomListController(ref)..getRoomList());
 
-class RoomListController extends StateNotifier<AsyncValue<List<Room>>> {
+class RoomListController extends StateNotifier<AsyncValue<List<RoomModel>>> {
   final Ref _ref;
   RoomListController(this._ref) : super(const AsyncLoading());
 
