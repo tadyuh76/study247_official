@@ -295,7 +295,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
                       // context.go("/document/${widget.documentId}/flashcards"),
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AllFlashcardsScreen(),
+                          builder: (context) => const FlashcardScreen(),
                         ),
                       ),
               child: SizedBox(

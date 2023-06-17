@@ -30,7 +30,7 @@ final authenticatedRouter = GoRouter(
           routes: [
             GoRoute(
               path: "flashcards",
-              builder: (context, _) => const AllFlashcardsScreen(),
+              builder: (context, _) => const FlashcardScreen(),
             )
           ],
         ),

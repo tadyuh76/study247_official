@@ -16,15 +16,14 @@ const defaultTextStyle = TextStyle(
   fontFamily: "Lexend",
 );
 
-class AllFlashcardsScreen extends ConsumerStatefulWidget {
-  const AllFlashcardsScreen({super.key});
+class FlashcardScreen extends ConsumerStatefulWidget {
+  const FlashcardScreen({super.key});
 
   @override
-  ConsumerState<AllFlashcardsScreen> createState() =>
-      _AllFlashcardsScreenState();
+  ConsumerState<FlashcardScreen> createState() => _AllFlashcardsScreenState();
 }
 
-class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
+class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
   final _pageController = PageController();
 
   void _nextPage() async {
@@ -43,17 +42,17 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
     }
   }
 
-  void onEasy() {
+  void _onEasy() {
     _nextPage();
     // TODO: implement next page algorithm
   }
 
-  void onHard() {
+  void _onHard() {
     _nextPage();
     // TODO: implement next page algorithm
   }
 
-  void onNeedRevise() {
+  void _onMedium() {
     _nextPage();
     // TODO: implement next page algorithm
   }
@@ -86,12 +85,12 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: flashcardList.length,
-                itemBuilder: (context, index) => _FlashcardPage(
+                itemBuilder: (context, index) => _FlashcardTab(
                   curCard: flashcardList[index],
                   nextPage: () => _nextPage(),
-                  onEasy: onEasy,
-                  onHard: onHard,
-                  onMedium: onNeedRevise,
+                  onEasy: _onEasy,
+                  onHard: _onHard,
+                  onMedium: _onMedium,
                 ),
               ),
             );
@@ -100,13 +99,13 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
   }
 }
 
-class _FlashcardPage extends StatefulWidget {
+class _FlashcardTab extends StatefulWidget {
   final Flashcard curCard;
   final VoidCallback nextPage;
   final VoidCallback onEasy;
   final VoidCallback onHard;
   final VoidCallback onMedium;
-  const _FlashcardPage({
+  const _FlashcardTab({
     required this.curCard,
     required this.nextPage,
     required this.onEasy,
@@ -115,10 +114,10 @@ class _FlashcardPage extends StatefulWidget {
   });
 
   @override
-  State<_FlashcardPage> createState() => _FlashcardPageState();
+  State<_FlashcardTab> createState() => _FlashcardTabState();
 }
 
-class _FlashcardPageState extends State<_FlashcardPage> {
+class _FlashcardTabState extends State<_FlashcardTab> {
   bool showAnswer = false;
 
   @override
