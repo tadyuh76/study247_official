@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,16 +67,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       camEnabled: camEnabled,
       defaultCameraIndex: 1,
     );
-
-    // _room = VideoSDK.createRoom(
-    //   roomId: "2un0-0oi7-8knv",
-    //   token:
-    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI4MTUyMjA3NC02ODc0LTQ0NWYtOTY2Yi02MDNiZjM2Nzg3ZTAiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTY4NjkzMDM2NywiZXhwIjoxNjg3MDE2NzY3fQ.jEQqxWwYIe_6aSgEbYfiA564TR2G63OfZrjSPVIl41g",
-    //   displayName: "Tad's Org",
-    //   micEnabled: false,
-    //   camEnabled: true,
-    //   defaultCameraIndex: 1,
-    // );
 
     _setMeetingEventListener();
     _room.join();
@@ -224,35 +215,49 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             onWillPop: _onExitRoom,
             child: LayoutBuilder(builder: (context, constraints) {
               final landscape = constraints.maxWidth > constraints.maxHeight;
+              // bool fullscreen = landscape && kIsWeb;
 
               return Scaffold(
+                backgroundColor: Colors.grey.shade900,
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerDocked,
                 floatingActionButton:
                     _renderFloatingActionButtons(landscape, context),
                 extendBodyBehindAppBar: true,
-                appBar: landscape ? null : _renderAppBar(),
+                appBar: landscape && !kIsWeb ? null : _renderAppBar(),
                 body: Stack(
                   children: [
-                    _renderBackground(),
+                    if (!kIsWeb) _renderBackground(),
                     PageView(
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(
-                            Constants.defaultPadding / 2,
-                          ).copyWith(top: landscape ? 10 : 100),
+                          padding:
+                              const EdgeInsets.all(Constants.defaultPadding / 2)
+                                  .copyWith(
+                                      top: kIsWeb
+                                          ? 60
+                                          : landscape
+                                              ? 10
+                                              : 100),
                           child: Stack(
                             children: [
+                              // _renderWebCTA(),
                               if (showParticipants)
                                 Container(
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.only(
-                                      top: 80, bottom: landscape ? 20 : 80),
+                                    top: kIsWeb ? 40 : 80,
+                                    bottom: kIsWeb
+                                        ? 40
+                                        : landscape
+                                            ? 20
+                                            : 80,
+                                  ),
                                   child: ConstrainedBox(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 400),
+                                    constraints: const BoxConstraints(
+                                        maxWidth: kIsWeb ? 800 : 400),
                                     child: Center(
                                       child: ScrollConfiguration(
                                         behavior: const ScrollBehavior()
@@ -261,7 +266,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                                           padding: const EdgeInsets.all(0),
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 1,
+                                            crossAxisCount: kIsWeb ? 2 : 1,
                                             crossAxisSpacing:
                                                 Constants.defaultPadding,
                                             mainAxisSpacing:
@@ -284,15 +289,21 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                                     ),
                                   ),
                                 ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const RoomTimerTab(),
-                                  const SizedBox(width: 10),
-                                  const SessionGoalsTab(),
-                                  if (!landscape) const Spacer(),
-                                  if (!landscape) const DotsMenu()
-                                ],
+                              Padding(
+                                padding: kIsWeb
+                                    ? const EdgeInsets.symmetric(horizontal: 10)
+                                        .copyWith(top: 30)
+                                    : const EdgeInsets.all(0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const RoomTimerTab(),
+                                    const SizedBox(width: 10),
+                                    const SessionGoalsTab(),
+                                    if (!landscape || kIsWeb) const Spacer(),
+                                    if (!landscape || kIsWeb) const DotsMenu()
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -323,15 +334,13 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     );
   }
 
-  // Widget _renderMeetingParticipants() {
-  //   return;
-  // }
-
   Padding _renderFloatingActionButtons(bool landscape, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: Constants.defaultPadding / 2,
-        vertical: Constants.defaultPadding,
+        horizontal:
+            kIsWeb ? Constants.defaultPadding : Constants.defaultPadding / 2,
+        vertical:
+            kIsWeb ? Constants.defaultPadding * 2 : Constants.defaultPadding,
       ),
       child: Row(
         mainAxisAlignment:
@@ -378,7 +387,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             ),
             onTap: () => setState(() => showParticipants = !showParticipants),
           ),
-          if (!landscape)
+          if (kIsWeb) const SizedBox(width: Constants.defaultPadding / 2),
+          if (!landscape || kIsWeb)
             BlackBackgroundButton(
               width: 60,
               onTap: () => showDialog(
@@ -392,17 +402,18 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
               ),
             ),
           if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          BlackBackgroundButton(
-            width: 60,
-            onTap: landscape ? _onPortrait : _onFullScreen,
-            child: Icon(
-              landscape
-                  ? Icons.fullscreen_exit_rounded
-                  : Icons.fullscreen_rounded,
-              color: Palette.white,
-              size: 32,
+          if (!kIsWeb)
+            BlackBackgroundButton(
+              width: 60,
+              onTap: landscape ? _onPortrait : _onFullScreen,
+              child: Icon(
+                landscape
+                    ? Icons.fullscreen_exit_rounded
+                    : Icons.fullscreen_rounded,
+                color: Palette.white,
+                size: 32,
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -442,7 +453,46 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         children: [
           Text(ref.read(roomControllerProvider).asData!.value!.name),
           const Spacer(),
+          if (kIsWeb) _renderWebCTA(),
+          if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
           const InviteButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderWebCTA() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade800,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          SvgPicture.asset(IconPaths.googlePlay, width: 24, height: 24),
+          const SizedBox(width: 5),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Tải ứng dụng trên",
+                style: TextStyle(
+                  color: Palette.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              Text(
+                "Google Play",
+                style: TextStyle(
+                  color: Palette.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

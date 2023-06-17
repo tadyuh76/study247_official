@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -21,18 +22,20 @@ class FeatureDialog extends StatelessWidget {
       final landscape = constraints.maxWidth > constraints.maxHeight;
 
       return Padding(
-        padding: const EdgeInsets.all(Constants.defaultPadding).copyWith(
+        padding: const EdgeInsets.all(kIsWeb ? 40 : Constants.defaultPadding)
+            .copyWith(
           top: landscape ? Constants.defaultPadding : kToolbarHeight + 100,
         ),
         child: Align(
-          alignment: Alignment.topCenter,
+          alignment: kIsWeb ? Alignment.center : Alignment.topCenter,
           child: Material(
             color: Colors.transparent,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 500),
+              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 500),
               child: Container(
-                width: landscape ? 400 : null,
-                padding: const EdgeInsets.all(Constants.defaultPadding),
+                width: landscape && !kIsWeb ? 400 : null,
+                padding: const EdgeInsets.all(
+                    kIsWeb ? 40 : Constants.defaultPadding),
                 decoration: const BoxDecoration(
                   color: Palette.white,
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -47,7 +50,7 @@ class FeatureDialog extends StatelessWidget {
                   children: [
                     _renderHeader(context),
                     const SizedBox(height: Constants.defaultPadding / 2),
-                    landscape
+                    landscape && !kIsWeb
                         ? Expanded(
                             child: SingleChildScrollView(
                             child: child,
