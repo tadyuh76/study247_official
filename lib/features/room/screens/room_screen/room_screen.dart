@@ -30,8 +30,10 @@ import 'package:study247/features/timer/notifiers/personal_timer.dart';
 import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
+import 'package:study247/utils/show_snack_bar.dart';
 import 'package:videosdk/videosdk.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
 
@@ -343,79 +345,97 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             kIsWeb ? Constants.defaultPadding * 2 : Constants.defaultPadding,
       ),
       child: Row(
-        mainAxisAlignment:
-            landscape ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: landscape || kIsWeb
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          BlackBackgroundButton(
-            width: 60,
-            child: SvgPicture.asset(
-              camEnabled ? IconPaths.camera : IconPaths.cameraOff,
-              color: Palette.white,
-            ),
-            onTap: () => setState(() {
-              if (camEnabled) {
-                _room.disableCam();
-              } else {
-                _room.enableCam();
-              }
-              camEnabled = !camEnabled;
-            }),
-          ),
-          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          BlackBackgroundButton(
-            width: 60,
-            child: SvgPicture.asset(
-              micEnabled ? IconPaths.mic : IconPaths.micOff,
-              color: Palette.white,
-            ),
-            onTap: () => setState(() {
-              if (micEnabled) {
-                _room.muteMic();
-              } else {
-                _room.unmuteMic();
-              }
-              micEnabled = !micEnabled;
-            }),
-          ),
-          if (landscape) const Spacer(),
-          BlackBackgroundButton(
-            width: 60,
-            child: SvgPicture.asset(
-              showParticipants ? IconPaths.hidePerson : IconPaths.person,
-              color: Palette.white,
-            ),
-            onTap: () => setState(() => showParticipants = !showParticipants),
-          ),
+          _cameraButton(),
+          if (landscape || kIsWeb)
+            const SizedBox(width: Constants.defaultPadding / 2),
+          _micButton(),
+          if (landscape || kIsWeb) const Spacer(),
+          _showParticipantsButton(),
           if (kIsWeb) const SizedBox(width: Constants.defaultPadding / 2),
-          if (!landscape || kIsWeb)
-            BlackBackgroundButton(
-              width: 60,
-              onTap: () => showDialog(
-                barrierColor: Colors.transparent,
-                context: context,
-                builder: (context) => const ChatView(),
-              ),
-              child: SvgPicture.asset(
-                IconPaths.chats,
-                color: Palette.white,
-              ),
-            ),
+          if (!landscape || kIsWeb) _chatButton(context),
           if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          if (!kIsWeb)
-            BlackBackgroundButton(
-              width: 60,
-              onTap: landscape ? _onPortrait : _onFullScreen,
-              child: Icon(
-                landscape
-                    ? Icons.fullscreen_exit_rounded
-                    : Icons.fullscreen_rounded,
-                color: Palette.white,
-                size: 32,
-              ),
-            ),
+          if (!kIsWeb) _fullScreenButton(landscape),
         ],
       ),
+    );
+  }
+
+  BlackBackgroundButton _fullScreenButton(bool landscape) {
+    return BlackBackgroundButton(
+      width: 60,
+      onTap: landscape ? _onPortrait : _onFullScreen,
+      child: Icon(
+        landscape ? Icons.fullscreen_exit_rounded : Icons.fullscreen_rounded,
+        color: Palette.white,
+        size: 32,
+      ),
+    );
+  }
+
+  BlackBackgroundButton _chatButton(BuildContext context) {
+    return BlackBackgroundButton(
+      width: 60,
+      onTap: () => showDialog(
+        barrierColor: Colors.transparent,
+        context: context,
+        builder: (context) => const ChatView(),
+      ),
+      child: SvgPicture.asset(
+        IconPaths.chats,
+        color: Palette.white,
+      ),
+    );
+  }
+
+  BlackBackgroundButton _showParticipantsButton() {
+    return BlackBackgroundButton(
+      width: 60,
+      child: SvgPicture.asset(
+        showParticipants ? IconPaths.hidePerson : IconPaths.person,
+        color: Palette.white,
+      ),
+      onTap: () => setState(() => showParticipants = !showParticipants),
+    );
+  }
+
+  BlackBackgroundButton _micButton() {
+    return BlackBackgroundButton(
+      width: 60,
+      child: SvgPicture.asset(
+        micEnabled ? IconPaths.mic : IconPaths.micOff,
+        color: Palette.white,
+      ),
+      onTap: () => setState(() {
+        if (micEnabled) {
+          _room.muteMic();
+        } else {
+          _room.unmuteMic();
+        }
+        micEnabled = !micEnabled;
+      }),
+    );
+  }
+
+  BlackBackgroundButton _cameraButton() {
+    return BlackBackgroundButton(
+      width: 60,
+      child: SvgPicture.asset(
+        camEnabled ? IconPaths.camera : IconPaths.cameraOff,
+        color: Palette.white,
+      ),
+      onTap: () => setState(() {
+        if (camEnabled) {
+          _room.disableCam();
+        } else {
+          _room.enableCam();
+        }
+        camEnabled = !camEnabled;
+      }),
     );
   }
 
@@ -461,39 +481,51 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     );
   }
 
+  Future<void> _launchGooglePlay() async {
+    final url = Uri.parse(
+      "https://play.google.com/store/apps/details?id=com.tadyuh.studie&hl=en-VN",
+    );
+    if (!await launchUrl(url)) {
+      if (mounted) showSnackBar(context, "Không thể mở đường dẫn!");
+    }
+  }
+
   Widget _renderWebCTA() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade800,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          SvgPicture.asset(IconPaths.googlePlay, width: 24, height: 24),
-          const SizedBox(width: 5),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tải ứng dụng trên",
-                style: TextStyle(
-                  color: Palette.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w300,
+    return GestureDetector(
+      onTap: _launchGooglePlay,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade800,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            SvgPicture.asset(IconPaths.googlePlay, width: 24, height: 24),
+            const SizedBox(width: 5),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Tải ứng dụng trên",
+                  style: TextStyle(
+                    color: Palette.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
-              ),
-              Text(
-                "Google Play",
-                style: TextStyle(
-                  color: Palette.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                Text(
+                  "Google Play",
+                  style: TextStyle(
+                    color: Palette.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
