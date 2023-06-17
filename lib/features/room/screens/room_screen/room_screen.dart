@@ -467,15 +467,19 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     return AppBar(
       backgroundColor: Palette.black.withOpacity(0.5),
       foregroundColor: Palette.white,
-      titleSpacing: Constants.defaultPadding,
+      titleSpacing: 0,
       elevation: 0,
       title: Row(
         children: [
-          Text(ref.read(roomControllerProvider).asData!.value!.name),
+          Text(
+            ref.read(roomControllerProvider).asData!.value!.name,
+            style: const TextStyle(fontSize: 16),
+          ),
           const Spacer(),
           if (kIsWeb) _renderWebCTA(),
           if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
           const InviteButton(),
+          const SizedBox(width: Constants.defaultPadding),
         ],
       ),
     );
