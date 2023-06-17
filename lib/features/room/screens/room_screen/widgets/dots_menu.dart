@@ -29,7 +29,7 @@ class _DotsMenuState extends State<DotsMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
         expanding
             ? ExpandedMenu(onHideMenu: onHideMenu)

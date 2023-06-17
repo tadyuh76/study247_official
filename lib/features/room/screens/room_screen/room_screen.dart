@@ -29,7 +29,6 @@ import 'package:study247/features/timer/notifiers/personal_timer.dart';
 import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
-import 'package:study247/utils/unfocus.dart';
 import 'package:videosdk/videosdk.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -225,67 +224,83 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             child: LayoutBuilder(builder: (context, constraints) {
               final landscape = constraints.maxWidth > constraints.maxHeight;
 
-              return Unfocus(
-                child: Scaffold(
-                  floatingActionButtonLocation:
-                      FloatingActionButtonLocation.endDocked,
-                  floatingActionButton:
-                      _renderFloatingActionButtons(landscape, context),
-                  extendBodyBehindAppBar: true,
-                  appBar: landscape ? null : _renderAppBar(),
-                  body: Stack(
-                    children: [
-                      SizedBox.expand(
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: YoutubePlayer(
-                            controller: ref.watch(
-                              roomBackgroundControllerProvider
-                                  .select((value) => value.videoController),
-                            ),
+              return Scaffold(
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
+                floatingActionButton:
+                    _renderFloatingActionButtons(landscape, context),
+                extendBodyBehindAppBar: true,
+                appBar: landscape ? null : _renderAppBar(),
+                body: Stack(
+                  children: [
+                    _renderBackground(),
+                    PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(
+                            Constants.defaultPadding / 2,
+                          ).copyWith(top: landscape ? 10 : 100),
+                          child: Stack(
+                            children: [
+                              if (showParticipants)
+                                Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.only(
+                                      top: 80, bottom: landscape ? 20 : 80),
+                                  child: ConstrainedBox(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 400),
+                                    child: Center(
+                                      child: ScrollConfiguration(
+                                        behavior: const ScrollBehavior()
+                                            .copyWith(overscroll: false),
+                                        child: GridView.builder(
+                                          padding: const EdgeInsets.all(0),
+                                          gridDelegate:
+                                              SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 1,
+                                            crossAxisSpacing:
+                                                Constants.defaultPadding,
+                                            mainAxisSpacing:
+                                                Constants.defaultPadding,
+                                            mainAxisExtent:
+                                                landscape ? 240 : 220,
+                                          ),
+                                          itemBuilder: (context, index) {
+                                            return ParticipantTile(
+                                              key: Key(participants.values
+                                                  .elementAt(index)
+                                                  .id),
+                                              participant: participants.values
+                                                  .elementAt(index),
+                                            );
+                                          },
+                                          itemCount: participants.length,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const RoomTimerTab(),
+                                  const SizedBox(width: 10),
+                                  const SessionGoalsTab(),
+                                  if (!landscape) const Spacer(),
+                                  if (!landscape) const DotsMenu()
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      PageView(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(
-                              Constants.defaultPadding / 2,
-                            ).copyWith(
-                              top: landscape
-                                  ? Constants.defaultPadding
-                                  : Constants.defaultPadding / 2 +
-                                      kToolbarHeight +
-                                      kTextTabBarHeight,
-                            ),
-                            child: Stack(
-                              children: [
-                                if (showParticipants)
-                                  _renderMeetingParticipants(),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const RoomTimerTab(),
-                                    const SizedBox(
-                                      width: Constants.defaultPadding / 2,
-                                    ),
-                                    const SessionGoalsTab(),
-                                    if (!landscape) const Spacer(),
-                                    if (!landscape) const DotsMenu()
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const FileView()
-                        ],
-                      ),
-                      _renderNavigators(),
-                      _renderMeetingControls(),
-                    ],
-                  ),
+                        const FileView()
+                      ],
+                    ),
+                    _renderNavigators(),
+                  ],
                 ),
               );
             }),
@@ -293,85 +308,58 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         );
   }
 
-  Widget _renderMeetingParticipants() {
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.only(top: 70, bottom: 90),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
-        child: Expanded(
-          child: Center(
-            child: ScrollConfiguration(
-              behavior: const ScrollBehavior().copyWith(overscroll: false),
-              child: GridView.builder(
-                padding:
-                    const EdgeInsets.only(top: Constants.defaultPadding / 2),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: Constants.defaultPadding,
-                  mainAxisSpacing: Constants.defaultPadding,
-                  mainAxisExtent: 220,
-                ),
-                itemBuilder: (context, index) {
-                  return ParticipantTile(
-                    key: Key(participants.values.elementAt(index).id),
-                    participant: participants.values.elementAt(index),
-                  );
-                },
-                itemCount: participants.length,
-              ),
-            ),
+  SizedBox _renderBackground() {
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: YoutubePlayer(
+          controller: ref.watch(
+            roomBackgroundControllerProvider
+                .select((value) => value.videoController),
           ),
         ),
       ),
     );
   }
 
-  Padding _renderMeetingControls() {
-    return Padding(
-      padding: const EdgeInsets.all(Constants.defaultPadding),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          children: [
-            BlackBackgroundButton(
-              width: 60,
-              child: SvgPicture.asset(
-                showParticipants ? IconPaths.hidePerson : IconPaths.person,
-                color: Palette.white,
-              ),
-              onTap: () => setState(() => showParticipants = !showParticipants),
-            ),
-            const SizedBox(width: Constants.defaultPadding / 2),
-            BlackBackgroundButton(
-              width: 60,
-              child: SvgPicture.asset(
-                camEnabled ? IconPaths.camera : IconPaths.cameraOff,
-                color: Palette.white,
-              ),
-              onTap: () => setState(() {
-                if (camEnabled) {
-                  _room.disableCam();
-                } else {
-                  _room.enableCam();
-                }
-                camEnabled = !camEnabled;
-              }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _renderMeetingParticipants() {
+  //   return;
+  // }
 
   Padding _renderFloatingActionButtons(bool landscape, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: Constants.defaultPadding),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Constants.defaultPadding / 2,
+        vertical: Constants.defaultPadding,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
         children: [
+          BlackBackgroundButton(
+            width: 60,
+            child: SvgPicture.asset(
+              showParticipants ? IconPaths.hidePerson : IconPaths.person,
+              color: Palette.white,
+            ),
+            onTap: () => setState(() => showParticipants = !showParticipants),
+          ),
+          const SizedBox(width: Constants.defaultPadding / 2),
+          BlackBackgroundButton(
+            width: 60,
+            child: SvgPicture.asset(
+              camEnabled ? IconPaths.camera : IconPaths.cameraOff,
+              color: Palette.white,
+            ),
+            onTap: () => setState(() {
+              if (camEnabled) {
+                _room.disableCam();
+              } else {
+                _room.enableCam();
+              }
+              camEnabled = !camEnabled;
+            }),
+          ),
+          const Spacer(),
           BlackBackgroundButton(
             width: 60,
             onTap: landscape ? _onPortrait : _onFullScreen,

@@ -14,6 +14,7 @@ class FlashcardListController {
   FlashcardListController(this._ref) : super();
 
   Stream<List<Flashcard>> getFlashcardList() {
+    // TODO: result
     final db = _ref.read(firestoreProvider);
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     final documentId = _ref.watch(documentControllerProvider).asData!.value!.id;
