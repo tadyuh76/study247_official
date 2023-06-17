@@ -57,12 +57,13 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
   Future<void> createNewDocument(BuildContext context) async {
     final result =
         await _ref.read(documentRepositoryProvider).createNewDocument();
+
     if (result case Success(value: final document)) {
       state = AsyncData(document);
       if (context.mounted) {
         context.pop();
         context.go("/document/${document.id}");
-        showSnackBar(context, "Đã tạo tài liệu mới!");
+        // showSnackBar(context, "Đã tạo tài liệu mới!");
       }
     } else {
       state = const AsyncData(null);

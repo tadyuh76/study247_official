@@ -19,15 +19,15 @@ class RoomBackgroundBox extends ConsumerStatefulWidget {
 class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
   bool allowSound = true;
 
-  Future<void> _checkClipboard() async {
-    if (await Clipboard.hasStrings()) {
-      final data = await Clipboard.getData("text/plain");
-      final str = data!.text!;
-      if (isYoutubeUrl(str)) {
-        ref.read(roomBackgroundControllerProvider).urlController.text = str;
-      }
-    }
-  }
+  // Future<void> _checkClipboard() async {
+  //   if (await Clipboard.hasStrings()) {
+  //     final data = await Clipboard.getData("text/plain");
+  //     final str = data!.text!;
+  //     if (isYoutubeUrl(str)) {
+  //       ref.read(roomBackgroundControllerProvider).urlController.text = str;
+  //     }
+  //   }
+  // }
 
   void _onSubmitUrl() {
     ref.read(roomBackgroundControllerProvider).loadVideoByURL();
@@ -96,15 +96,8 @@ class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         child: IconButton(
-                          onPressed: urlController.text.isEmpty
-                              ? _checkClipboard
-                              : _onSubmitUrl,
-                          icon: Icon(
-                            urlController.text.isEmpty
-                                ? Icons.paste
-                                : Icons.check,
-                            color: Palette.white,
-                          ),
+                          onPressed: _onSubmitUrl,
+                          icon: const Icon(Icons.check, color: Palette.white),
                         ),
                       ),
                     ],

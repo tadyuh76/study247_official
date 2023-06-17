@@ -12,7 +12,9 @@ import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class FileView extends ConsumerStatefulWidget {
-  const FileView({super.key});
+  final bool solo;
+  final bool landscape;
+  const FileView({super.key, required this.landscape, this.solo = false});
 
   @override
   ConsumerState<FileView> createState() => _FileViewState();
@@ -34,56 +36,66 @@ class _FileViewState extends ConsumerState<FileView>
               return _renderPickFileUI(ref);
             }
 
-            return Scaffold(
-              floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-              floatingActionButton: _renderActions(ref),
-              body: file.type == "pdf"
-                  ? SfPdfViewer.network(file.url)
-                  : PhotoView(
-                      imageProvider: NetworkImage(file.url),
-                      backgroundDecoration:
-                          const BoxDecoration(color: Palette.grey),
-                      minScale: PhotoViewComputedScale.contained,
-                      maxScale: 2.0,
-                    ),
+            return SafeArea(
+              child: Scaffold(
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerTop,
+                floatingActionButton:
+                    widget.landscape ? null : _renderActions(ref),
+                body: file.type == "pdf"
+                    ? SfPdfViewer.network(file.url)
+                    : PhotoView(
+                        maxScale: 2.0,
+                        imageProvider: NetworkImage(file.url),
+                        minScale: PhotoViewComputedScale.contained,
+                        backgroundDecoration:
+                            const BoxDecoration(color: Palette.grey),
+                      ),
+              ),
             );
           },
         );
   }
 
-  Padding _renderActions(WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: Constants.defaultPadding / 2 + kToolbarHeight + kTextTabBarHeight,
-      ),
-      child: Opacity(
-        opacity: 0.8,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BlackBackgroundButton(
-                onTap: ref.read(fileControllerProvider.notifier).reset,
-                width: 60,
-                child: SvgPicture.asset(
-                  IconPaths.close,
-                  color: Palette.white,
-                  width: 32,
-                  height: 32,
-                )),
-            const SizedBox(height: Constants.defaultPadding / 2),
-            BlackBackgroundButton(
-              onTap: ref.read(fileControllerProvider.notifier).pickFile,
-              width: 60,
-              child: SvgPicture.asset(
-                IconPaths.fileAdd,
-                color: Palette.white,
-                width: 32,
-                height: 32,
-              ),
+  Widget _renderActions(WidgetRef ref) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: Constants.defaultPadding / 2,
+            right: Constants.defaultPadding / 2,
+          ),
+          child: Opacity(
+            opacity: 0.8,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BlackBackgroundButton(
+                    onTap: ref.read(fileControllerProvider.notifier).reset,
+                    width: 60,
+                    child: SvgPicture.asset(
+                      IconPaths.close,
+                      color: Palette.white,
+                      width: 32,
+                      height: 32,
+                    )),
+                const SizedBox(height: Constants.defaultPadding / 2),
+                BlackBackgroundButton(
+                  onTap: ref.read(fileControllerProvider.notifier).pickFile,
+                  width: 60,
+                  child: SvgPicture.asset(
+                    IconPaths.fileAdd,
+                    color: Palette.white,
+                    width: 32,
+                    height: 32,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -99,7 +111,9 @@ class _FileViewState extends ConsumerState<FileView>
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onTap: ref.read(fileControllerProvider.notifier).pickFile,
+              onTap: () => ref
+                  .read(fileControllerProvider.notifier)
+                  .pickFile(solo: widget.solo),
               child: Container(
                 width: 120,
                 height: 120,

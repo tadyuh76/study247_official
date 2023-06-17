@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
-import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/file.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
@@ -13,7 +13,7 @@ class FileRepository {
   final Ref _ref;
   FileRepository(this._ref);
 
-  Future<Result<File, Exception>> pickFile() async {
+  Future<Result<File, Exception>> pickFile({bool solo = false}) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -27,12 +27,17 @@ class FileRepository {
       final fileBytes = file.bytes;
       if (fileBytes == null) return Failure(Exception("Không thể tải tệp"));
 
-      final roomId = _ref.read(roomControllerProvider).asData!.value!.id;
-      // final db = _ref.read(firestoreProvider);
+      final roomId = _ref.read(roomControllerProvider).asData?.value?.id;
       final storage = _ref.read(storageProvider);
+      // final db = _ref.read(firestoreProvider);
 
       // upload to Firebase and get download URL
-      final fileDir = storage.ref('/files/$roomId/${file.name}');
+      late Reference fileDir;
+      if (solo) {
+        fileDir = storage.ref("/files/solo/${file.name}");
+      } else {
+        fileDir = storage.ref('/files/$roomId/${file.name}');
+      }
       final res = await fileDir.putData(fileBytes);
       final fileUrl = await res.ref.getDownloadURL();
 
@@ -49,12 +54,12 @@ class FileRepository {
 
   Future<Result<String, Exception>> removeFile() async {
     try {
-      final currentRoomId = _ref.read(roomControllerProvider).asData!.value!.id;
-      final db = _ref.read(firestoreProvider);
-      await db.collection(FirebaseConstants.rooms).doc(currentRoomId).update({
-        "fileUrl": "",
-        "fileType": "",
-      });
+      // final currentRoomId = _ref.read(roomControllerProvider).asData!.value!.id;
+      // final db = _ref.read(firestoreProvider);
+      // await db.collection(FirebaseConstants.rooms).doc(currentRoomId).update({
+      //   "fileUrl": "",
+      //   "fileType": "",
+      // });
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);

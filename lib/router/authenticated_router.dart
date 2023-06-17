@@ -4,6 +4,7 @@ import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/home/home_screen.dart';
 import 'package:study247/features/room/screens/create_room_screen/create_room_screen.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
+import 'package:study247/features/room/screens/solo_room_screen/solo_room_screen.dart';
 
 final authenticatedRouter = GoRouter(
   routes: [
@@ -32,6 +33,10 @@ final authenticatedRouter = GoRouter(
               builder: (context, _) => const AllFlashcardsScreen(),
             )
           ],
+        ),
+        GoRoute(
+          path: "solo",
+          builder: (context, state) => SoloRoomScreen(),
         ),
       ],
     ),

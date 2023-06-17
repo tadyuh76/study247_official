@@ -4,6 +4,7 @@ import 'package:study247/core/palette.dart';
 
 class CustomButton extends StatelessWidget {
   final bool primary;
+  final Color? color;
   final String text;
   final VoidCallback onTap;
   final bool loading;
@@ -13,6 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.onTap,
     this.primary = false,
     this.loading = false,
+    this.color,
   });
 
   @override
@@ -20,10 +22,12 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(vertical: Constants.defaultPadding / 2),
+        padding: const EdgeInsets.symmetric(
+          vertical: Constants.defaultPadding / 2,
+          horizontal: Constants.defaultPadding,
+        ),
         decoration: BoxDecoration(
-          color: primary ? Palette.primary : Palette.white,
+          color: color ?? (primary ? Palette.primary : Palette.white),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Center(
@@ -31,9 +35,8 @@ class CustomButton extends StatelessWidget {
               ? const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(
-                    color: Palette.white,
-                  ))
+                  child: CircularProgressIndicator(color: Palette.white),
+                )
               : Text(
                   text,
                   style: TextStyle(

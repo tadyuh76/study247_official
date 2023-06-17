@@ -16,6 +16,8 @@ class AuthGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(authControllerProvider).when(
+          error: (error, stk) => const ErrorScreen(),
+          loading: () => const LoadingScreen(),
           data: (userModel) {
             return MaterialApp.router(
               routerConfig: userModel == null
@@ -41,8 +43,6 @@ class AuthGate extends ConsumerWidget {
               ),
             );
           },
-          error: (error, stk) => const ErrorScreen(),
-          loading: () => const LoadingScreen(),
         );
   }
 }

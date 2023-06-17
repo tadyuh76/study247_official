@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 
 class FeatureDialog extends StatelessWidget {
   final Widget child;
@@ -46,7 +45,7 @@ class FeatureDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _renderHeader(),
+                    _renderHeader(context),
                     const SizedBox(height: Constants.defaultPadding / 2),
                     landscape
                         ? Expanded(
@@ -67,7 +66,7 @@ class FeatureDialog extends StatelessWidget {
     });
   }
 
-  Row _renderHeader() {
+  Row _renderHeader(BuildContext context) {
     return Row(
       children: [
         SvgPicture.asset(
@@ -83,7 +82,7 @@ class FeatureDialog extends StatelessWidget {
         ),
         const Spacer(),
         GestureDetector(
-          onTap: globalKey.currentState!.context.pop,
+          onTap: context.pop,
           child: const Icon(Icons.close),
         )
       ],

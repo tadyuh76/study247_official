@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
+import 'package:study247/features/home/widgets/create_dialog.dart';
 
 class CreateCard extends StatelessWidget {
   const CreateCard({super.key});
+
+  void _showCreateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const RoomCreateDialog(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class CreateCard extends StatelessWidget {
             const SizedBox(height: Constants.defaultPadding),
             CustomButton(
               text: "Tạo phòng học",
-              onTap: () => context.go("/create"),
+              onTap: () => _showCreateDialog(context),
             ),
           ],
         ),

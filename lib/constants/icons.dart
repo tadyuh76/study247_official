@@ -17,6 +17,8 @@ class IconPaths {
   static const hidePerson = "assets/icons/hide_person.svg";
   static const home = "assets/icons/home.svg";
   static const image = "assets/icons/image.svg";
+  static const mic = "assets/icons/mic.svg";
+  static const micOff = "assets/icons/mic_off.svg";
   static const more = "assets/icons/more.svg";
   static const music = "assets/icons/music.svg";
   static const pause = "assets/icons/pause.svg";

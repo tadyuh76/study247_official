@@ -91,7 +91,7 @@ class _AllFlashcardsScreenState extends ConsumerState<AllFlashcardsScreen> {
                   nextPage: () => _nextPage(),
                   onEasy: onEasy,
                   onHard: onHard,
-                  onNeedRevise: onNeedRevise,
+                  onMedium: onNeedRevise,
                 ),
               ),
             );
@@ -105,13 +105,13 @@ class _FlashcardPage extends StatefulWidget {
   final VoidCallback nextPage;
   final VoidCallback onEasy;
   final VoidCallback onHard;
-  final VoidCallback onNeedRevise;
+  final VoidCallback onMedium;
   const _FlashcardPage({
     required this.curCard,
     required this.nextPage,
     required this.onEasy,
     required this.onHard,
-    required this.onNeedRevise,
+    required this.onMedium,
   });
 
   @override
@@ -164,9 +164,10 @@ class _FlashcardPageState extends State<_FlashcardPage> {
                     Text(
                       widget.curCard.title,
                       style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Palette.darkGrey),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Palette.darkGrey,
+                      ),
                     ),
                     const SizedBox(height: Constants.defaultPadding * 2),
                     Text(
@@ -196,31 +197,27 @@ class _FlashcardPageState extends State<_FlashcardPage> {
             SizedBox(
               width: double.infinity,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: CustomButton(
-                      text: "Tiếp tục",
-                      onTap: widget.onEasy,
-                    ),
+                  CustomButton(
+                    text: "Dễ",
+                    onTap: widget.onEasy,
+                    primary: true,
                   ),
-                  // const SizedBox(width: 5),
-                  // Expanded(
-                  //   child: CustomButton(
-                  //
-                  //     text: "Khó",
-                  //     onTap: widget.onHard,
-                  //     color: bannerColors["red"],
-                  //     primary: true,
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 5),
-                  // CustomButton(
-                  //
-                  //   text: "Cần xem lại",
-                  //   onTap: widget.onNeedRevise,
-                  //   color: bannerColors["blue"],
-                  //   primary: true,
-                  // ),
+                  const SizedBox(width: Constants.defaultPadding),
+                  CustomButton(
+                    text: "Thường",
+                    onTap: widget.onMedium,
+                    color: bannerColors["yellow"]!,
+                    primary: true,
+                  ),
+                  const SizedBox(width: Constants.defaultPadding),
+                  CustomButton(
+                    text: "Khó",
+                    onTap: widget.onHard,
+                    color: bannerColors["red"]!,
+                    primary: true,
+                  ),
                 ],
               ),
             ),

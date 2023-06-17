@@ -47,7 +47,8 @@ class RoomScreen extends ConsumerStatefulWidget {
 class _RoomScreenState extends ConsumerState<RoomScreen> {
   final PageController _pageController = PageController();
   bool _isSecondPage = false;
-  bool camEnabled = true;
+  bool camEnabled = false;
+  bool micEnabled = false;
   bool showParticipants = true;
 
   late Room _room;
@@ -61,8 +62,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       roomId: widget.meetingId,
       token: Constants.videoSDKToken,
       displayName: ref.read(authControllerProvider).asData!.value!.displayName,
-      micEnabled: false,
-      camEnabled: true,
+      micEnabled: micEnabled,
+      camEnabled: camEnabled,
       defaultCameraIndex: 1,
     );
 
@@ -296,7 +297,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                             ],
                           ),
                         ),
-                        const FileView()
+                        FileView(landscape: landscape),
                       ],
                     ),
                     _renderNavigators(),
@@ -333,17 +334,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         vertical: Constants.defaultPadding,
       ),
       child: Row(
+        mainAxisAlignment:
+            landscape ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          BlackBackgroundButton(
-            width: 60,
-            child: SvgPicture.asset(
-              showParticipants ? IconPaths.hidePerson : IconPaths.person,
-              color: Palette.white,
-            ),
-            onTap: () => setState(() => showParticipants = !showParticipants),
-          ),
-          const SizedBox(width: Constants.defaultPadding / 2),
           BlackBackgroundButton(
             width: 60,
             child: SvgPicture.asset(
@@ -359,19 +353,31 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
               camEnabled = !camEnabled;
             }),
           ),
-          const Spacer(),
+          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
           BlackBackgroundButton(
             width: 60,
-            onTap: landscape ? _onPortrait : _onFullScreen,
-            child: Icon(
-              landscape
-                  ? Icons.fullscreen_exit_rounded
-                  : Icons.fullscreen_rounded,
+            child: SvgPicture.asset(
+              micEnabled ? IconPaths.mic : IconPaths.micOff,
               color: Palette.white,
-              size: 32,
             ),
+            onTap: () => setState(() {
+              if (micEnabled) {
+                _room.muteMic();
+              } else {
+                _room.unmuteMic();
+              }
+              micEnabled = !micEnabled;
+            }),
           ),
-          if (!landscape) const SizedBox(width: Constants.defaultPadding / 2),
+          if (landscape) const Spacer(),
+          BlackBackgroundButton(
+            width: 60,
+            child: SvgPicture.asset(
+              showParticipants ? IconPaths.hidePerson : IconPaths.person,
+              color: Palette.white,
+            ),
+            onTap: () => setState(() => showParticipants = !showParticipants),
+          ),
           if (!landscape)
             BlackBackgroundButton(
               width: 60,
@@ -385,6 +391,18 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                 color: Palette.white,
               ),
             ),
+          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
+          BlackBackgroundButton(
+            width: 60,
+            onTap: landscape ? _onPortrait : _onFullScreen,
+            child: Icon(
+              landscape
+                  ? Icons.fullscreen_exit_rounded
+                  : Icons.fullscreen_rounded,
+              color: Palette.white,
+              size: 32,
+            ),
+          ),
         ],
       ),
     );
