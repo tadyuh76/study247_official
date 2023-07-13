@@ -1,5 +1,5 @@
 name: study247
-description: A new Flutter project.
+description: This is an educational app built with Flutter. Study247's aim is to connect and improve the learning experience of students all around the world. Created by tadyuh76.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
