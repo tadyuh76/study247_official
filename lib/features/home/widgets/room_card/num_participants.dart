@@ -28,7 +28,14 @@ class NumParticipants extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset('assets/icons/people.svg', color: Palette.primary),
+            SvgPicture.asset(
+              'assets/icons/people.svg',
+              // color: Palette.primary,
+              colorFilter: const ColorFilter.mode(
+                Palette.primary,
+                BlendMode.srcIn,
+              ),
+            ),
             const SizedBox(width: Constants.defaultPadding / 2),
             RichText(
               text: TextSpan(

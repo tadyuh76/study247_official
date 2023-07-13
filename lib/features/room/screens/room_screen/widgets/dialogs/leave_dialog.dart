@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/widgets/custom_button.dart';
 
 class LeaveDialog extends StatelessWidget {
   final String title;
@@ -45,14 +43,28 @@ class LeaveDialog extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CustomButton(text: "Đồng ý", onTap: onAccept),
+                    _renderButton("Đồng ý", onAccept),
                     const SizedBox(width: Constants.defaultPadding * 2),
-                    CustomButton(text: "Huỷ", onTap: context.pop),
+                    _renderButton("Huỷ", context.pop),
                   ],
                 )
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _renderButton(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Palette.primary,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

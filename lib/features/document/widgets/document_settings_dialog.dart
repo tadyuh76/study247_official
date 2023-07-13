@@ -123,7 +123,11 @@ class _DocumentSettingsDialogState
               iconPath,
               width: 32,
               height: 32,
-              color: Palette.black,
+              // color: Palette.black,
+              colorFilter: const ColorFilter.mode(
+                Palette.black,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: Constants.defaultPadding),
             Text(

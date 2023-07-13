@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +11,7 @@ import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/flashcards/widgets/complete_dialog.dart';
+import 'package:study247/features/notifications/notification_service.dart';
 
 const defaultTextStyle = TextStyle(
   color: Palette.black,
@@ -42,19 +45,46 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
     }
   }
 
-  void _onEasy() {
+  void _onEasy(Flashcard flashcard) {
     _nextPage();
-    // TODO: implement next page algorithm
+    NotificationService().showNotification(
+      id: Random().nextInt(762005),
+      title: flashcard.title,
+      body: flashcard.front,
+      duration: Duration(
+        minutes: int.parse(
+          (flashcard.currentInterval * 60 * 1.3).toStringAsFixed(0),
+        ),
+      ),
+    );
   }
 
-  void _onHard() {
+  void _onHard(Flashcard flashcard) {
     _nextPage();
-    // TODO: implement next page algorithm
+    NotificationService().showNotification(
+      id: Random().nextInt(762005),
+      title: flashcard.title,
+      body: flashcard.front,
+      duration: Duration(
+        minutes: int.parse(
+          (flashcard.currentInterval * 1.5).toStringAsFixed(0),
+        ),
+      ),
+    );
   }
 
-  void _onMedium() {
+  void _onMedium(Flashcard flashcard) {
     _nextPage();
-    // TODO: implement next page algorithm
+    NotificationService().showNotification(
+      id: Random().nextInt(762005),
+      title: flashcard.title,
+      body: flashcard.front,
+      duration: Duration(
+        minutes: int.parse(
+          (flashcard.currentInterval * 60 * 1).toStringAsFixed(0),
+        ),
+      ),
+    );
   }
 
   @override
@@ -88,9 +118,9 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
                 itemBuilder: (context, index) => _FlashcardTab(
                   curCard: flashcardList[index],
                   nextPage: () => _nextPage(),
-                  onEasy: _onEasy,
-                  onHard: _onHard,
-                  onMedium: _onMedium,
+                  onEasy: () => _onEasy(flashcardList[index]),
+                  onHard: () => _onHard(flashcardList[index]),
+                  onMedium: () => _onMedium(flashcardList[index]),
                 ),
               ),
             );

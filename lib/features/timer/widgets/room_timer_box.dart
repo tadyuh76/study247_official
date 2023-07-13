@@ -52,7 +52,7 @@ class RoomTimerBox extends ConsumerWidget {
               width: 200,
               child: CircularPercentIndicator(
                 radius: 100,
-                percent: percent,
+                percent: percent < 0 ? 0 : percent,
                 progressColor: Palette.primary,
                 backgroundColor: Palette.lightGrey,
                 lineWidth: 12,

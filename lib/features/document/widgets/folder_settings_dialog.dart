@@ -66,7 +66,7 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  "Chỉnh sửa ghi chú",
+                  "Chỉnh sửa thư mục",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Palette.black,
@@ -82,7 +82,7 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
                   onEditingComplete: () {},
                 ),
                 const SizedBox(height: Constants.defaultPadding),
-                _renderOption("Đổi màu ghi chú", IconPaths.color),
+                _renderOption("Đổi màu thư mục", IconPaths.color),
                 ColorPicker(
                   selectingColorIdx: _selectingColorIdx,
                   onSelect: (index) =>
@@ -114,7 +114,11 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
               iconPath,
               width: 32,
               height: 32,
-              color: Palette.black,
+              // color: Palette.black,
+              colorFilter: const ColorFilter.mode(
+                Palette.black,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: Constants.defaultPadding),
             Text(

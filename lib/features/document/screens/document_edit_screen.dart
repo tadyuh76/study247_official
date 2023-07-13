@@ -176,73 +176,76 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
               ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Constants.defaultPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  maxLines: null,
-                  controller: _titleController,
-                  onChanged: _onTitleChanged,
-                  style: const TextStyle(
-                    color: Palette.black,
-                    fontSize: 20,
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: "Nhập tiêu đề...",
-                    hintStyle: TextStyle(color: Palette.darkGrey),
-                    border: InputBorder.none,
-                  ),
-                ),
-                // const SizedBox(height: Constants.defaultPadding),
-                Consumer(builder: (context, ref, child) {
-                  final lastEditTime = DateTime.parse(
-                    ref
-                            .watch(documentControllerProvider)
-                            .asData
-                            ?.value
-                            ?.lastEdit ??
-                        DateTime.now().toString(),
-                  );
-                  final lastEditHour =
-                      "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
-                  final lastEditDay =
-                      "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
-
-                  return Text(
-                    "$lastEditHour - $lastEditDay",
+        body: ScrollConfiguration(
+          behavior: const ScrollBehavior().copyWith(overscroll: false),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Constants.defaultPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    maxLines: null,
+                    controller: _titleController,
+                    onChanged: _onTitleChanged,
                     style: const TextStyle(
-                      fontSize: 12,
-                      color: Palette.darkGrey,
-                      fontWeight: FontWeight.w300,
+                      color: Palette.black,
+                      fontSize: 20,
                     ),
-                  );
-                }),
-                const SizedBox(height: Constants.defaultPadding / 2),
-                TextField(
-                  maxLengthEnforcement: MaxLengthEnforcement.none,
-                  maxLength: TextField.noMaxLength,
-                  controller: _documentController,
-                  maxLines: null,
-                  onChanged: _onDocumentChanged,
-                  cursorColor: Palette.primary,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(color: Palette.darkGrey),
-                    hintText: "Nhập nội dung...",
+                    decoration: const InputDecoration(
+                      hintText: "Nhập tiêu đề...",
+                      hintStyle: TextStyle(color: Palette.darkGrey),
+                      border: InputBorder.none,
+                    ),
                   ),
-                  style: const TextStyle(
-                    height: 1.5,
-                    color: Palette.black,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 14,
+                  // const SizedBox(height: Constants.defaultPadding),
+                  Consumer(builder: (context, ref, child) {
+                    final lastEditTime = DateTime.parse(
+                      ref
+                              .watch(documentControllerProvider)
+                              .asData
+                              ?.value
+                              ?.lastEdit ??
+                          DateTime.now().toString(),
+                    );
+                    final lastEditHour =
+                        "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
+                    final lastEditDay =
+                        "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
+
+                    return Text(
+                      "$lastEditHour - $lastEditDay",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Palette.darkGrey,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: Constants.defaultPadding / 2),
+                  TextField(
+                    maxLengthEnforcement: MaxLengthEnforcement.none,
+                    maxLength: TextField.noMaxLength,
+                    controller: _documentController,
+                    maxLines: null,
+                    onChanged: _onDocumentChanged,
+                    cursorColor: Palette.primary,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(color: Palette.darkGrey),
+                      hintText: "Nhập nội dung...",
+                    ),
+                    style: const TextStyle(
+                      height: 1.5,
+                      color: Palette.black,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 14,
+                    ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -387,12 +390,16 @@ class _DocCustomController extends TextEditingController {
 
     return TextSpan(
       children: [
-        TextSpan(text: frontSideText, style: style),
+        TextSpan(text: "$frontSideText ", style: style),
         TextSpan(
-          text: symbol,
-          style: style.copyWith(color: Palette.primary),
+          text: symbol.trim(),
+          style: style.copyWith(
+            color: Palette.primary,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        TextSpan(text: "$backSideText\n", style: style),
+        TextSpan(text: " $backSideText\n", style: style),
       ],
     );
   }

@@ -74,9 +74,13 @@ class FolderWidget extends ConsumerWidget {
                   onTap: () => _showFolderEditDialog(context),
                   child: SvgPicture.asset(
                     IconPaths.more,
-                    color: Palette.white,
+                    // color: Palette.white,
                     width: 24,
                     height: 24,
+                    colorFilter: const ColorFilter.mode(
+                      Palette.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],

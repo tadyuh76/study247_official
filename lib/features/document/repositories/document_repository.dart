@@ -4,10 +4,12 @@ import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/models/flashcard.dart';
 import 'package:study247/core/models/folder.dart';
+import 'package:study247/core/models/message.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
+import 'package:study247/features/room/controllers/room_controller.dart';
 
 final documentRepositoryProvider = Provider((ref) => DocumentRepository(ref));
 
@@ -52,6 +54,72 @@ class DocumentRepository {
       final newFolder = Folder(id: newRef.id, name: name, color: color);
       await newRef.set(newFolder.toMap());
       return Success(newFolder);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> shareDocumentToRoom(
+    Document document,
+  ) async {
+    try {
+      final roomId = _ref.read(roomControllerProvider).asData?.value?.id;
+      if (roomId == null) {
+        return Failure(
+          Exception("Bạn cần trong phòng học để chia sẻ tài liệu!"),
+        );
+      }
+
+      final db = _ref.read(firestoreProvider);
+      final user = _ref.read(authControllerProvider).asData!.value!;
+      final docRef = db
+          .collection(FirebaseConstants.rooms)
+          .doc(roomId)
+          .collection(FirebaseConstants.messages)
+          .doc();
+
+      final sharedMessage = Message(
+        text: "[TITLE]:${document.title}  [TEXT]:${document.text}",
+        senderId: user.uid,
+        senderName: user.displayName,
+        senderPhotoURL: user.photoURL,
+        createdAt: DateTime.now().toString(),
+        type: "document",
+        noteId: document.id,
+      );
+      docRef.set(sharedMessage.toMap());
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> copyDocument(String documentInText) async {
+    try {
+      final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+      final db = _ref.read(firestoreProvider);
+
+      List<String> parts = documentInText.split("[TEXT]:");
+      final documentTitle = parts[0].substring("[TITLE]:".length);
+      final documentText = parts[1];
+
+      final newRef = db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.documents)
+          .doc();
+
+      final newDocument = Document(
+        id: newRef.id,
+        title: documentTitle,
+        text: documentText,
+        lastEdit: DateTime.now().toString(),
+        color: "blue",
+        folderName: "",
+      );
+      newRef.set(newDocument.toMap());
+
+      return Success(newRef.id);
     } on Exception catch (e) {
       return Failure(e);
     }

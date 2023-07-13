@@ -74,7 +74,8 @@ class FeatureDialog extends StatelessWidget {
       children: [
         SvgPicture.asset(
           iconPath,
-          color: Palette.black,
+          // color: Palette.black,
+          colorFilter: const ColorFilter.mode(Palette.black, BlendMode.srcIn),
           height: 24,
           width: 24,
         ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:study247/core/models/audio.dart';
+import 'package:study247/features/room/screens/room_screen/room_screen.dart';
+import 'package:study247/utils/show_snack_bar.dart';
 
 final audioControllerProvider = ChangeNotifierProvider(
   (ref) => AudioController()..init(),
@@ -46,7 +48,7 @@ class AudioController extends ChangeNotifier {
     try {
       audio.forEach((key, value) => value.player.dispose());
     } catch (e) {
-      print("error disposing audios");
+      showSnackBar(globalKey.currentContext!, "error disposing audios");
     }
 
     audio = {

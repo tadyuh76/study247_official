@@ -64,7 +64,11 @@ class MessageWidget extends ConsumerWidget {
                     SvgPicture.asset(
                       IconPaths.reply,
                       width: 30,
-                      color: Palette.darkGrey,
+                      // color: Palette.darkGrey,
+                      colorFilter: const ColorFilter.mode(
+                        Palette.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     const SizedBox(width: Constants.defaultPadding / 2),
                     Avatar(photoURL: message.replyingPhotoURL!, radius: 8),
@@ -137,8 +141,12 @@ class MessageWidget extends ConsumerWidget {
                                 onTap: () => _onUnpinMessage(ref, context),
                                 child: SvgPicture.asset(
                                   IconPaths.unpin,
-                                  color: Palette.darkGrey,
+                                  // color: Palette.darkGrey,
                                   width: 16,
+                                  colorFilter: const ColorFilter.mode(
+                                    Palette.black,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                           ],

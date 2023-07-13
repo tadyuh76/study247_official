@@ -182,7 +182,11 @@ class _PlayPauseButton extends ConsumerWidget {
           padding: const EdgeInsets.all(10).copyWith(left: 10),
           child: SvgPicture.asset(
             isPaused ? IconPaths.play : IconPaths.pause,
-            color: Palette.white,
+            // color: Palette.white,
+            colorFilter: const ColorFilter.mode(
+              Palette.white,
+              BlendMode.srcIn,
+            ),
             width: 24,
             height: 24,
           ),
@@ -214,7 +218,11 @@ class _ResetButton extends ConsumerWidget {
           padding: const EdgeInsets.all(10),
           child: SvgPicture.asset(
             IconPaths.reset,
-            color: Palette.black,
+            // color: Palette.black,
+            colorFilter: const ColorFilter.mode(
+              Palette.black,
+              BlendMode.srcIn,
+            ),
             width: 24,
             height: 24,
           ),

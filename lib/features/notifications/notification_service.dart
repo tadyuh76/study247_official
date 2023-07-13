@@ -12,8 +12,6 @@ class NotificationService {
     const androidSettings =
         AndroidInitializationSettings("@mipmap/launcher_icon");
 
-    // TODO: ios initialization
-
     const settings = InitializationSettings(android: androidSettings);
     await flutterLocalNotificationsPlugin.initialize(settings);
   }

@@ -82,7 +82,11 @@ class DocumentWidget extends ConsumerWidget {
                   onTap: () => _showDocumentEditDialog(context),
                   child: SvgPicture.asset(
                     IconPaths.more,
-                    color: Palette.white,
+                    // color: Palette.white,
+                    colorFilter: const ColorFilter.mode(
+                      Palette.white,
+                      BlendMode.srcIn,
+                    ),
                     width: 24,
                     height: 24,
                   ),

@@ -39,7 +39,11 @@ class _DotsMenuState extends State<DotsMenu> {
                   onTap: () => _showExpandedMenu(context),
                   child: SvgPicture.asset(
                     IconPaths.more,
-                    color: Palette.white,
+                    // color: Palette.white,
+                    colorFilter: const ColorFilter.mode(
+                      Palette.white,
+                      BlendMode.srcIn,
+                    ),
                     width: 32,
                     height: 32,
                   ),

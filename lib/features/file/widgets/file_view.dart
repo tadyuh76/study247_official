@@ -76,7 +76,11 @@ class _FileViewState extends ConsumerState<FileView>
                     width: 60,
                     child: SvgPicture.asset(
                       IconPaths.close,
-                      color: Palette.white,
+                      // color: Palette.white,
+                      colorFilter: const ColorFilter.mode(
+                        Palette.white,
+                        BlendMode.srcIn,
+                      ),
                       width: 32,
                       height: 32,
                     )),
@@ -86,7 +90,11 @@ class _FileViewState extends ConsumerState<FileView>
                   width: 60,
                   child: SvgPicture.asset(
                     IconPaths.fileAdd,
-                    color: Palette.white,
+                    // color: Palette.white,
+                    colorFilter: const ColorFilter.mode(
+                      Palette.white,
+                      BlendMode.srcIn,
+                    ),
                     width: 32,
                     height: 32,
                   ),
@@ -124,7 +132,11 @@ class _FileViewState extends ConsumerState<FileView>
                 ),
                 child: SvgPicture.asset(
                   IconPaths.fileAdd,
-                  color: Palette.lightGrey,
+                  // color: Palette.lightGrey,
+                  colorFilter: const ColorFilter.mode(
+                    Palette.lightGrey,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

@@ -81,7 +81,7 @@ class RoomTimer extends ChangeNotifier {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       remainTime--;
 
-      if (remainTime == 0) {
+      if (remainTime <= 0) {
         timer.cancel();
         isStudying = false;
 
@@ -104,7 +104,7 @@ class RoomTimer extends ChangeNotifier {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       remainTime--;
 
-      if (remainTime == 0) {
+      if (remainTime <= 0) {
         timer.cancel();
         isStudying = true;
 

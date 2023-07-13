@@ -52,7 +52,11 @@ class RoomTimerTab extends ConsumerWidget {
                 IconPaths.clock,
                 width: 16,
                 height: 16,
-                color: Palette.white,
+                // color: Palette.white,
+                colorFilter: const ColorFilter.mode(
+                  Palette.white,
+                  BlendMode.srcIn,
+                ),
               ),
               const SizedBox(width: 5),
               Text(

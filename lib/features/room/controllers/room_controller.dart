@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
@@ -9,8 +10,6 @@ import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/room/controllers/room_info_controller.dart';
 import 'package:study247/features/room/repositories/room_repository.dart';
-
-import '../../../constants/firebase.dart';
 
 final roomControllerProvider =
     StateNotifierProvider<RoomController, AsyncValue<RoomModel?>>(

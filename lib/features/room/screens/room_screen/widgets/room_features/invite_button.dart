@@ -33,7 +33,11 @@ class InviteButton extends StatelessWidget {
               IconPaths.addPeople,
               width: 20,
               height: 20,
-              color: Palette.primary,
+              // color: Palette.primary,
+              colorFilter: const ColorFilter.mode(
+                Palette.primary,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: Constants.defaultPadding / 2),
             const Text(

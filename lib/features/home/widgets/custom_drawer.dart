@@ -137,7 +137,10 @@ class TabItem extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   'assets/icons/$iconName.svg',
-                  color: focus ? Palette.white : Palette.darkGrey,
+                  colorFilter: ColorFilter.mode(
+                    focus ? Palette.white : Palette.darkGrey,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 const SizedBox(width: Constants.defaultPadding),
                 Text(

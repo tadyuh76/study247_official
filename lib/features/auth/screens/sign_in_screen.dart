@@ -169,7 +169,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
                           IconPaths.google,
-                          color: Palette.white,
+                          // color: Palette.white,
+                          colorFilter: const ColorFilter.mode(
+                            Palette.white,
+                            BlendMode.srcIn,
+                          ),
                           width: 24,
                         ),
                       ),

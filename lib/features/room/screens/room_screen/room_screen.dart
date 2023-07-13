@@ -387,7 +387,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       ),
       child: SvgPicture.asset(
         IconPaths.chats,
-        color: Palette.white,
+        // color: Palette.white,
+        colorFilter: const ColorFilter.mode(
+          Palette.white,
+          BlendMode.srcIn,
+        ),
       ),
     );
   }
@@ -397,7 +401,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       width: 60,
       child: SvgPicture.asset(
         showParticipants ? IconPaths.hidePerson : IconPaths.person,
-        color: Palette.white,
+        // color: Palette.white,
+        colorFilter: const ColorFilter.mode(
+          Palette.white,
+          BlendMode.srcIn,
+        ),
       ),
       onTap: () => setState(() => showParticipants = !showParticipants),
     );
@@ -408,7 +416,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       width: 60,
       child: SvgPicture.asset(
         micEnabled ? IconPaths.mic : IconPaths.micOff,
-        color: Palette.white,
+        // color: Palette.white,
+        colorFilter: const ColorFilter.mode(
+          Palette.white,
+          BlendMode.srcIn,
+        ),
       ),
       onTap: () => setState(() {
         if (micEnabled) {
@@ -426,7 +438,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       width: 60,
       child: SvgPicture.asset(
         camEnabled ? IconPaths.camera : IconPaths.cameraOff,
-        color: Palette.white,
+        // color: Palette.white,
+        colorFilter: const ColorFilter.mode(
+          Palette.white,
+          BlendMode.srcIn,
+        ),
       ),
       onTap: () => setState(() {
         if (camEnabled) {
@@ -549,7 +565,11 @@ class ChatButton extends StatelessWidget {
       ),
       child: SvgPicture.asset(
         IconPaths.chats,
-        color: Palette.white,
+        // color: Palette.white,
+        colorFilter: const ColorFilter.mode(
+          Palette.white,
+          BlendMode.srcIn,
+        ),
       ),
     );
   }

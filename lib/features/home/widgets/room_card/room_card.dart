@@ -47,7 +47,11 @@ class RoomCard extends StatelessWidget {
                 Text(
                   room.description,
                   maxLines: 3,
-                  style: const TextStyle(color: Palette.black, fontSize: 14),
+                  style: const TextStyle(
+                    color: Palette.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
                 const SizedBox(height: Constants.defaultPadding / 2),
                 EnterButton(room: room),
@@ -83,7 +87,7 @@ class RoomCard extends StatelessWidget {
           child: Text(
             room.name,
             maxLines: 2,
-            textScaleFactor: 1,
+            // textScaleFactor: 1,
             style: const TextStyle(
               color: Palette.white,
               fontWeight: FontWeight.w500,

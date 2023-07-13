@@ -43,7 +43,11 @@ class ExpandedMenu extends StatelessWidget {
             onTap: onHideMenu,
             child: SvgPicture.asset(
               IconPaths.close,
-              color: Palette.white,
+              // color: Palette.white,
+              colorFilter: const ColorFilter.mode(
+                Palette.white,
+                BlendMode.srcIn,
+              ),
               width: 32,
               height: 32,
             ),
@@ -53,7 +57,11 @@ class ExpandedMenu extends StatelessWidget {
             width: 60,
             child: SvgPicture.asset(
               IconPaths.music,
-              color: Palette.white,
+              // color: Palette.white,
+              colorFilter: const ColorFilter.mode(
+                Palette.white,
+                BlendMode.srcIn,
+              ),
               width: 24,
               height: 24,
             ),
@@ -66,7 +74,11 @@ class ExpandedMenu extends StatelessWidget {
             child: SvgPicture.asset(
               IconPaths.image,
               width: 32,
-              color: Palette.white,
+              // color: Palette.white,
+              colorFilter: const ColorFilter.mode(
+                Palette.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const SizedBox(height: Constants.defaultPadding / 2),
@@ -74,7 +86,11 @@ class ExpandedMenu extends StatelessWidget {
             width: 60,
             child: SvgPicture.asset(
               IconPaths.file,
-              color: Palette.white,
+              // color: Palette.white,
+              colorFilter: const ColorFilter.mode(
+                Palette.white,
+                BlendMode.srcIn,
+              ),
               width: 24,
             ),
             onTap: () => Navigator.of(context).push(

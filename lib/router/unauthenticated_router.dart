@@ -6,11 +6,11 @@ final unauthenticatedRouter = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => SignInScreen(),
+      builder: (context, state) => const SignInScreen(),
       routes: [
         GoRoute(
           path: "signup",
-          builder: (context, state) => SignUpScreen(),
+          builder: (context, state) => const SignUpScreen(),
         ),
       ],
     ),

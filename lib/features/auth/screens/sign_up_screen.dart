@@ -23,6 +23,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _nameController = TextEditingController();
 
   bool _passwordHide = true;
+  bool _loading = false;
 
   void _signUp(WidgetRef ref, BuildContext context) {
     final email = _emailController.text.trim();
@@ -39,9 +40,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       return;
     }
 
+    setState(() => _loading = true);
     ref
         .read(authControllerProvider.notifier)
         .signUpWithEmailAndPassword(context, email, password, name);
+    setState(() => _loading = false);
   }
 
   @override
@@ -147,6 +150,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       text: "Đăng kí",
                       primary: true,
                       onTap: () => _signUp(ref, context),
+                      loading: _loading,
                     ),
                     const SizedBox(height: Constants.defaultPadding),
                     const Text(
@@ -168,7 +172,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       alignment: Alignment.center,
                       child: SvgPicture.asset(
                         IconPaths.google,
-                        color: Palette.white,
+                        // color: Palette.white,
+                        colorFilter: const ColorFilter.mode(
+                          Palette.white,
+                          BlendMode.srcIn,
+                        ),
                         width: 24,
                       ),
                     ),

@@ -30,7 +30,7 @@ const tags = [
 ];
 
 class Constants {
-  static const double defaultPadding = 20;
+  static const defaultPadding = 20.0;
   static const appName = "Study247";
   static const appFontName = "Lexend";
   static const videoSDKToken =
@@ -40,13 +40,16 @@ class Constants {
   static const failedMessage = "Đã có lỗi xảy ra";
   static const successMessage = "success";
 
-  static const flashcardForward = " >>";
-  static const flashcardBackward = " <<";
-  static const flashcardDouble = " <>";
+  static const flashcardForward = ">> ";
+  static const flashcardBackward = "<< ";
+  static const flashcardDouble = "<> ";
 
-  static const flashcardForwardSymbol = " \u2964 ";
-  static const flashcardBackwardSymbol = " \u2962 ";
-  static const flashcardDoubleSymbol = " \u21cb ";
+  // static const flashcardForwardSymbol = " \u2964 ";
+  static const flashcardForwardSymbol = " → ";
+  // static const flashcardBackwardSymbol = " \u2962 ";
+  static const flashcardBackwardSymbol = " ← ";
+  // static const flashcardDoubleSymbol = " \u21cb ";
+  static const flashcardDoubleSymbol = " ↔ ";
 
   static const documentHeadingSymbol = "#";
 }

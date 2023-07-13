@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/models/folder.dart';
-import 'package:study247/core/models/message.dart';
 import 'package:study247/core/models/result.dart';
-import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/repositories/document_repository.dart';
-import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final documentControllerProvider =
@@ -63,7 +58,6 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
       if (context.mounted) {
         context.pop();
         context.go("/document/${document.id}");
-        // showSnackBar(context, "Đã tạo tài liệu mới!");
       }
     } else {
       state = const AsyncData(null);
@@ -117,9 +111,6 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
         await _ref.read(documentRepositoryProvider).deleteDocument(documentId);
     if (result case Success()) {
       if (context.mounted) {
-        // context
-        //   ..pop()
-        //   ..pop();
         showSnackBar(context, "Đã xoá tài liệu.");
       }
     } else {
@@ -134,6 +125,7 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     final result = await _ref
         .read(documentRepositoryProvider)
         .fetchDocumentById(documentId);
+
     if (result case Success(value: final document)) {
       state = AsyncData(document);
       return document;
@@ -165,58 +157,26 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
   // }
 
   Future<void> shareDocumentToRoom(BuildContext context) async {
-    final roomId = _ref.read(roomControllerProvider).asData?.value?.id;
-    if (roomId == null) {
-      showSnackBar(context, "Bạn cần trong phòng học để chia sẻ tài liệu!");
-      return;
+    final result = await _ref
+        .read(documentRepositoryProvider)
+        .shareDocumentToRoom(state.asData!.value!);
+
+    if (result case Success()) {
+      if (mounted) showSnackBar(context, "Đã chia sẻ tài liệu cho phòng học!");
+    } else if (result case Failure(:final failure)) {
+      if (mounted) showSnackBar(context, failure.toString());
     }
-
-    // TODO: result
-    final db = _ref.read(firestoreProvider);
-    final document = state.asData!.value!;
-    final user = _ref.read(authControllerProvider).asData!.value!;
-
-    final docRef = db
-        .collection(FirebaseConstants.rooms)
-        .doc(roomId)
-        .collection(FirebaseConstants.messages)
-        .doc();
-    final sharedMessage = Message(
-      text: "[TITLE]:${document.title}  [TEXT]:${document.text}",
-      senderId: user.uid,
-      senderName: user.displayName,
-      senderPhotoURL: user.photoURL,
-      createdAt: DateTime.now().toString(),
-      type: "document",
-      noteId: document.id,
-    );
-    docRef.set(sharedMessage.toMap());
-    showSnackBar(context, "Đã chia sẻ tài liệu cho phòng học!");
   }
 
   Future<String> copyDocument(String documentInText) async {
-    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    final db = _ref.read(firestoreProvider);
+    final result = await _ref
+        .read(documentRepositoryProvider)
+        .copyDocument(documentInText);
 
-    List<String> parts = documentInText.split("[TEXT]:");
-    final documentTitle = parts[0].substring("[TITLE]:".length);
-    final documentText = parts[1];
+    if (result case Success(value: final documentId)) {
+      return documentId;
+    }
 
-    final newRef = db
-        .collection(FirebaseConstants.users)
-        .doc(userId)
-        .collection(FirebaseConstants.documents)
-        .doc();
-
-    final newDocument = Document(
-      id: newRef.id,
-      title: documentTitle,
-      text: documentText,
-      lastEdit: DateTime.now().toString(),
-      color: "blue",
-      folderName: "",
-    );
-    newRef.set(newDocument.toMap());
-    return newRef.id;
+    return "";
   }
 }

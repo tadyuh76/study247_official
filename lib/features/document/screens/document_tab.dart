@@ -33,7 +33,7 @@ class DocumentTab extends ConsumerWidget {
 
                     return Expanded(
                       child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
+                        // physics: const BouncingScrollPhysics(),
                         itemCount: documentList.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {

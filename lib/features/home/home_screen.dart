@@ -146,9 +146,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   children: [
                     SvgPicture.asset(
                       IconPaths.home,
-                      color: _currentIndex == 0
-                          ? Palette.primary
-                          : Palette.darkGrey,
+                      colorFilter: ColorFilter.mode(
+                        _currentIndex == 0 ? Palette.primary : Palette.darkGrey,
+                        BlendMode.srcIn,
+                      ),
                       width: 32,
                     ),
                     Text(
@@ -175,9 +176,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   children: [
                     SvgPicture.asset(
                       IconPaths.flashcards,
-                      color: _currentIndex == 1
-                          ? Palette.primary
-                          : Palette.darkGrey,
+                      colorFilter: ColorFilter.mode(
+                        _currentIndex == 1 ? Palette.primary : Palette.darkGrey,
+                        BlendMode.srcIn,
+                      ),
                       width: 32,
                     ),
                     Text(
