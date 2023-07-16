@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:study247/constants/common.dart';
+import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 
 class NumParticipants extends StatelessWidget {
@@ -29,7 +30,7 @@ class NumParticipants extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              'assets/icons/people.svg',
+              IconPaths.people,
               // color: Palette.primary,
               colorFilter: const ColorFilter.mode(
                 Palette.primary,

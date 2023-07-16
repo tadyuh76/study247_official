@@ -246,8 +246,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                           child: Stack(
                             children: [
                               // _renderWebCTA(),
-                              if (showParticipants)
-                                Container(
+                              // if (showParticipants)
+                              Opacity(
+                                opacity: showParticipants ? 1 : 0,
+                                child: Container(
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.only(
                                     top: kIsWeb ? 40 : 80,
@@ -278,9 +280,11 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                                           ),
                                           itemBuilder: (context, index) {
                                             return ParticipantTile(
-                                              key: Key(participants.values
-                                                  .elementAt(index)
-                                                  .id),
+                                              key: Key(
+                                                participants.values
+                                                    .elementAt(index)
+                                                    .id,
+                                              ),
                                               participant: participants.values
                                                   .elementAt(index),
                                             );
@@ -291,6 +295,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                                     ),
                                   ),
                                 ),
+                              ),
                               Padding(
                                 padding: kIsWeb
                                     ? const EdgeInsets.symmetric(horizontal: 10)

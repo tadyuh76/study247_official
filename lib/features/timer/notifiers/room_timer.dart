@@ -94,7 +94,7 @@ class RoomTimer extends ChangeNotifier {
         //   dialog: const BreaktimeDialog(),
         //   canDismiss: false,
         // );
-        showSnackBar(globalKey.currentState!.context, "hết giờ học");
+        showSnackBar(globalKey.currentState!.context, "hết phiên học");
       }
       notifyListeners();
     });

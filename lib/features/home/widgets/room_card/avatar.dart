@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 
 class Avatar extends StatelessWidget {
@@ -14,7 +15,7 @@ class Avatar extends StatelessWidget {
       radius: radius,
       child: ClipOval(
         child: photoURL.isEmpty
-            ? SvgPicture.asset("assets/icons/user.svg")
+            ? SvgPicture.asset(IconPaths.defaultUser)
             : Image.network(photoURL, fit: BoxFit.cover),
       ),
     );

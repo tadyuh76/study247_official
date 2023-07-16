@@ -6,10 +6,12 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
+import 'package:study247/core/shared/widgets/search_bar.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
 import 'package:study247/features/home/widgets/custom_drawer.dart';
 import 'package:study247/features/home/widgets/room_card/room_card.dart';
+import 'package:study247/features/profile/screens/profile_screen.dart';
 import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/utils/unfocus.dart';
 
@@ -92,7 +94,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     .getRoomList(refresh: true),
                 child: _currentIndex == 0
                     ? _renderHomeScreenContent()
-                    : const DocumentScreen(),
+                    : _currentIndex == 1
+                        ? const DocumentScreen()
+                        : const ProfileScreen(),
               ),
             ),
           ),
@@ -105,7 +109,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [const CreateCard(), _renderRoomList()],
+        children: [
+          const CreateCard(),
+          const AppSearchBar(hintText: "Tìm phòng học..."),
+          _renderRoomList(),
+        ],
       ),
     );
   }
@@ -150,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         _currentIndex == 0 ? Palette.primary : Palette.darkGrey,
                         BlendMode.srcIn,
                       ),
-                      width: 32,
+                      width: 28,
                     ),
                     Text(
                       'Trang chủ',
@@ -158,7 +166,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         color: _currentIndex == 0
                             ? Palette.primary
                             : Palette.darkGrey,
-                        fontSize: 12,
+                        fontSize: 10,
+                        fontWeight: _currentIndex == 0 ? FontWeight.w500 : null,
                       ),
                     ),
                   ],
@@ -180,7 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         _currentIndex == 1 ? Palette.primary : Palette.darkGrey,
                         BlendMode.srcIn,
                       ),
-                      width: 32,
+                      width: 28,
                     ),
                     Text(
                       'Tài liệu',
@@ -188,7 +197,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         color: _currentIndex == 1
                             ? Palette.primary
                             : Palette.darkGrey,
-                        fontSize: 12,
+                        fontSize: 10,
+                        fontWeight: _currentIndex == 1 ? FontWeight.w500 : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => setState(() => _currentIndex = 2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      IconPaths.person,
+                      colorFilter: ColorFilter.mode(
+                        _currentIndex == 2 ? Palette.primary : Palette.darkGrey,
+                        BlendMode.srcIn,
+                      ),
+                      width: 28,
+                    ),
+                    Text(
+                      "Hồ sơ",
+                      style: TextStyle(
+                        color: _currentIndex == 2
+                            ? Palette.primary
+                            : Palette.darkGrey,
+                        fontSize: 10,
+                        fontWeight: _currentIndex == 2 ? FontWeight.w500 : null,
                       ),
                     ),
                   ],

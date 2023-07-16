@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:study247/constants/common.dart';
+import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
@@ -35,23 +36,23 @@ class CustomDrawer extends ConsumerWidget {
                     children: [
                       TabItem(
                         text: 'Trang chủ',
-                        iconName: 'home',
+                        iconPath: IconPaths.home,
                         focus: true,
                         onTap: () {},
                       ),
                       TabItem(
                         text: 'Cài đặt',
-                        iconName: 'settings',
+                        iconPath: IconPaths.settings,
                         onTap: () {},
                       ),
                       TabItem(
                         text: 'Về ứng dụng',
-                        iconName: 'info',
+                        iconPath: IconPaths.info,
                         onTap: () {},
                       ),
                       TabItem(
                         text: 'Đăng xuất',
-                        iconName: 'log_out',
+                        iconPath: IconPaths.logOut,
                         onTap: () => ref
                             .read(authControllerProvider.notifier)
                             .signOut(context),
@@ -111,13 +112,13 @@ class CustomDrawer extends ConsumerWidget {
 class TabItem extends StatelessWidget {
   final bool focus;
   final String text;
-  final String iconName;
+  final String iconPath;
   final VoidCallback onTap;
   const TabItem({
     super.key,
     this.focus = false,
     required this.text,
-    required this.iconName,
+    required this.iconPath,
     required this.onTap,
   });
 
@@ -136,7 +137,7 @@ class TabItem extends StatelessWidget {
             child: Row(
               children: [
                 SvgPicture.asset(
-                  'assets/icons/$iconName.svg',
+                  iconPath,
                   colorFilter: ColorFilter.mode(
                     focus ? Palette.white : Palette.darkGrey,
                     BlendMode.srcIn,

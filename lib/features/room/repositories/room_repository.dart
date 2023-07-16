@@ -17,12 +17,12 @@ class RoomRepository {
   final Ref _ref;
   RoomRepository(this._db, this._ref);
 
-  CollectionReference get roomRef => _db.collection(FirebaseConstants.rooms);
+  CollectionReference get _roomRef => _db.collection(FirebaseConstants.rooms);
 
   Future<Result<String, Exception>> createRoom(RoomModel room) async {
     try {
-      final roomId = roomRef.doc().id;
-      await roomRef.doc(roomId).set(room.copyWith(id: roomId).toMap());
+      final roomId = _roomRef.doc().id;
+      await _roomRef.doc(roomId).set(room.copyWith(id: roomId).toMap());
       return Success(roomId);
     } on Exception catch (e) {
       return Failure(e);
@@ -31,7 +31,7 @@ class RoomRepository {
 
   Future<Result<RoomModel, Exception>> getRoomById(String roomId) async {
     try {
-      final room = await roomRef.doc(roomId).get();
+      final room = await _roomRef.doc(roomId).get();
       return Success(RoomModel.fromMap(room.data() as Map<String, dynamic>));
     } on Exception catch (e) {
       return Failure(e);
@@ -41,10 +41,10 @@ class RoomRepository {
   Future<Result<String, Exception>> joinRoom(String roomId) async {
     try {
       final user = _ref.read(authControllerProvider).asData!.value!;
-      await roomRef
+      await _roomRef
           .doc(roomId)
           .update({"curParticipants": FieldValue.increment(1)});
-      await roomRef
+      await _roomRef
           .doc(roomId)
           .collection(FirebaseConstants.participants)
           .doc(user.uid)
@@ -58,7 +58,7 @@ class RoomRepository {
 
   Future<Result<String, Exception>> leaveRoom(String roomId) async {
     try {
-      final currentRoomRef = roomRef.doc(roomId);
+      final currentRoomRef = _roomRef.doc(roomId);
       final currentRoom = RoomModel.fromMap(
           (await currentRoomRef.get()).data() as Map<String, dynamic>);
       if (currentRoom.curParticipants == 1) {

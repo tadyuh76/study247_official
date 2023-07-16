@@ -18,6 +18,8 @@ class IconPaths {
   static const hidePerson = "assets/icons/hide_person.svg";
   static const home = "assets/icons/home.svg";
   static const image = "assets/icons/image.svg";
+  static const info = "assets/icons/info.svg";
+  static const logOut = "assets/icons/log_out.svg";
   static const mic = "assets/icons/mic.svg";
   static const micOff = "assets/icons/mic_off.svg";
   static const more = "assets/icons/more.svg";
@@ -29,7 +31,10 @@ class IconPaths {
   static const play = "assets/icons/play.svg";
   static const reply = "assets/icons/reply.svg";
   static const reset = "assets/icons/reset.svg";
+  static const search = "assets/icons/search.svg";
+  static const settings = 'assets/icons/settings.svg';
   static const share = "assets/icons/share.svg";
   static const trashBin = "assets/icons/trash_bin.svg";
   static const unpin = "assets/icons/unpin.svg";
+  static const defaultUser = "assets/icons/user.svg";
 }
