@@ -5,6 +5,10 @@ class UserModel {
   final String displayName;
   final String email;
   final String photoURL;
+  // final int currentStreak;
+  // final int longestStreak;
+  // final int
+
   UserModel({
     required this.uid,
     required this.displayName,

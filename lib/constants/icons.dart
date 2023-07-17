@@ -1,7 +1,7 @@
 class IconPaths {
   static const addPeople = "assets/icons/add_people.svg";
-  static const camera = "assets/icons/camera.svg";
   static const cameraOff = "assets/icons/camera_off.svg";
+  static const camera = "assets/icons/camera.svg";
   static const chats = "assets/icons/chats.svg";
   static const clock = "assets/icons/clock.svg";
   static const close = "assets/icons/close.svg";
@@ -37,4 +37,15 @@ class IconPaths {
   static const trashBin = "assets/icons/trash_bin.svg";
   static const unpin = "assets/icons/unpin.svg";
   static const defaultUser = "assets/icons/user.svg";
+
+  static const mastery1 = "assets/icons/mastery/1.svg";
+  static const mastery2 = "assets/icons/mastery/2.svg";
+  static const mastery3 = "assets/icons/mastery/3.svg";
+  static const mastery4 = "assets/icons/mastery/4.svg";
+  static const mastery5 = "assets/icons/mastery/5.svg";
+  static const mastery6 = "assets/icons/mastery/6.svg";
+  static const mastery7 = "assets/icons/mastery/7.svg";
+  static const mastery8 = "assets/icons/mastery/8.svg";
+  static const mastery9 = "assets/icons/mastery/9.svg";
+  static const mastery10 = "assets/icons/mastery/10.svg";
 }

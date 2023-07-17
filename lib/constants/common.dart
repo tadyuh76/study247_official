@@ -26,7 +26,11 @@ const tags = [
   "Lý",
   "Hóa",
   "Sinh",
-  "Đại cương"
+  "Đại cương",
+  "Trò chuyện trong giờ nghỉ",
+  "Kinh tế",
+  "Lập trình",
+  "Văn học",
 ];
 
 class Constants {

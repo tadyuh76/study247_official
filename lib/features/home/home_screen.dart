@@ -88,6 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             child: Scaffold(
               bottomNavigationBar: _renderNavBar(),
               appBar: _currentIndex == 0 ? _renderAppBar() : null,
+              backgroundColor: Palette.lightGrey,
               body: RefreshIndicator(
                 onRefresh: () => ref
                     .read(roomListControllerProvider.notifier)
@@ -127,7 +128,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
       centerTitle: true,
       titleSpacing: 0,
-      elevation: 0,
+      elevation: 1,
       leading: IconButton(
         splashRadius: 25,
         onPressed: _onMenuTap,

@@ -41,10 +41,11 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Center(
                       child: Container(
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(100)),
-                          border: Border.all(color: Palette.grey, width: 5),
+                          border: Border.all(color: Palette.grey, width: 10),
                         ),
                         child: Avatar(photoURL: user.photoURL, radius: 50),
                       ),

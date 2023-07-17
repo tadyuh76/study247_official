@@ -17,8 +17,9 @@ class AppSearchBar extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding),
       decoration: const BoxDecoration(
-        color: Palette.lightGrey,
+        color: Palette.white,
         borderRadius: BorderRadius.all(Radius.circular(50)),
+        boxShadow: [BoxShadow(color: Palette.shadow, blurRadius: 8)],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
