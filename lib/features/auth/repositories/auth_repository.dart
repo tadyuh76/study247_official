@@ -7,6 +7,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
+import 'package:study247/utils/days_in_month.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final auth = ref.read(authProvider);
@@ -81,7 +82,7 @@ class AuthRepository {
 
       if (userCred.user != null && userCred.additionalUserInfo!.isNewUser) {
         userCred.user!.updateDisplayName(displayName);
-        _uploadUserToDB(userCred, displayName);
+        _uploadUserToDB(userCred, displayName: displayName);
       }
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
@@ -109,14 +110,30 @@ class AuthRepository {
   }
 
   // private methods
-  Future<void> _uploadUserToDB(UserCredential userCredential,
-      [String? displayName]) async {
+  Future<void> _uploadUserToDB(
+    UserCredential userCredential, {
+    String? displayName,
+  }) async {
+    final thisYear = DateTime.now().year;
+
     final newUser = UserModel(
       uid: userCredential.user!.uid,
       displayName: displayName ?? userCredential.user!.displayName ?? "",
       email: userCredential.user!.email ?? "",
       photoURL: userCredential.user!.photoURL ?? "",
+      currentStreak: 0,
+      longestStreak: 0,
+      masteryLevel: 1,
+      badges: <String>[],
+      commitBoard: {
+        thisYear.toString(): {
+          for (int month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+            month.toString():
+                List.generate(daysInMonth(month, thisYear), (_) => 0)
+        }
+      },
     );
+    print(newUser);
     await _db
         .collection(FirebaseConstants.users)
         .doc(userCredential.user!.uid)

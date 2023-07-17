@@ -34,6 +34,7 @@ class ProfileScreen extends StatelessWidget {
               loading: () => const AppLoading(),
               data: (user) {
                 if (user == null) return const Text("Đã có lỗi xảy ra...");
+                print(user);
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

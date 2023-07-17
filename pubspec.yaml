@@ -94,7 +94,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/icons/mastery
+    - assets/icons/mastery/
     - assets/lotties/
     - assets/
 
