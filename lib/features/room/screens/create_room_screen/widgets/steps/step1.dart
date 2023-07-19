@@ -53,7 +53,7 @@ class _Step1State extends ConsumerState<Step1> {
         const SizedBox(height: Constants.defaultPadding * 2),
         AppTextInput(
           title: "Mô tả",
-          hintText: "Cùng học nào",
+          hintText: "Tham gia phòng của mình để cùng nhau học nhé!",
           controller: _descriptionController,
           onEditingComplete: () => ref
               .read(roomInfoControllerProvider)

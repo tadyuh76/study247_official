@@ -132,7 +132,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Chào Huy!",
+            "Chào Huy,",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 5),

@@ -32,6 +32,9 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
       hostUid: hostUser.uid,
       hostPhotoUrl: hostUser.photoURL,
       roomTimerStart: DateTime.now().toString(),
+      description: roomInfo.description.isEmpty
+          ? "Tham gia phòng của mình để cùng nhau học nhé!"
+          : roomInfo.description,
     );
 
     final result = await _ref.read(roomRepositoryProvider).createRoom(roomInfo);

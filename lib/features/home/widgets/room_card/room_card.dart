@@ -30,7 +30,11 @@ class RoomCard extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               renderCardCover(),
-              renderUserAvatar(),
+              Positioned(
+                bottom: -20,
+                left: 20,
+                child: Avatar(radius: 20, photoURL: room.hostPhotoUrl),
+              ),
               NumParticipants(
                 curParticipants: room.curParticipants,
                 maxParticipants: room.maxParticipants,
@@ -49,9 +53,9 @@ class RoomCard extends StatelessWidget {
                   room.description,
                   maxLines: 3,
                   style: const TextStyle(
-                    color: Palette.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300,
+                    color: Palette.darkGrey,
+                    fontSize: 14,
+                    // fontWeight: FontWeight.w300,
                   ),
                 ),
                 const SizedBox(height: Constants.defaultPadding / 2),
@@ -61,14 +65,6 @@ class RoomCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget renderUserAvatar() {
-    return Positioned(
-      bottom: -20,
-      left: 20,
-      child: Avatar(radius: 20, photoURL: room.hostPhotoUrl),
     );
   }
 
@@ -88,7 +84,6 @@ class RoomCard extends StatelessWidget {
           child: Text(
             room.name,
             maxLines: 2,
-            // textScaleFactor: 1,
             style: const TextStyle(
               color: Palette.white,
               fontWeight: FontWeight.w500,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/core/palette.dart';
 
@@ -27,7 +28,6 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 40,
       child: Material(
         color: Palette.primary,
         borderRadius: BorderRadius.circular(10),
@@ -35,13 +35,19 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
           ignoring: joining,
           child: InkWell(
             onTap: onTap,
-            child: const Center(
-              child: Text(
-                'Vào phòng học',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Constants.defaultPadding,
+                vertical: 15,
+              ),
+              child: Center(
+                child: Text(
+                  'Vào phòng học',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
