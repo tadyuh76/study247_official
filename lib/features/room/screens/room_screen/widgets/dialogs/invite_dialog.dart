@@ -43,10 +43,10 @@ class _InviteDialogState extends ConsumerState<InviteDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Unfocus(
-      child: FeatureDialog(
-        title: "Mời bạn",
-        iconPath: IconPaths.addPeople,
+    return FeatureDialog(
+      title: "Mời bạn",
+      iconPath: IconPaths.addPeople,
+      child: Unfocus(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

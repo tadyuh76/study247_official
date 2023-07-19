@@ -18,36 +18,33 @@ class CreateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(
-        vertical: 20,
         horizontal: Constants.defaultPadding,
-      ),
+      ).copyWith(bottom: Constants.defaultPadding),
       padding: const EdgeInsets.all(Constants.defaultPadding),
       decoration: const BoxDecoration(
-        color: Palette.white,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        boxShadow: [BoxShadow(blurRadius: 4, color: Palette.shadow)],
-      ),
+          color: Palette.primary,
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          image: DecorationImage(
+            image: AssetImage("assets/images/card_background.png"),
+            fit: BoxFit.cover,
+          )
+          // boxShadow: [BoxShadow(blurRadius: 4, color: Palette.shadow)],
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "HỌC CÙNG NHAU",
+            "Học cùng nhau\nmọi lúc, mọi nơi\nvới Study247!",
             style: TextStyle(
-              fontSize: 20,
-              letterSpacing: -0.5,
+              fontSize: 18,
+              height: 1.4,
               fontWeight: FontWeight.w500,
-              color: Palette.black,
+              color: Palette.white,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
-            "Kết nối những tâm hồn yêu học tập!",
-            style: TextStyle(color: Palette.darkGrey),
-          ),
-          const SizedBox(height: Constants.defaultPadding * 2),
+          const SizedBox(height: 30),
           CustomButton(
-            text: "Tạo phòng học",
-            primary: true,
+            text: "Tạo phòng học mới",
             onTap: () => _showCreateDialog(context),
           ),
         ],

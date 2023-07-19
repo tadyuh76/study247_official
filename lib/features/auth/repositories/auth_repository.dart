@@ -133,7 +133,6 @@ class AuthRepository {
         }
       },
     );
-    print(newUser);
     await _db
         .collection(FirebaseConstants.users)
         .doc(userCredential.user!.uid)

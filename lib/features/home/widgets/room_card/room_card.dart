@@ -14,13 +14,11 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: Constants.defaultPadding,
-        vertical: Constants.defaultPadding / 2,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding)
+          .copyWith(bottom: Constants.defaultPadding),
       decoration: BoxDecoration(
         color: Palette.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(blurRadius: 16, color: Palette.shadow),
         ],

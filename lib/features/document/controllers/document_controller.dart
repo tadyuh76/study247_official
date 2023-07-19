@@ -79,7 +79,7 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     if (result case Success()) {
       if (context.mounted) {
         context.pop();
-        showSnackBar(context, "Đã tạo thư mục mới!");
+        // showSnackBar(context, "Đã tạo thư mục mới!");
       }
     } else if (result case Failure()) {
       if (context.mounted) {

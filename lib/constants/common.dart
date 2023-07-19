@@ -14,6 +14,19 @@ const bannerColors = {
   "black": Palette.black,
 };
 
+const masteryColors = {
+  1: Color(0xFF23B0E2),
+  2: Color(0xFF236FE2),
+  3: Color(0xFF6023E2),
+  4: Color(0xFF8C26DC),
+  5: Color(0xFFB023E2),
+  6: Color(0xFFDE23E2),
+  7: Color(0xFFE223A1),
+  8: Color(0xFFE22373),
+  9: Color(0xFFE22351),
+  10: Color(0xFFA32D4A),
+};
+
 const tags = [
   "THCS",
   "THPT",

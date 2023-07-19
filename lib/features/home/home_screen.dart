@@ -7,6 +7,7 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/core/shared/widgets/search_bar.dart';
+import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
 import 'package:study247/features/home/widgets/custom_drawer.dart';
@@ -86,9 +87,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ..scale(_menuOpened ? 0.8 : 1.00),
           child: Unfocus(
             child: Scaffold(
-              bottomNavigationBar: _renderNavBar(),
-              appBar: _currentIndex == 0 ? _renderAppBar() : null,
               backgroundColor: Palette.lightGrey,
+              appBar: _renderAppBar(),
+              bottomNavigationBar: _renderNavBar(),
               body: RefreshIndicator(
                 onRefresh: () => ref
                     .read(roomListControllerProvider.notifier)
@@ -106,14 +107,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  SingleChildScrollView _renderHomeScreenContent() {
+  Widget _renderHomeScreenContent() {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _renderHeader(),
           const CreateCard(),
           const AppSearchBar(hintText: "Tìm phòng học..."),
+          const SizedBox(height: 10),
           _renderRoomList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Constants.defaultPadding,
+        vertical: Constants.defaultPadding,
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Chào Huy!",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "Bắt đầu một phiên học mới nào!",
+            style: TextStyle(color: Palette.darkGrey),
+          ),
+          SizedBox(height: 10),
         ],
       ),
     );
@@ -121,20 +148,90 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   AppBar _renderAppBar() {
     return AppBar(
-      backgroundColor: Palette.white,
-      title: const Text(
-        Constants.appName,
-        style: TextStyle(fontWeight: FontWeight.w500),
-      ),
+      backgroundColor: Palette.lightGrey,
       centerTitle: true,
       titleSpacing: 0,
-      elevation: 1,
-      leading: IconButton(
-        splashRadius: 25,
-        onPressed: _onMenuTap,
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: _menuController,
+      elevation: 0,
+      title: Padding(
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: Constants.defaultPadding,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              splashRadius: 25,
+              padding: const EdgeInsets.all(0),
+              onPressed: _onMenuTap,
+              icon: AnimatedIcon(
+                icon: AnimatedIcons.menu_arrow,
+                progress: _menuController,
+                size: 30,
+              ),
+            ),
+            ref.watch(authControllerProvider).when(
+                  loading: () => const AppLoading(),
+                  error: (err, stk) => const SizedBox.shrink(),
+                  data: (user) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SvgPicture.asset(
+                          IconPaths.streak,
+                          width: 20,
+                        ),
+                        const SizedBox(width: 3),
+                        const Text(
+                          "Chuỗi học: ",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const Text(
+                          "2",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(width: Constants.defaultPadding),
+                        SvgPicture.asset(
+                          IconPaths.clock2,
+                          width: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          "Mục tiêu: ",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const Text(
+                          "0.3h",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                )
+            // const Text(
+            //   Constants.appName,
+            //   style: TextStyle(fontWeight: FontWeight.w500),
+            // ),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: SvgPicture.asset(
+            //     IconPaths.settings,
+            //     colorFilter: const ColorFilter.mode(
+            //       Palette.black,
+            //       BlendMode.srcIn,
+            //     ),
+            //   ),
+            // )
+            // Consumer(builder: (context, ref, child) {
+            //   return Avatar(photoURL: ref.watch(authControllerProvider).when(data: data, error: error, loading: loading), radius: radius)
+            // })
+          ],
         ),
       ),
     );
@@ -250,10 +347,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) => RoomCard(
-                room: roomList[index],
-                key: Key(roomList[index].id!),
+                room: roomList[0],
+                key: Key(roomList[0].id!),
               ),
-              itemCount: roomList.length,
+              itemCount: 5,
             );
           },
           error: (e, stk) => const AppError(),

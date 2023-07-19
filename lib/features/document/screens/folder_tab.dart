@@ -7,45 +7,37 @@ import 'package:study247/features/document/controllers/folder_list_controller.da
 import 'package:study247/features/document/widgets/folder_widget.dart';
 
 class FolderTab extends ConsumerWidget {
-  const FolderTab({
-    super.key,
-  });
+  const FolderTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(Constants.defaultPadding),
-        child: Column(
-          children: [
-            ref.watch(folderListControllerProvider).when(
-                  error: (err, stk) => const AppError(),
-                  loading: () => const AppLoading(),
-                  data: (folderList) {
-                    if (folderList.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "Trống.",
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      );
-                    }
-
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: folderList.length,
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return FolderWidget(folder: folderList[index]);
-                        },
-                      ),
-                    );
-                  },
+    return ref.watch(folderListControllerProvider).when(
+          error: (err, stk) => const AppError(),
+          loading: () => const AppLoading(),
+          data: (folderList) {
+            if (folderList.isEmpty) {
+              return const Expanded(
+                child: Center(
+                  child: Text(
+                    "Trống.",
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  ),
                 ),
-          ],
-        ),
-      ),
-    );
+              );
+            }
+
+            return Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: folderList.length,
+                padding: const EdgeInsets.all(Constants.defaultPadding),
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return FolderWidget(folder: folderList[index]);
+                },
+              ),
+            );
+          },
+        );
   }
 }

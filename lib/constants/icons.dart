@@ -4,6 +4,7 @@ class IconPaths {
   static const camera = "assets/icons/camera.svg";
   static const chats = "assets/icons/chats.svg";
   static const clock = "assets/icons/clock.svg";
+  static const clock2 = "assets/icons/clock_2.svg";
   static const close = "assets/icons/close.svg";
   static const color = "assets/icons/color.svg";
   static const document = "assets/icons/document.svg";
@@ -34,6 +35,7 @@ class IconPaths {
   static const search = "assets/icons/search.svg";
   static const settings = 'assets/icons/settings.svg';
   static const share = "assets/icons/share.svg";
+  static const streak = "assets/icons/streak.svg";
   static const trashBin = "assets/icons/trash_bin.svg";
   static const unpin = "assets/icons/unpin.svg";
   static const defaultUser = "assets/icons/user.svg";
@@ -49,3 +51,16 @@ class IconPaths {
   static const mastery9 = "assets/icons/mastery/9.svg";
   static const mastery10 = "assets/icons/mastery/10.svg";
 }
+
+const masteryIconPaths = {
+  1: IconPaths.mastery1,
+  2: IconPaths.mastery2,
+  3: IconPaths.mastery3,
+  4: IconPaths.mastery4,
+  5: IconPaths.mastery5,
+  6: IconPaths.mastery6,
+  7: IconPaths.mastery7,
+  8: IconPaths.mastery8,
+  9: IconPaths.mastery9,
+  10: IconPaths.mastery10,
+};

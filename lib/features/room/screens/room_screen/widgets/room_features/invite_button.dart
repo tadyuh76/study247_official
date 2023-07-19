@@ -11,7 +11,11 @@ class InviteButton extends StatelessWidget {
   });
 
   void _showInviteDialog(BuildContext context) {
-    showDialog(context: context, builder: (context) => const InviteDialog());
+    showDialog(
+      context: context,
+      builder: (context) => const InviteDialog(),
+      barrierDismissible: true,
+    );
   }
 
   @override
@@ -33,7 +37,6 @@ class InviteButton extends StatelessWidget {
               IconPaths.addPeople,
               width: 20,
               height: 20,
-              // color: Palette.primary,
               colorFilter: const ColorFilter.mode(
                 Palette.primary,
                 BlendMode.srcIn,

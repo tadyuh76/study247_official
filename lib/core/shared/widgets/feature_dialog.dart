@@ -18,55 +18,59 @@ class FeatureDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final landscape = constraints.maxWidth > constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final landscape = constraints.maxWidth > constraints.maxHeight;
 
-      return Padding(
-        padding: const EdgeInsets.all(kIsWeb ? 40 : Constants.defaultPadding)
-            .copyWith(
-          top: landscape ? Constants.defaultPadding : kToolbarHeight + 100,
-        ),
-        child: Align(
-          alignment: kIsWeb ? Alignment.center : Alignment.topCenter,
-          child: Material(
-            color: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 500),
-              child: Container(
-                width: landscape && !kIsWeb ? 400 : null,
-                padding: const EdgeInsets.all(
-                    kIsWeb ? 40 : Constants.defaultPadding),
-                decoration: const BoxDecoration(
-                  color: Palette.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(blurRadius: 4, color: Palette.darkGrey)
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _renderHeader(context),
-                    const SizedBox(height: Constants.defaultPadding / 2),
-                    landscape && !kIsWeb
-                        ? Expanded(
-                            child: SingleChildScrollView(
-                            child: child,
-                          ))
-                        : SizedBox(
-                            width: double.infinity,
-                            child: child,
-                          )
-                  ],
+        return Padding(
+          padding: const EdgeInsets.all(kIsWeb ? 40 : Constants.defaultPadding)
+              .copyWith(
+            top: landscape ? Constants.defaultPadding : kToolbarHeight + 100,
+          ),
+          child: Align(
+            alignment: kIsWeb ? Alignment.center : Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxHeight: 500, maxWidth: 500),
+                child: Container(
+                  width: landscape && !kIsWeb ? 400 : null,
+                  padding: const EdgeInsets.all(
+                      kIsWeb ? 40 : Constants.defaultPadding),
+                  decoration: const BoxDecoration(
+                    color: Palette.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(blurRadius: 4, color: Palette.darkGrey)
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _renderHeader(context),
+                      const SizedBox(height: Constants.defaultPadding / 2),
+                      landscape && !kIsWeb
+                          ? Expanded(
+                              child: SingleChildScrollView(
+                                child: child,
+                              ),
+                            )
+                          : SizedBox(
+                              width: double.infinity,
+                              child: child,
+                            )
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Row _renderHeader(BuildContext context) {
@@ -74,7 +78,6 @@ class FeatureDialog extends StatelessWidget {
       children: [
         SvgPicture.asset(
           iconPath,
-          // color: Palette.black,
           colorFilter: const ColorFilter.mode(Palette.black, BlendMode.srcIn),
           height: 24,
           width: 24,
@@ -87,7 +90,10 @@ class FeatureDialog extends StatelessWidget {
         const Spacer(),
         GestureDetector(
           onTap: context.pop,
-          child: const Icon(Icons.close),
+          child: const Icon(
+            Icons.close,
+            color: Palette.black,
+          ),
         )
       ],
     );
