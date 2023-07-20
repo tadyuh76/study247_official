@@ -62,13 +62,24 @@ class UserModel {
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
-    var temp = map['commitBoard'];
+    Map<String, dynamic> temp = map['commitBoard'];
     Map<String, Map<String, List<int>>> commitBoard = {};
+    // try {
     for (final year in temp.entries) {
+      final Map<String, List<int>> monthBoard = {};
+
       for (final month in year.value.entries) {
-        temp[year.key][month.key] = month.value.map((e) => int.parse(e));
+        monthBoard.putIfAbsent(
+          month.key,
+          () => month.value.cast<int>(),
+        );
       }
+
+      commitBoard.putIfAbsent(year.key, () => monthBoard);
     }
+    // } catch (e) {
+    //   print('error user from map: $e');
+    // }
 
     return UserModel(
       uid: map['uid'] ?? '',

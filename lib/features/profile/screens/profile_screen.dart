@@ -36,7 +36,9 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: Constants.defaultPadding),
                   _renderStreak(),
                   const SizedBox(height: Constants.defaultPadding),
-                  _renderWeeklyStatistic(),
+                  _renderWeeklyStatistics(),
+                  const SizedBox(height: Constants.defaultPadding),
+                  _renderMonthlyStatistics(),
                   const SizedBox(height: Constants.defaultPadding),
                 ],
               );
@@ -45,7 +47,152 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _renderWeeklyStatistic() {
+  Widget _renderMonthlyStatistics() {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Palette.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      padding: const EdgeInsets.all(Constants.defaultPadding),
+      margin: const EdgeInsets.symmetric(
+        horizontal: Constants.defaultPadding,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Thống kê tháng này",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: Constants.defaultPadding),
+          Consumer(builder: (context, ref, child) {
+            return ref.watch(authControllerProvider).when(
+                error: (err, stk) => const AppError(),
+                loading: () => const AppLoading(),
+                data: (user) {
+                  if (user == null) return const AppLoading();
+                  final now = DateTime.now();
+                  final thisYear = user.commitBoard[now.year.toString()]!;
+
+                  return _renderMonthCalendar(thisYear);
+                });
+          })
+        ],
+      ),
+    );
+  }
+
+  Widget _renderMonthCalendar(Map<String, List<int>> thisYear) {
+    final now = DateTime.now();
+    final thisMonth = thisYear[now.month.toString()]!;
+
+    final firstDayIndex = DateTime(now.year, now.month, 1, 1).weekday;
+    final blankDays = firstDayIndex;
+    final renderData = [
+      ...List.generate(blankDays + 7, (_) => -1),
+      ...thisMonth
+    ];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.chevron_left,
+                color: Palette.darkGrey,
+              ),
+            ),
+            Text(
+              "THÁNG ${now.month}",
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Palette.darkGrey,
+                fontSize: 16,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.chevron_right,
+                color: Palette.darkGrey,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1,
+            ),
+            itemCount: renderData.length,
+            itemBuilder: (context, index) {
+              if (index < 7) {
+                return Center(
+                  child: Text(
+                    Constants.weekdayMap[index],
+                    style: const TextStyle(
+                      color: Palette.darkGrey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }
+              if (renderData[index] == -1) return const SizedBox.shrink();
+
+              final dayNumber = index - 7 - (blankDays - 1);
+              final isEmpty = renderData[index] == 0;
+              final isToday = dayNumber == now.day;
+
+              return Container(
+                decoration: BoxDecoration(
+                  border: isToday
+                      ? Border.all(color: Palette.complete, width: 2)
+                      : null,
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Palette.complete.withOpacity(
+                    renderData[index] / 60 >= 1.0
+                        ? 1.0
+                        : renderData[index] / 60 >= 0.5
+                            ? 0.75
+                            : renderData[index] / 60 >= 0.25
+                                ? 0.25
+                                : !isEmpty
+                                    ? 0.25
+                                    : 0,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    dayNumber.toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: isEmpty ? Palette.darkGrey : Palette.white,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _renderWeeklyStatistics() {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -127,17 +274,17 @@ class ProfileScreen extends StatelessWidget {
       children: [
         Container(
           height: percent * 120,
-          width: 20,
+          width: 5,
           decoration: const BoxDecoration(
             color: Palette.primary,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(20),
-              bottom: Radius.circular(20),
+              bottom: Radius.circular(5),
             ),
           ),
         ),
         const SizedBox(height: 5),
-        Text(
+        const Text(
           "19/7",
           style: TextStyle(fontSize: 12, color: Palette.darkGrey),
         )
@@ -193,7 +340,7 @@ class ProfileScreen extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Palette.primary,
-                            fontSize: 32,
+                            fontSize: 24,
                           ),
                         ),
                       ],
@@ -217,7 +364,7 @@ class ProfileScreen extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Palette.black,
-                            fontSize: 32,
+                            fontSize: 24,
                           ),
                         ),
                       ],

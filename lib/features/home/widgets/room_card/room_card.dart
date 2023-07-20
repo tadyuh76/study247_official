@@ -19,9 +19,7 @@ class RoomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Palette.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(blurRadius: 16, color: Palette.shadow),
-        ],
+        // boxShadow: const [BoxShadow(blurRadius: 16, color: Palette.shadow)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
