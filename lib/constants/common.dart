@@ -74,6 +74,7 @@ const tags = [
 class Constants {
   // common
   static const defaultPadding = 20.0;
+  static const defaultBorderRadius = 16.0;
   static const appName = "Study247";
   static const appFontName = "Lexend";
   static const videoSDKToken =
@@ -112,21 +113,6 @@ class Constants {
   };
 
   static const weekdayMap = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
-
-  // static const monthMap = {
-  //   "1": "Tháng 1",
-  //   "2": "Tháng 2",
-  //   "3": "Tháng 3",
-  //   "4": "Tháng 4",
-  //   "5": "Tháng 5",
-  //   "6": "Tháng 6",
-  //   "7": "Tháng 7",
-  //   "8": "Tháng 8",
-  //   "9": "Tháng 9",
-  //   "10": "Tháng 10",
-  //   "11": "Tháng 11",
-  //   "12": "Tháng 12",
-  // };
 
   // flashcard
   static const flashcardForward = ">> ";

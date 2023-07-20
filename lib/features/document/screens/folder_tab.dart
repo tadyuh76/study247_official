@@ -16,26 +16,22 @@ class FolderTab extends ConsumerWidget {
           loading: () => const AppLoading(),
           data: (folderList) {
             if (folderList.isEmpty) {
-              return const Expanded(
-                child: Center(
-                  child: Text(
-                    "Trống.",
-                    style: TextStyle(fontWeight: FontWeight.w300),
-                  ),
+              return const Center(
+                child: Text(
+                  "Trống.",
+                  style: TextStyle(fontWeight: FontWeight.w300),
                 ),
               );
             }
 
-            return Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: folderList.length,
-                padding: const EdgeInsets.all(Constants.defaultPadding),
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return FolderWidget(folder: folderList[index]);
-                },
-              ),
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: folderList.length,
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return FolderWidget(folder: folderList[index]);
+              },
             );
           },
         );

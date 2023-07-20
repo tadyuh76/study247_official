@@ -90,16 +90,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               backgroundColor: Palette.lightGrey,
               appBar: _renderAppBar(),
               bottomNavigationBar: _renderNavBar(),
-              body: RefreshIndicator(
-                onRefresh: () => ref
-                    .read(roomListControllerProvider.notifier)
-                    .getRoomList(refresh: true),
-                child: _currentIndex == 0
-                    ? _renderHomeScreenContent()
-                    : _currentIndex == 1
-                        ? const DocumentScreen()
-                        : const ProfileScreen(),
-              ),
+              body: _currentIndex == 0
+                  ? _renderHomeScreenContent()
+                  : _currentIndex == 1
+                      ? const DocumentScreen()
+                      : const ProfileScreen(),
             ),
           ),
         ),
@@ -108,16 +103,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _renderHomeScreenContent() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _renderHeader(),
-          const CreateCard(),
-          const AppSearchBar(hintText: "Tìm phòng học..."),
-          const SizedBox(height: 10),
-          _renderRoomList(),
-        ],
+    return RefreshIndicator(
+      onRefresh: () => ref
+          .read(roomListControllerProvider.notifier)
+          .getRoomList(refresh: true),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _renderHeader(),
+            const CreateCard(),
+            const AppSearchBar(hintText: "Tìm phòng học..."),
+            const SizedBox(height: 10),
+            _renderRoomList(),
+          ],
+        ),
       ),
     );
   }
@@ -174,6 +174,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   loading: () => const AppLoading(),
                   error: (err, stk) => const SizedBox.shrink(),
                   data: (user) {
+                    if (user == null) return const SizedBox.shrink();
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -186,9 +188,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           "Chuỗi học: ",
                           style: TextStyle(fontSize: 12),
                         ),
-                        const Text(
-                          "2",
-                          style: TextStyle(
+                        Text(
+                          user.currentStreak.toString(),
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -214,23 +216,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     );
                   },
                 )
-            // const Text(
-            //   Constants.appName,
-            //   style: TextStyle(fontWeight: FontWeight.w500),
-            // ),
-            // IconButton(
-            //   onPressed: () {},
-            //   icon: SvgPicture.asset(
-            //     IconPaths.settings,
-            //     colorFilter: const ColorFilter.mode(
-            //       Palette.black,
-            //       BlendMode.srcIn,
-            //     ),
-            //   ),
-            // )
-            // Consumer(builder: (context, ref, child) {
-            //   return Avatar(photoURL: ref.watch(authControllerProvider).when(data: data, error: error, loading: loading), radius: radius)
-            // })
           ],
         ),
       ),
@@ -342,6 +327,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Widget _renderRoomList() {
     return ref.watch(roomListControllerProvider).when(
+          error: (e, stk) => const AppError(),
+          loading: () => const AppLoading(),
           data: (roomList) {
             return ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -353,8 +340,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               itemCount: 5,
             );
           },
-          error: (e, stk) => const AppError(),
-          loading: () => const AppLoading(),
         );
   }
 }

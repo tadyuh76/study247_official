@@ -18,7 +18,7 @@ class RoomCard extends StatelessWidget {
           .copyWith(bottom: Constants.defaultPadding),
       decoration: BoxDecoration(
         color: Palette.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
         // boxShadow: const [BoxShadow(blurRadius: 16, color: Palette.shadow)],
       ),
       child: Column(
@@ -76,7 +76,8 @@ class RoomCard extends StatelessWidget {
           alignment: Alignment.topLeft,
           padding: const EdgeInsets.all(Constants.defaultPadding),
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(Constants.defaultBorderRadius)),
             color: bannerColors[room.bannerColor],
           ),
           child: Text(

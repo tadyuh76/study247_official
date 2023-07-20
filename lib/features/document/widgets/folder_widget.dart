@@ -38,7 +38,8 @@ class FolderWidget extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: Constants.defaultPadding / 2),
       child: Material(
         color: bannerColors[folder.color],
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(
+            Radius.circular(Constants.defaultBorderRadius)),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: selecting ?? () => _onFolderTap(context, ref),

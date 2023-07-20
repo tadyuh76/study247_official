@@ -16,28 +16,24 @@ class DocumentTab extends ConsumerWidget {
           loading: () => const AppLoading(),
           data: (documentList) {
             if (documentList.isEmpty) {
-              return const Expanded(
-                child: Center(
-                  child: Text(
-                    "Trống.",
-                    style: TextStyle(fontWeight: FontWeight.w300),
-                  ),
+              return const Center(
+                child: Text(
+                  "Trống.",
+                  style: TextStyle(fontWeight: FontWeight.w300),
                 ),
               );
             }
 
-            return Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(Constants.defaultPadding),
-                physics: const BouncingScrollPhysics(),
-                itemCount: documentList.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return DocumentWidget(
-                    document: documentList[index],
-                  );
-                },
-              ),
+            return ListView.builder(
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              physics: const BouncingScrollPhysics(),
+              itemCount: documentList.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return DocumentWidget(
+                  document: documentList[index],
+                );
+              },
             );
           },
         );

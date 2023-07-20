@@ -37,7 +37,9 @@ class DocumentWidget extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: Constants.defaultPadding / 2),
       child: Material(
         color: bannerColors[document.color],
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(Constants.defaultBorderRadius),
+        ),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () => _onDocumentTab(context, ref),

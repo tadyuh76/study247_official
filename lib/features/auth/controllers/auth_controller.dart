@@ -40,7 +40,9 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     state = AsyncData(appUser);
   }
 
-  Future<void> updateUser() async {
+  Future<void> updateUser([bool refresh = false]) async {
+    if (refresh) state = const AsyncLoading();
+
     final userId = _ref.read(authProvider).currentUser!.uid;
     final userResult = await _ref.read(authRepositoryProvider).getUser(userId);
     final updatedUser = switch (userResult) {

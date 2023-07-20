@@ -23,7 +23,9 @@ class CreateCard extends StatelessWidget {
       padding: const EdgeInsets.all(Constants.defaultPadding),
       decoration: const BoxDecoration(
           color: Palette.primary,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(Constants.defaultBorderRadius),
+          ),
           image: DecorationImage(
             image: AssetImage("assets/images/card_background.png"),
             fit: BoxFit.cover,
