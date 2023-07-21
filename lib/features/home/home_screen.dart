@@ -176,6 +176,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   data: (user) {
                     if (user == null) return const SizedBox.shrink();
 
+                    final now = DateTime.now();
+
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -202,12 +204,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                         const SizedBox(width: 5),
                         const Text(
-                          "Mục tiêu: ",
+                          "Tháng này: ",
                           style: TextStyle(fontSize: 12),
                         ),
-                        const Text(
-                          "0.3h",
-                          style: TextStyle(
+                        Text(
+                          // total number of hours studied in the current month
+                          "${((user.commitBoard[now.year.toString()]![now.month.toString()]!).fold(0, (previousValue, element) => previousValue + element) / 60).toStringAsFixed(1)}h",
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -334,10 +337,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) => RoomCard(
-                room: roomList[0],
-                key: Key(roomList[0].id!),
+                room: roomList[index],
+                key: Key(roomList[index].id!),
               ),
-              itemCount: 5,
+              itemCount: roomList.length,
             );
           },
         );

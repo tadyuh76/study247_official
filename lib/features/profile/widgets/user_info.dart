@@ -63,13 +63,19 @@ class UserInfo extends StatelessWidget {
                     ? 1
                     : user.totalStudyTime /
                         minutesToMastery[user.masteryLevel + 1],
+                clipLinearGradient: true,
                 padding: const EdgeInsets.all(0),
+                // center: Text((user.totalStudyTime / 60).toStringAsFixed(1)),
+                leading: Text(
+                  "${(user.totalStudyTime / 60).toStringAsFixed(1)}h ",
+                  style: const TextStyle(fontSize: 14),
+                ),
                 linearGradient: LinearGradient(
                   colors: [
                     masteryColors[user.masteryLevel],
                     _maxLevel
                         ? masteryColors[user.masteryLevel]
-                        : masteryColors[user.masteryLevel + 1].withOpacity(0.7)
+                        : masteryColors[user.masteryLevel + 1]
                   ],
                 ),
                 trailing: _maxLevel

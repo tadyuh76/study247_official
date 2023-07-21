@@ -57,14 +57,14 @@ class RoomRepository {
   }
 
   Future<Result<String, Exception>> leaveRoom(String roomId,
-      {bool resumed = false}) async {
+      {bool paused = false}) async {
     try {
       final currentRoomRef = _roomRef.doc(roomId);
       final currentRoom = RoomModel.fromMap(
         (await currentRoomRef.get()).data() as Map<String, dynamic>,
       );
 
-      if (currentRoom.curParticipants == 1) {
+      if (currentRoom.curParticipants == 1 && !paused) {
         await currentRoomRef.delete();
       } else {
         currentRoomRef.update({"curParticipants": FieldValue.increment(-1)});

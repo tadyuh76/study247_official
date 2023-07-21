@@ -56,18 +56,18 @@ class FolderWidget extends ConsumerWidget {
                 ),
                 const SizedBox(width: Constants.defaultPadding),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 5),
-                      Text(
-                        folder.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            const TextStyle(color: Palette.white, fontSize: 16),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: Constants.defaultPadding),
+                    child: Text(
+                      folder.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Palette.white,
+                        fontSize: 16,
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: Constants.defaultPadding / 2),

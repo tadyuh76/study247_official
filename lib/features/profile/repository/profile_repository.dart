@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,8 +11,8 @@ import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final profileRepositoryProvider = Provider((ref) {
-  final _db = ref.read(firestoreProvider);
-  return ProfileRepository(_db);
+  final db = ref.read(firestoreProvider);
+  return ProfileRepository(db);
 });
 
 class ProfileRepository {
@@ -38,13 +37,15 @@ class ProfileRepository {
       int newStreak = currentUser.currentStreak;
       int newLongestStreak = currentUser.longestStreak;
       if (updatedCommitBoard[year]![month]![dayIdx] == 15) {
-        newStreak += 1;
+        newStreak++;
         newLongestStreak = max(newLongestStreak, newStreak);
       }
 
       int newStudyTime = currentUser.totalStudyTime + 1;
+      int newMasteryLevel = currentUser.masteryLevel;
       if (user.masteryLevel != 9 &&
           newStudyTime == minutesToMastery[user.masteryLevel + 1]) {
+        newMasteryLevel++;
         showSnackBar(globalKey.currentContext!, "Đã đạt cấp độ tiếp theo!");
       }
 
@@ -53,6 +54,7 @@ class ProfileRepository {
         "commitBoard": updatedCommitBoard,
         "currentStreak": newStreak,
         "longestStreak": newLongestStreak,
+        "masteryLevel": newMasteryLevel,
       });
 
       return const Success(Constants.successMessage);

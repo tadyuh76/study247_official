@@ -26,7 +26,7 @@ class LeaveDialog extends StatelessWidget {
             padding: const EdgeInsets.all(Constants.defaultPadding + 10),
             decoration: const BoxDecoration(
               color: Palette.white,
-              borderRadius: BorderRadius.all(Radius.circular(30)),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               boxShadow: [BoxShadow(color: Palette.darkGrey)],
             ),
             child: Column(
@@ -39,7 +39,7 @@ class LeaveDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: Constants.defaultPadding),
                 child,
-                const SizedBox(height: Constants.defaultPadding),
+                const SizedBox(height: Constants.defaultPadding * 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

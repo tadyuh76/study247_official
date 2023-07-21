@@ -7,15 +7,19 @@ import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 
+const int _minutesForMaxOpacity = 120;
+
 class MonthlyStatistics extends StatelessWidget {
   final UserModel user;
   const MonthlyStatistics({super.key, required this.user});
 
   Color _getTileColor(double value) {
     if (value >= 1) return Palette.complete.withOpacity(1);
-    if (value >= 0.5) return Palette.complete.withOpacity(0.5);
+    if (value >= 0.8) return Palette.complete.withOpacity(0.8);
+    if (value >= 0.6) return Palette.complete.withOpacity(0.6);
+    if (value >= 0.4) return Palette.complete.withOpacity(0.4);
     if (value == 0) return Palette.complete.withOpacity(0);
-    return Palette.complete.withOpacity(0.3);
+    return Palette.complete.withOpacity(0.2);
   }
 
   @override
@@ -119,14 +123,16 @@ class MonthlyStatistics extends StatelessWidget {
 
               return Tooltip(
                 triggerMode: TooltipTriggerMode.tap,
-                message: "${(renderData[index] / 60).toStringAsFixed(1)}h",
+                message:
+                    "${(renderData[index] / _minutesForMaxOpacity).toStringAsFixed(1)}h",
                 child: Container(
                   decoration: BoxDecoration(
                     border: isToday
                         ? Border.all(color: Palette.complete, width: 2)
                         : null,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: _getTileColor(renderData[index] / 60),
+                    color: _getTileColor(
+                        renderData[index] / _minutesForMaxOpacity),
                   ),
                   child: Center(
                     child: Text(

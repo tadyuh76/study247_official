@@ -39,7 +39,6 @@ class RoomTimerTab extends ConsumerWidget {
     }
 
     return BlackBackgroundButton(
-      width: 100,
       onTap: () => _showTimerBox(context, ref),
       child: Column(
         mainAxisSize: MainAxisSize.min,

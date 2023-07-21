@@ -157,28 +157,32 @@ class WeeklyStatistics extends StatelessWidget {
     required int day,
     required int month,
   }) {
-    return Column(
-      children: [
-        Container(
-          height: percent * baseHeight,
-          width: 10,
-          decoration: const BoxDecoration(
-            color: Palette.primary,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(3),
+    return Tooltip(
+      message: "${(percent * maxCrossAxis).toStringAsFixed(1)}h",
+      triggerMode: TooltipTriggerMode.tap,
+      child: Column(
+        children: [
+          Container(
+            height: percent * baseHeight,
+            width: 10,
+            decoration: const BoxDecoration(
+              color: Palette.primary,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(3),
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 25,
-          child: Center(
-            child: Text(
-              "$day/$month",
-              style: const TextStyle(fontSize: 12, color: Palette.darkGrey),
+          SizedBox(
+            height: 25,
+            child: Center(
+              child: Text(
+                "$day/$month",
+                style: const TextStyle(fontSize: 12, color: Palette.darkGrey),
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

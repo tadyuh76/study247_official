@@ -98,7 +98,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     // leave room temporarily when user pop out the app
     // rejoin the room when user comes back
     if (state == AppLifecycleState.paused) {
-      ref.read(roomControllerProvider.notifier).leaveRoom();
+      ref.read(roomControllerProvider.notifier).leaveRoom(true);
     } else if (state == AppLifecycleState.resumed) {
       ref.read(roomControllerProvider.notifier).joinRoom(widget.roomId);
     }
@@ -250,7 +250,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
             onWillPop: _onExitRoom,
             child: LayoutBuilder(builder: (context, constraints) {
               final landscape = constraints.maxWidth > constraints.maxHeight;
-              // bool fullscreen = landscape && kIsWeb;
 
               return Scaffold(
                 backgroundColor: Colors.grey.shade900,
@@ -259,10 +258,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                 floatingActionButton:
                     _renderFloatingActionButtons(landscape, context),
                 extendBodyBehindAppBar: true,
-                appBar: landscape && !kIsWeb ? null : _renderAppBar(),
+                appBar: landscape ? null : _renderAppBar(),
                 body: Stack(
                   children: [
-                    if (!kIsWeb) _renderBackground(),
+                    _renderBackground(),
                     PageView(
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
@@ -270,80 +269,19 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                         Padding(
                           padding:
                               const EdgeInsets.all(Constants.defaultPadding / 2)
-                                  .copyWith(
-                                      top: kIsWeb
-                                          ? 60
-                                          : landscape
-                                              ? 10
-                                              : 100),
+                                  .copyWith(top: landscape ? 10 : 100),
                           child: Stack(
                             children: [
-                              // _renderWebCTA(),
-                              // if (showParticipants)
-                              Opacity(
-                                opacity: showParticipants ? 1 : 0,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.only(
-                                    top: kIsWeb ? 40 : 80,
-                                    bottom: kIsWeb
-                                        ? 40
-                                        : landscape
-                                            ? 20
-                                            : 80,
-                                  ),
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                        maxWidth: kIsWeb ? 800 : 400),
-                                    child: Center(
-                                      child: ScrollConfiguration(
-                                        behavior: const ScrollBehavior()
-                                            .copyWith(overscroll: false),
-                                        child: GridView.builder(
-                                          padding: const EdgeInsets.all(0),
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: kIsWeb ? 2 : 1,
-                                            crossAxisSpacing:
-                                                Constants.defaultPadding,
-                                            mainAxisSpacing:
-                                                Constants.defaultPadding,
-                                            mainAxisExtent:
-                                                landscape ? 240 : 220,
-                                          ),
-                                          itemBuilder: (context, index) {
-                                            return ParticipantTile(
-                                              key: Key(
-                                                participants.values
-                                                    .elementAt(index)
-                                                    .id,
-                                              ),
-                                              participant: participants.values
-                                                  .elementAt(index),
-                                            );
-                                          },
-                                          itemCount: participants.length,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: kIsWeb
-                                    ? const EdgeInsets.symmetric(horizontal: 10)
-                                        .copyWith(top: 30)
-                                    : const EdgeInsets.all(0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const RoomTimerTab(),
-                                    const SizedBox(width: 10),
-                                    const SessionGoalsTab(),
-                                    if (!landscape || kIsWeb) const Spacer(),
-                                    if (!landscape || kIsWeb) const DotsMenu()
-                                  ],
-                                ),
+                              _renderParticipants(landscape),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const RoomTimerTab(),
+                                  const SizedBox(width: 10),
+                                  const SessionGoalsTab(),
+                                  if (!landscape) const Spacer(),
+                                  if (!landscape) const DotsMenu()
+                                ],
                               ),
                             ],
                           ),
@@ -358,6 +296,45 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
             }),
           ),
         );
+  }
+
+  Opacity _renderParticipants(bool landscape) {
+    return Opacity(
+      opacity: showParticipants ? 1 : 0,
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(
+          top: 80,
+          bottom: landscape ? 20 : 80,
+        ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Center(
+            child: ScrollConfiguration(
+              behavior: const ScrollBehavior().copyWith(overscroll: false),
+              child: GridView.builder(
+                padding: const EdgeInsets.all(0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  crossAxisSpacing: Constants.defaultPadding,
+                  mainAxisSpacing: Constants.defaultPadding,
+                  mainAxisExtent: 220,
+                ),
+                itemBuilder: (context, index) {
+                  return ParticipantTile(
+                    key: Key(
+                      participants.values.elementAt(index).id,
+                    ),
+                    participant: participants.values.elementAt(index),
+                  );
+                },
+                itemCount: participants.length,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   SizedBox _renderBackground() {
@@ -377,27 +354,22 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
   Padding _renderFloatingActionButtons(bool landscape, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal:
-            kIsWeb ? Constants.defaultPadding : Constants.defaultPadding / 2,
-        vertical:
-            kIsWeb ? Constants.defaultPadding * 2 : Constants.defaultPadding,
+        horizontal: Constants.defaultPadding / 2,
+        vertical: Constants.defaultPadding,
       ),
       child: Row(
-        mainAxisAlignment: landscape || kIsWeb
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.spaceBetween,
+        mainAxisAlignment:
+            landscape ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _cameraButton(),
-          if (landscape || kIsWeb)
-            const SizedBox(width: Constants.defaultPadding / 2),
-          _micButton(),
-          if (landscape || kIsWeb) const Spacer(),
-          _showParticipantsButton(),
-          if (kIsWeb) const SizedBox(width: Constants.defaultPadding / 2),
-          if (!landscape || kIsWeb) _chatButton(context),
           if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          if (!kIsWeb) _fullScreenButton(landscape),
+          _micButton(),
+          if (landscape) const Spacer(),
+          _showParticipantsButton(),
+          if (!landscape) _chatButton(context),
+          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
+          _fullScreenButton(landscape),
         ],
       ),
     );

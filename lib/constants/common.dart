@@ -14,15 +14,7 @@ const bannerColors = {
   "black": Palette.black,
 };
 
-const weekdayMap = {
-  "1": "M",
-  "2": "T",
-  "3": "W",
-  "4": "T",
-  "5": "F",
-  "6": "S",
-  "7": "S",
-};
+const weekdayMap = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
 const minutesToMastery = [
   10,
@@ -63,22 +55,22 @@ const masteryColors = [
 ];
 
 const tags = [
+  "24/7",
+  "Học với Camera",
+  "Trò chuyện trong giờ nghỉ",
   "THCS",
   "THPT",
   "Đại học",
-  "Tiếng Anh",
   "Tất cả các cấp học",
-  "24/7",
-  "Học với Camera",
   "Toán",
   "Lý",
   "Hóa",
   "Sinh",
+  "Văn học",
+  "Tiếng Anh",
   "Đại cương",
-  "Trò chuyện trong giờ nghỉ",
   "Kinh tế",
   "Lập trình",
-  "Văn học",
 ];
 
 class Constants {

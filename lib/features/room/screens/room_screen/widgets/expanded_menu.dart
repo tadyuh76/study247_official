@@ -86,7 +86,6 @@ class ExpandedMenu extends StatelessWidget {
             width: 60,
             child: SvgPicture.asset(
               IconPaths.file,
-              // color: Palette.white,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,
@@ -95,7 +94,7 @@ class ExpandedMenu extends StatelessWidget {
             ),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const DocumentScreen(),
+                builder: (context) => const DocumentScreen(renderAppBar: true),
               ),
             ),
           ),

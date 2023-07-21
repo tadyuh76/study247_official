@@ -72,8 +72,8 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
     state = const AsyncLoading();
   }
 
-  Future<void> leaveRoom() async {
+  Future<void> leaveRoom([bool paused = false]) async {
     final roomId = state.asData!.value!.id!;
-    await _ref.read(roomRepositoryProvider).leaveRoom(roomId);
+    await _ref.read(roomRepositoryProvider).leaveRoom(roomId, paused: paused);
   }
 }

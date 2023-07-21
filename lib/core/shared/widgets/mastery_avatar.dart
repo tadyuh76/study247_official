@@ -48,10 +48,15 @@ class MasteryAvatar extends StatelessWidget {
           bottom: -(radius / 3),
           left: 0,
           right: 0,
-          child: SvgPicture.asset(
-            masteryIconPaths[masteryLevel],
-            width: radius,
-            height: radius,
+          child: Tooltip(
+            triggerMode: TooltipTriggerMode.tap,
+            message:
+                "${masteryTitles[masteryLevel]} (${minutesToMastery[masteryLevel] ~/ 60}h+)",
+            child: SvgPicture.asset(
+              masteryIconPaths[masteryLevel],
+              width: radius,
+              height: radius,
+            ),
           ),
         )
       ],
