@@ -11,6 +11,8 @@ class UserInfo extends StatelessWidget {
   final UserModel user;
   const UserInfo({super.key, required this.user});
 
+  bool get _maxLevel => user.masteryLevel == 9;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -43,9 +45,9 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 3),
-              const Text(
-                "- Người mới -",
-                style: TextStyle(
+              Text(
+                "- ${masteryTitles[user.masteryLevel]} -",
+                style: const TextStyle(
                   fontSize: 12,
                   color: Palette.darkGrey,
                 ),
@@ -57,28 +59,39 @@ class UserInfo extends StatelessWidget {
                 lineHeight: 10,
                 animationDuration: 300,
                 barRadius: const Radius.circular(Constants.defaultBorderRadius),
-                percent: 0.7,
+                percent: _maxLevel
+                    ? 1
+                    : user.totalStudyTime /
+                        minutesToMastery[user.masteryLevel + 1],
                 padding: const EdgeInsets.all(0),
                 linearGradient: LinearGradient(
                   colors: [
-                    masteryColors[user.masteryLevel]!,
-                    masteryColors[user.masteryLevel + 1]!.withOpacity(0.7)
+                    masteryColors[user.masteryLevel],
+                    _maxLevel
+                        ? masteryColors[user.masteryLevel]
+                        : masteryColors[user.masteryLevel + 1].withOpacity(0.7)
                   ],
                 ),
-                trailing: Tooltip(
-                  triggerMode: TooltipTriggerMode.tap,
-                  preferBelow: false,
-                  message: "Trung cấp (2h+)",
-                  child: SvgPicture.asset(
-                    masteryIconPaths[user.masteryLevel + 1]!,
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
+                trailing: _maxLevel
+                    ? null
+                    : Tooltip(
+                        triggerMode: TooltipTriggerMode.tap,
+                        preferBelow: false,
+                        message:
+                            "${masteryTitles[user.masteryLevel + 1]} (${minutesToMastery[user.masteryLevel + 1] ~/ 60}h+)",
+                        child: SvgPicture.asset(
+                          masteryIconPaths[user.masteryLevel + 1],
+                          width: 40,
+                          height: 40,
+                        ),
+                      ),
               ),
-              const Text(
-                "Học thêm 0.3h để đạt cấp độ tiếp theo!",
-                style: TextStyle(
+              const SizedBox(height: 5),
+              Text(
+                _maxLevel
+                    ? "Bạn đã đạt cấp độ cao nhất!"
+                    : "Học thêm ${((minutesToMastery[user.masteryLevel + 1] - user.totalStudyTime) / 60).toStringAsFixed(1)}h để đạt cấp độ tiếp theo!",
+                style: const TextStyle(
                   fontSize: 12,
                   color: Palette.darkGrey,
                 ),

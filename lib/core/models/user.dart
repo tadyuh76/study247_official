@@ -10,6 +10,7 @@ class UserModel {
   final int masteryLevel;
   final List<String> badges;
   final Map<String, Map<String, List<int>>> commitBoard;
+  final int totalStudyTime;
 
   UserModel({
     required this.uid,
@@ -21,19 +22,20 @@ class UserModel {
     required this.masteryLevel,
     required this.badges,
     required this.commitBoard,
+    required this.totalStudyTime,
   });
 
-  UserModel copyWith({
-    String? uid,
-    String? displayName,
-    String? email,
-    String? photoURL,
-    int? currentStreak,
-    int? longestStreak,
-    int? masteryLevel,
-    List<String>? badges,
-    Map<String, Map<String, List<int>>>? commitBoard,
-  }) {
+  UserModel copyWith(
+      {String? uid,
+      String? displayName,
+      String? email,
+      String? photoURL,
+      int? currentStreak,
+      int? longestStreak,
+      int? masteryLevel,
+      List<String>? badges,
+      Map<String, Map<String, List<int>>>? commitBoard,
+      int? totalStudyTime}) {
     return UserModel(
       uid: uid ?? this.uid,
       displayName: displayName ?? this.displayName,
@@ -44,6 +46,7 @@ class UserModel {
       masteryLevel: masteryLevel ?? this.masteryLevel,
       badges: badges ?? this.badges,
       commitBoard: commitBoard ?? this.commitBoard,
+      totalStudyTime: totalStudyTime ?? this.totalStudyTime,
     );
   }
 
@@ -58,6 +61,7 @@ class UserModel {
       'masteryLevel': masteryLevel,
       'badges': badges,
       'commitBoard': commitBoard,
+      'totalStudyTime': totalStudyTime,
     };
   }
 
@@ -91,12 +95,13 @@ class UserModel {
       masteryLevel: map['masteryLevel']?.toInt() ?? 0,
       badges: (map['badges'] as List).map((e) => e.toString()).toList(),
       commitBoard: commitBoard,
+      totalStudyTime: map['totalStudyTime'],
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, commitBoard: $commitBoard)';
+    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
   }
 
   @override
@@ -112,7 +117,8 @@ class UserModel {
         other.longestStreak == longestStreak &&
         other.masteryLevel == masteryLevel &&
         listEquals(other.badges, badges) &&
-        mapEquals(other.commitBoard, commitBoard);
+        mapEquals(other.commitBoard, commitBoard) &&
+        other.totalStudyTime == totalStudyTime;
   }
 
   @override
@@ -125,6 +131,7 @@ class UserModel {
         longestStreak.hashCode ^
         masteryLevel.hashCode ^
         badges.hashCode ^
-        commitBoard.hashCode;
+        commitBoard.hashCode ^
+        totalStudyTime.hashCode;
   }
 }

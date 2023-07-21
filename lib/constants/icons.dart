@@ -52,15 +52,15 @@ class IconPaths {
   static const mastery10 = "assets/icons/mastery/10.svg";
 }
 
-const masteryIconPaths = {
-  1: IconPaths.mastery1,
-  2: IconPaths.mastery2,
-  3: IconPaths.mastery3,
-  4: IconPaths.mastery4,
-  5: IconPaths.mastery5,
-  6: IconPaths.mastery6,
-  7: IconPaths.mastery7,
-  8: IconPaths.mastery8,
-  9: IconPaths.mastery9,
-  10: IconPaths.mastery10,
-};
+const masteryIconPaths = [
+  IconPaths.mastery1,
+  IconPaths.mastery2,
+  IconPaths.mastery3,
+  IconPaths.mastery4,
+  IconPaths.mastery5,
+  IconPaths.mastery6,
+  IconPaths.mastery7,
+  IconPaths.mastery8,
+  IconPaths.mastery9,
+  IconPaths.mastery10,
+];

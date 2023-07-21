@@ -19,33 +19,31 @@ class ProfileScreen extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () => ref.read(authControllerProvider.notifier).updateUser(),
       child: SingleChildScrollView(
-        child: Consumer(builder: (context, ref, child) {
-          return ref.watch(authControllerProvider).when(
-              error: (err, stk) => const AppError(),
-              loading: () => const AppLoading(),
-              data: (user) {
-                if (user == null) return const Text("Đã có lỗi xảy ra...");
+        child: ref.watch(authControllerProvider).when(
+            error: (err, stk) => const AppError(),
+            loading: () => const AppLoading(),
+            data: (user) {
+              if (user == null) return const Text("Đã có lỗi xảy ra...");
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    _renderHeader(),
-                    const SizedBox(height: 30),
-                    UserInfo(user: user),
-                    const SizedBox(height: Constants.defaultPadding),
-                    UserBadges(user: user),
-                    const SizedBox(height: Constants.defaultPadding),
-                    UserStreak(user: user),
-                    const SizedBox(height: Constants.defaultPadding),
-                    WeeklyStatistics(user: user),
-                    const SizedBox(height: Constants.defaultPadding),
-                    MonthlyStatistics(user: user),
-                    const SizedBox(height: Constants.defaultPadding),
-                  ],
-                );
-              });
-        }),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _renderHeader(),
+                  const SizedBox(height: 30),
+                  UserInfo(user: user),
+                  const SizedBox(height: Constants.defaultPadding),
+                  UserBadges(user: user),
+                  const SizedBox(height: Constants.defaultPadding),
+                  UserStreak(user: user),
+                  const SizedBox(height: Constants.defaultPadding),
+                  WeeklyStatistics(user: user),
+                  const SizedBox(height: Constants.defaultPadding),
+                  MonthlyStatistics(user: user),
+                  const SizedBox(height: Constants.defaultPadding),
+                ],
+              );
+            }),
       ),
     );
   }

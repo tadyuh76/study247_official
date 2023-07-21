@@ -24,33 +24,43 @@ const weekdayMap = {
   "7": "S",
 };
 
-const monthMap = {
-  "1": "Tháng 1",
-  "2": "Tháng 2",
-  "3": "Tháng 3",
-  "4": "Tháng 4",
-  "5": "Tháng 5",
-  "6": "Tháng 6",
-  "7": "Tháng 7",
-  "8": "Tháng 8",
-  "9": "Tháng 9",
-  "10": "Tháng 10",
-  "11": "Tháng 11",
-  "12": "Tháng 12",
-};
+const minutesToMastery = [
+  10,
+  60,
+  3 * 60,
+  6 * 60,
+  10 * 60,
+  20 * 60,
+  40 * 60,
+  80 * 60,
+  120 * 60,
+  200 * 60
+];
+const masteryTitles = [
+  "Thành viên mới",
+  "Khởi đầu",
+  "Sơ cấp",
+  "Trung cấp",
+  "Tiên tiến",
+  "Thành thạo",
+  "Chuyên gia",
+  "Bậc thầy",
+  "Kỳ cựu",
+  "Sư phụ",
+];
 
-const masteryColors = {
-  1: Color(0xFF23B0E2),
-  2: Color(0xFF236FE2),
-  3: Color(0xFF6023E2),
-  4: Color(0xFF8C26DC),
-  5: Color(0xFFB023E2),
-  6: Color(0xFFDE23E2),
-  7: Color(0xFFE223A1),
-  8: Color(0xFFE22373),
-  9: Color(0xFFE22351),
-  10: Color(0xFFA32D4A),
-};
+const masteryColors = [
+  Color(0xFF23B0E2),
+  Color(0xFF236FE2),
+  Color(0xFF6023E2),
+  Color(0xFF8C26DC),
+  Color(0xFF9817C6),
+  Color(0xFFA9129A),
+  Color(0xFFD61795),
+  Color(0xFFCA1460),
+  Color(0xFFBD0E38),
+  Color(0xFF780722),
+];
 
 const tags = [
   "THCS",

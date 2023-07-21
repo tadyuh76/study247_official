@@ -124,6 +124,7 @@ class AuthRepository {
       currentStreak: 0,
       longestStreak: 0,
       masteryLevel: 1,
+      totalStudyTime: 0,
       badges: <String>[],
       commitBoard: {
         thisYear.toString(): {

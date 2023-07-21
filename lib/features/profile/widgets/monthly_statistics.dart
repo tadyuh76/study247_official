@@ -117,21 +117,25 @@ class MonthlyStatistics extends StatelessWidget {
               final isEmpty = renderData[index] == 0;
               final isToday = dayNumber == now.day;
 
-              return Container(
-                decoration: BoxDecoration(
-                  border: isToday
-                      ? Border.all(color: Palette.complete, width: 2)
-                      : null,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  color: _getTileColor(renderData[index] / 60),
-                ),
-                child: Center(
-                  child: Text(
-                    dayNumber.toString(),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: isEmpty ? Palette.darkGrey : Palette.white,
+              return Tooltip(
+                triggerMode: TooltipTriggerMode.tap,
+                message: "${(renderData[index] / 60).toStringAsFixed(1)}h",
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: isToday
+                        ? Border.all(color: Palette.complete, width: 2)
+                        : null,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: _getTileColor(renderData[index] / 60),
+                  ),
+                  child: Center(
+                    child: Text(
+                      dayNumber.toString(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: isEmpty ? Palette.darkGrey : Palette.white,
+                      ),
                     ),
                   ),
                 ),

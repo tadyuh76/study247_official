@@ -26,7 +26,7 @@ class MasteryAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(radius * 2)),
             border: Border.all(
-              color: masteryColors[masteryLevel]!,
+              color: masteryColors[masteryLevel],
               width: radius / 5,
             ),
           ),
@@ -49,7 +49,7 @@ class MasteryAvatar extends StatelessWidget {
           left: 0,
           right: 0,
           child: SvgPicture.asset(
-            masteryIconPaths[masteryLevel]!,
+            masteryIconPaths[masteryLevel],
             width: radius,
             height: radius,
           ),

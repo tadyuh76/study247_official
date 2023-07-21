@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,7 @@ import 'package:study247/features/chat/widgets/chat_view.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
 import 'package:study247/features/music/controllers/music_controller.dart';
+import 'package:study247/features/profile/controller/profile_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
@@ -32,9 +35,9 @@ import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/features/timer/widgets/timer_tab.dart';
 import 'package:study247/utils/show_snack_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:videosdk/videosdk.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
 
@@ -59,10 +62,15 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
   late Room _room;
   Map<String, Participant> participants = {};
 
+  late Timer _studyTimeTracker;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _studyTimeTracker = Timer.periodic(const Duration(seconds: 10), (_) {
+      ref.read(profileControllerProvider).updateStudyTime();
+    });
 
     _setup();
     _room = VideoSDK.createRoom(
@@ -81,6 +89,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _studyTimeTracker.cancel();
     super.dispose();
   }
 
@@ -516,11 +525,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
       elevation: 0,
       title: Row(
         children: [
-          Text(
-            ref.read(roomControllerProvider).asData!.value!.name,
-            style: const TextStyle(fontSize: 16),
+          Expanded(
+            child: Text(
+              ref.read(roomControllerProvider).asData!.value!.name,
+              style: const TextStyle(fontSize: 16),
+            ),
           ),
-          const Spacer(),
           if (kIsWeb) _renderWebCTA(),
           if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
           const InviteButton(),
