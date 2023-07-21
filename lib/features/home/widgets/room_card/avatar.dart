@@ -16,7 +16,11 @@ class Avatar extends StatelessWidget {
       child: ClipOval(
         child: photoURL.isEmpty
             ? SvgPicture.asset(IconPaths.defaultUser)
-            : Image.network(photoURL, fit: BoxFit.cover),
+            : Image.network(
+                photoURL,
+                fit: BoxFit.cover,
+                width: radius * 2,
+              ),
       ),
     );
   }

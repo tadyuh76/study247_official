@@ -5,13 +5,42 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
+import 'package:study247/features/home/widgets/room_card/avatar.dart';
 
 class UserInfo extends StatelessWidget {
   final UserModel user;
   const UserInfo({super.key, required this.user});
 
   bool get _maxLevel => user.masteryLevel == 9;
+
+  void _showInfoEdittingBox(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => FeatureDialog(
+        iconPath: IconPaths.person,
+        title: "Chỉnh sửa thông tin",
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Avatar(photoURL: user.photoURL, radius: 50),
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Palette.black.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +52,8 @@ class UserInfo extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Palette.white,
             borderRadius: BorderRadius.all(
-                Radius.circular(Constants.defaultBorderRadius)),
+              Radius.circular(Constants.defaultBorderRadius),
+            ),
           ),
           padding:
               const EdgeInsets.all(Constants.defaultPadding).copyWith(top: 80),
@@ -122,7 +152,7 @@ class UserInfo extends StatelessWidget {
           top: 0,
           child: IconButton(
             splashRadius: 25,
-            onPressed: () {},
+            onPressed: () => _showInfoEdittingBox(context),
             icon: const Icon(Icons.edit),
             color: Palette.darkGrey,
           ),
