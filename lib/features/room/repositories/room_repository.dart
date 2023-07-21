@@ -56,11 +56,14 @@ class RoomRepository {
     }
   }
 
-  Future<Result<String, Exception>> leaveRoom(String roomId) async {
+  Future<Result<String, Exception>> leaveRoom(String roomId,
+      {bool resumed = false}) async {
     try {
       final currentRoomRef = _roomRef.doc(roomId);
       final currentRoom = RoomModel.fromMap(
-          (await currentRoomRef.get()).data() as Map<String, dynamic>);
+        (await currentRoomRef.get()).data() as Map<String, dynamic>,
+      );
+
       if (currentRoom.curParticipants == 1) {
         await currentRoomRef.delete();
       } else {

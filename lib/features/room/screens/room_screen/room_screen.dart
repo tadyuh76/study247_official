@@ -19,6 +19,7 @@ import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
 import 'package:study247/features/music/controllers/music_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
+import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dots_menu.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/participant_tile.dart';
@@ -47,7 +48,8 @@ class RoomScreen extends ConsumerStatefulWidget {
   ConsumerState<RoomScreen> createState() => _RoomScreenState();
 }
 
-class _RoomScreenState extends ConsumerState<RoomScreen> {
+class _RoomScreenState extends ConsumerState<RoomScreen>
+    with WidgetsBindingObserver {
   final PageController _pageController = PageController();
   bool _isSecondPage = false;
   bool camEnabled = false;
@@ -60,6 +62,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     _setup();
     _room = VideoSDK.createRoom(
       roomId: widget.meetingId,
@@ -72,6 +76,23 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
     _setMeetingEventListener();
     _room.join();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // leave room temporarily when user pop out the app
+    // rejoin the room when user comes back
+    if (state == AppLifecycleState.paused) {
+      ref.read(roomControllerProvider.notifier).leaveRoom();
+    } else if (state == AppLifecycleState.resumed) {
+      ref.read(roomControllerProvider.notifier).joinRoom(widget.roomId);
+    }
   }
 
   void _setMeetingEventListener() {
@@ -183,6 +204,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
               ..leaveRoom()
               ..reset();
           }
+          ref
+              .read(roomListControllerProvider.notifier)
+              .getRoomList(refresh: true);
           context
             ..pop()
             ..pop();
