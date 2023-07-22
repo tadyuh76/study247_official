@@ -112,17 +112,20 @@ class MessageWidget extends ConsumerWidget {
                           children: [
                             Text(
                               message.senderName,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "  -  ${formatDate(message.createdAt)}",
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: Palette.darkGrey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
+                            if (!pinned)
+                              Text(
+                                "  -  ${formatDate(message.createdAt)}",
+                                style: const TextStyle(
+                                  color: Palette.darkGrey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
                             const Spacer(),
                             if (isSelecting && !pinned)
                               GestureDetector(

@@ -6,7 +6,6 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
-import 'package:study247/core/shared/widgets/search_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
@@ -113,7 +112,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           children: [
             _renderHeader(),
             const CreateCard(),
-            const AppSearchBar(hintText: "Tìm phòng học..."),
+            // const AppSearchBar(hintText: "Tìm phòng học..."),
+            const SizedBox(height: Constants.defaultPadding),
+            const Padding(
+              padding: EdgeInsets.only(left: Constants.defaultPadding),
+              child: Text(
+                "Danh sách phòng học",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+            ),
             const SizedBox(height: 10),
             _renderRoomList(),
           ],
@@ -128,19 +135,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         horizontal: Constants.defaultPadding,
         vertical: Constants.defaultPadding,
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Chào Huy,",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+            ref.watch(authControllerProvider).when(
+                  error: (err, stk) => "",
+                  loading: () => "",
+                  data: (user) => "Chào ${user!.displayName.split(" ").last},",
+                ),
           ),
-          SizedBox(height: 5),
-          Text(
+          const SizedBox(height: 5),
+          const Text(
             "Bắt đầu một phiên học mới nào!",
             style: TextStyle(color: Palette.darkGrey),
           ),
-          SizedBox(height: 10),
+          // SizedBsox(height: 10),
         ],
       ),
     );
@@ -176,8 +187,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   data: (user) {
                     if (user == null) return const SizedBox.shrink();
 
-                    final now = DateTime.now();
-
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -209,7 +218,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                         Text(
                           // total number of hours studied in the current month
-                          "${((user.commitBoard[now.year.toString()]![now.month.toString()]!).fold(0, (previousValue, element) => previousValue + element) / 60).toStringAsFixed(1)}h",
+                          "${(user.monthStudyTime / 60).toStringAsFixed(1)}h",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -270,7 +279,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      IconPaths.flashcards,
+                      IconPaths.documents,
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 1 ? Palette.primary : Palette.darkGrey,
                         BlendMode.srcIn,
@@ -301,7 +310,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      IconPaths.person,
+                      IconPaths.profile,
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 2 ? Palette.primary : Palette.darkGrey,
                         BlendMode.srcIn,

@@ -31,6 +31,7 @@ class NumParticipants extends StatelessWidget {
           children: [
             SvgPicture.asset(
               IconPaths.people,
+              width: 16,
               // color: Palette.primary,
               colorFilter: const ColorFilter.mode(
                 Palette.primary,

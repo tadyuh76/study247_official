@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
+import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 
 class RoomCreateDialog extends ConsumerStatefulWidget {
@@ -38,7 +40,7 @@ class _RoomCreateDialogState extends ConsumerState<RoomCreateDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _renderCreateButton(
-                      iconName: Icons.people_rounded,
+                      iconPath: IconPaths.people,
                       title: "Phòng nhóm",
                       onTap: () => context
                         ..pop()
@@ -46,7 +48,7 @@ class _RoomCreateDialogState extends ConsumerState<RoomCreateDialog> {
                     ),
                     const SizedBox(width: Constants.defaultPadding / 2),
                     _renderCreateButton(
-                      iconName: Icons.person,
+                      iconPath: IconPaths.person,
                       title: "Phòng cá nhân",
                       onTap: () => context
                         ..pop()
@@ -64,7 +66,7 @@ class _RoomCreateDialogState extends ConsumerState<RoomCreateDialog> {
   }
 
   Column _renderCreateButton({
-    required IconData iconName,
+    required String iconPath,
     required String title,
     required VoidCallback onTap,
   }) {
@@ -81,10 +83,13 @@ class _RoomCreateDialogState extends ConsumerState<RoomCreateDialog> {
               width: 100,
               height: 100,
               child: Center(
-                child: Icon(
-                  iconName,
-                  size: 64,
-                  color: Palette.darkGrey,
+                child: SvgPicture.asset(
+                  iconPath,
+                  width: iconPath == IconPaths.person ? 52 : 64,
+                  colorFilter: const ColorFilter.mode(
+                    Palette.darkGrey,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

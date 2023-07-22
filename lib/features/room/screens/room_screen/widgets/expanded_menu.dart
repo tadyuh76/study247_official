@@ -73,8 +73,7 @@ class ExpandedMenu extends StatelessWidget {
             width: 60,
             child: SvgPicture.asset(
               IconPaths.image,
-              width: 32,
-              // color: Palette.white,
+              width: 24,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,
@@ -85,7 +84,7 @@ class ExpandedMenu extends StatelessWidget {
           BlackBackgroundButton(
             width: 60,
             child: SvgPicture.asset(
-              IconPaths.file,
+              IconPaths.documents,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,

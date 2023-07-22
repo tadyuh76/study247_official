@@ -1,23 +1,27 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/features/room/screens/room_screen/room_screen.dart';
+import 'package:study247/features/room/screens/solo_room_screen/solo_room_screen.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final profileRepositoryProvider = Provider((ref) {
   final db = ref.read(firestoreProvider);
-  return ProfileRepository(db);
+  final storage = ref.read(storageProvider);
+  return ProfileRepository(db, storage);
 });
 
 class ProfileRepository {
   final FirebaseFirestore _db;
-  ProfileRepository(this._db);
+  final FirebaseStorage _storage;
+  ProfileRepository(this._db, this._storage);
 
   Future<Result<String, Exception>> updateStudyTime(UserModel user) async {
     try {
@@ -61,5 +65,43 @@ class ProfileRepository {
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  Future<Result<String, Exception>> updateProfile({
+    required String userId,
+    String? newDisplayName,
+    Uint8List? imageBytes,
+  }) async {
+    try {
+      String? newPhotoURL;
+      if (imageBytes != null) {
+        newPhotoURL = await _uploadProfileImage(userId, imageBytes);
+      }
+      final snapshot =
+          await _db.collection(FirebaseConstants.users).doc(userId).get();
+      final user = UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+      final newUser = user.copyWith(
+        displayName: newDisplayName ?? user.displayName,
+        photoURL: newPhotoURL ?? user.photoURL,
+      );
+      await _db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .set(newUser.toMap());
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<String> _uploadProfileImage(
+    String userId,
+    Uint8List imageBytes,
+  ) async {
+    final result =
+        await _storage.ref("profileImgs/$userId").putData(imageBytes);
+    final photoURL = await result.ref.getDownloadURL();
+    return photoURL;
   }
 }

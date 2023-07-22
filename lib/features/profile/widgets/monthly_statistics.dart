@@ -123,8 +123,7 @@ class MonthlyStatistics extends StatelessWidget {
 
               return Tooltip(
                 triggerMode: TooltipTriggerMode.tap,
-                message:
-                    "${(renderData[index] / _minutesForMaxOpacity).toStringAsFixed(1)}h",
+                message: "${(renderData[index] / 60).toStringAsFixed(1)}h",
                 child: Container(
                   decoration: BoxDecoration(
                     border: isToday

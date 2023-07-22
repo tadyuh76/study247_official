@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:study247/core/models/audio.dart';
-import 'package:study247/features/room/screens/room_screen/room_screen.dart';
+import 'package:study247/features/room/screens/solo_room_screen/solo_room_screen.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final audioControllerProvider = ChangeNotifierProvider(

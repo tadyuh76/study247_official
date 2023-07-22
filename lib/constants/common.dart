@@ -29,11 +29,11 @@ const minutesToMastery = [
   200 * 60
 ];
 const masteryTitles = [
-  "Thành viên mới",
   "Khởi đầu",
   "Sơ cấp",
   "Trung cấp",
-  "Tiên tiến",
+  "Nâng cao",
+  "Ham học",
   "Thành thạo",
   "Chuyên gia",
   "Bậc thầy",

@@ -57,7 +57,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
   bool _isSecondPage = false;
   bool camEnabled = false;
   bool micEnabled = false;
-  bool showParticipants = true;
+  bool _showParticipants = true;
 
   late Room _room;
   Map<String, Participant> participants = {};
@@ -300,7 +300,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
 
   Opacity _renderParticipants(bool landscape) {
     return Opacity(
-      opacity: showParticipants ? 1 : 0,
+      opacity: _showParticipants ? 1 : 0,
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.only(
@@ -396,7 +396,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
         builder: (context) => const ChatView(),
       ),
       child: SvgPicture.asset(
-        IconPaths.chats,
+        IconPaths.message,
         // color: Palette.white,
         colorFilter: const ColorFilter.mode(
           Palette.white,
@@ -410,14 +410,16 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     return BlackBackgroundButton(
       width: 60,
       child: SvgPicture.asset(
-        showParticipants ? IconPaths.hidePerson : IconPaths.person,
+        _showParticipants
+            ? IconPaths.hideParticipants
+            : IconPaths.showParticipants,
         // color: Palette.white,
         colorFilter: const ColorFilter.mode(
           Palette.white,
           BlendMode.srcIn,
         ),
       ),
-      onTap: () => setState(() => showParticipants = !showParticipants),
+      onTap: () => setState(() => _showParticipants = !_showParticipants),
     );
   }
 
@@ -575,7 +577,7 @@ class ChatButton extends StatelessWidget {
         builder: (context) => const ChatView(),
       ),
       child: SvgPicture.asset(
-        IconPaths.chats,
+        IconPaths.message,
         // color: Palette.white,
         colorFilter: const ColorFilter.mode(
           Palette.white,

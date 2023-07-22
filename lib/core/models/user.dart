@@ -12,6 +12,11 @@ class UserModel {
   final Map<String, Map<String, List<int>>> commitBoard;
   final int totalStudyTime;
 
+  DateTime get _now => DateTime.now();
+  int get monthStudyTime =>
+      commitBoard[_now.year.toString()]![_now.month.toString()]!
+          .fold(0, (previousValue, element) => previousValue + element);
+
   UserModel({
     required this.uid,
     required this.displayName,
@@ -25,17 +30,18 @@ class UserModel {
     required this.totalStudyTime,
   });
 
-  UserModel copyWith(
-      {String? uid,
-      String? displayName,
-      String? email,
-      String? photoURL,
-      int? currentStreak,
-      int? longestStreak,
-      int? masteryLevel,
-      List<String>? badges,
-      Map<String, Map<String, List<int>>>? commitBoard,
-      int? totalStudyTime}) {
+  UserModel copyWith({
+    String? uid,
+    String? displayName,
+    String? email,
+    String? photoURL,
+    int? currentStreak,
+    int? longestStreak,
+    int? masteryLevel,
+    List<String>? badges,
+    Map<String, Map<String, List<int>>>? commitBoard,
+    int? totalStudyTime,
+  }) {
     return UserModel(
       uid: uid ?? this.uid,
       displayName: displayName ?? this.displayName,

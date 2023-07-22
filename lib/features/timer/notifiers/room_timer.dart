@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 import 'package:study247/features/timer/repositories/room_timer_repository.dart';
@@ -28,12 +27,12 @@ class RoomTimer extends ChangeNotifier {
   RoomTimer(this._ref);
 
   Future<void> updateTimer() async {
-    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    final hostId = _ref.read(roomControllerProvider).asData!.value!.hostUid;
+    // final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    // final hostId = _ref.read(roomControllerProvider).asData!.value!.hostUid;
 
-    if (userId == hostId) {
-      await _ref.read(roomTimerRepositoryProvider).updateRoomTimer();
-    }
+    // if (userId == hostId) {
+    await _ref.read(roomTimerRepositoryProvider).updateRoomTimer();
+    // }
   }
 
   void setup() {

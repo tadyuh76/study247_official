@@ -12,6 +12,7 @@ import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/utils/show_snack_bar.dart';
+import 'package:study247/utils/unfocus.dart';
 
 class DocumentEditScreen extends ConsumerStatefulWidget {
   final String documentId;
@@ -144,107 +145,109 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onExit,
-      child: Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0,
-          backgroundColor: Palette.white,
-          elevation: 0,
-          foregroundColor: Palette.black,
-          actions: [
-            // if (MediaQuery.of(context).viewInsets.bottom > 0.0)
-            //   ..._renderActiveLeading()
-            // else
-            ..._renderDefaultLeading(),
-            if (saving)
-              IconButton(
-                onPressed: () {},
-                icon: const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-            if (!saved && !saving)
-              IconButton(
-                splashRadius: 24,
-                onPressed: _onSaved,
-                icon: const Icon(
-                  Icons.check,
-                  color: Palette.primary,
-                  size: 24,
-                ),
-              ),
-          ],
-        ),
-        body: ScrollConfiguration(
-          behavior: const ScrollBehavior().copyWith(overscroll: false),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Constants.defaultPadding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    maxLines: null,
-                    controller: _titleController,
-                    onChanged: _onTitleChanged,
-                    style: const TextStyle(
-                      color: Palette.black,
-                      fontSize: 20,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "Nhập tiêu đề...",
-                      hintStyle: TextStyle(color: Palette.darkGrey),
-                      border: InputBorder.none,
-                    ),
+      child: Unfocus(
+        child: Scaffold(
+          appBar: AppBar(
+            titleSpacing: 0,
+            backgroundColor: Palette.white,
+            elevation: 0,
+            foregroundColor: Palette.black,
+            actions: [
+              // if (MediaQuery.of(context).viewInsets.bottom > 0.0)
+              //   ..._renderActiveLeading()
+              // else
+              ..._renderDefaultLeading(),
+              if (saving)
+                IconButton(
+                  onPressed: () {},
+                  icon: const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  // const SizedBox(height: Constants.defaultPadding),
-                  Consumer(builder: (context, ref, child) {
-                    final lastEditTime = DateTime.parse(
-                      ref
-                              .watch(documentControllerProvider)
-                              .asData
-                              ?.value
-                              ?.lastEdit ??
-                          DateTime.now().toString(),
-                    );
-                    final lastEditHour =
-                        "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
-                    final lastEditDay =
-                        "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
-
-                    return Text(
-                      "$lastEditHour - $lastEditDay",
+                ),
+              if (!saved && !saving)
+                IconButton(
+                  splashRadius: 24,
+                  onPressed: _onSaved,
+                  icon: const Icon(
+                    Icons.check,
+                    color: Palette.primary,
+                    size: 24,
+                  ),
+                ),
+            ],
+          ),
+          body: ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(overscroll: false),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Constants.defaultPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      maxLines: null,
+                      controller: _titleController,
+                      onChanged: _onTitleChanged,
                       style: const TextStyle(
-                        fontSize: 12,
-                        color: Palette.darkGrey,
-                        fontWeight: FontWeight.w300,
+                        color: Palette.black,
+                        fontSize: 20,
                       ),
-                    );
-                  }),
-                  const SizedBox(height: Constants.defaultPadding / 2),
-                  TextField(
-                    maxLengthEnforcement: MaxLengthEnforcement.none,
-                    maxLength: TextField.noMaxLength,
-                    controller: _documentController,
-                    maxLines: null,
-                    onChanged: _onDocumentChanged,
-                    cursorColor: Palette.primary,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(color: Palette.darkGrey),
-                      hintText: "Nhập nội dung...",
+                      decoration: const InputDecoration(
+                        hintText: "Nhập tiêu đề...",
+                        hintStyle: TextStyle(color: Palette.darkGrey),
+                        border: InputBorder.none,
+                      ),
                     ),
-                    style: const TextStyle(
-                      height: 1.5,
-                      color: Palette.black,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 14,
+                    // const SizedBox(height: Constants.defaultPadding),
+                    Consumer(builder: (context, ref, child) {
+                      final lastEditTime = DateTime.parse(
+                        ref
+                                .watch(documentControllerProvider)
+                                .asData
+                                ?.value
+                                ?.lastEdit ??
+                            DateTime.now().toString(),
+                      );
+                      final lastEditHour =
+                          "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
+                      final lastEditDay =
+                          "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
+
+                      return Text(
+                        "$lastEditHour - $lastEditDay",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Palette.darkGrey,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: Constants.defaultPadding / 2),
+                    TextField(
+                      maxLengthEnforcement: MaxLengthEnforcement.none,
+                      maxLength: TextField.noMaxLength,
+                      controller: _documentController,
+                      maxLines: null,
+                      onChanged: _onDocumentChanged,
+                      cursorColor: Palette.primary,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(color: Palette.darkGrey),
+                        hintText: "Nhập nội dung...",
+                      ),
+                      style: const TextStyle(
+                        height: 1.5,
+                        color: Palette.black,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

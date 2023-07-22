@@ -20,7 +20,7 @@ class _EnterButtonState extends ConsumerState<EnterButton> {
     // setState(() => joining = true);
 
     final roomId = widget.room.id!;
-    context.go("/room/$roomId/${widget.room.meetingId}");
+    context.go("/room/$roomId?meetingId=${widget.room.meetingId}");
     // showSnackBar(context, "Đã tham gia phòng học!");
   }
 

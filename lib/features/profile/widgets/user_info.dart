@@ -5,9 +5,8 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
-import 'package:study247/features/home/widgets/room_card/avatar.dart';
+import 'package:study247/features/profile/widgets/update_user_dialog.dart';
 
 class UserInfo extends StatelessWidget {
   final UserModel user;
@@ -18,27 +17,7 @@ class UserInfo extends StatelessWidget {
   void _showInfoEdittingBox(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => FeatureDialog(
-        iconPath: IconPaths.person,
-        title: "Chỉnh sửa thông tin",
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Avatar(photoURL: user.photoURL, radius: 50),
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Palette.black.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      builder: (context) => UpdateUserInfoDialog(user: user, key: key),
     );
   }
 
@@ -153,7 +132,13 @@ class UserInfo extends StatelessWidget {
           child: IconButton(
             splashRadius: 25,
             onPressed: () => _showInfoEdittingBox(context),
-            icon: const Icon(Icons.edit),
+            icon: SvgPicture.asset(
+              IconPaths.edit,
+              colorFilter: const ColorFilter.mode(
+                Palette.darkGrey,
+                BlendMode.srcIn,
+              ),
+            ),
             color: Palette.darkGrey,
           ),
         ),

@@ -10,8 +10,12 @@ class ParticipantTile extends StatefulWidget {
   State<ParticipantTile> createState() => _ParticipantTileState();
 }
 
-class _ParticipantTileState extends State<ParticipantTile> {
+class _ParticipantTileState extends State<ParticipantTile>
+    with AutomaticKeepAliveClientMixin {
   Stream? videoStream;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -42,6 +46,8 @@ class _ParticipantTileState extends State<ParticipantTile> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Stack(
       children: [
         Container(

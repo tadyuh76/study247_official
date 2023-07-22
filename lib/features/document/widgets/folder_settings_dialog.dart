@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
-import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/folder.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/color_picker.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
 import 'package:study247/features/room/screens/create_room_screen/widgets/form/text_input.dart';
+import 'package:study247/utils/unfocus.dart';
 
 class FolderSettingsDialog extends ConsumerStatefulWidget {
   const FolderSettingsDialog({super.key, required this.folder});
@@ -55,45 +54,47 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
       child: Padding(
         padding:
             const EdgeInsets.symmetric(horizontal: Constants.defaultPadding),
-        child: Material(
-          color: Palette.white,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          clipBehavior: Clip.hardEdge,
-          child: Padding(
-            padding: const EdgeInsets.all(Constants.defaultPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Chỉnh sửa thư mục",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Palette.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+        child: Unfocus(
+          child: Material(
+            color: Palette.white,
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            clipBehavior: Clip.hardEdge,
+            child: Padding(
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Chỉnh sửa thư mục",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Palette.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                AppTextInput(
-                  title: "Tên thư mục",
-                  hintText: "Lý chương I",
-                  controller: _folderNameController,
-                  onEditingComplete: () {},
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                _renderOption("Đổi màu thư mục", IconPaths.color),
-                ColorPicker(
-                  selectingColorIdx: _selectingColorIdx,
-                  onSelect: (index) =>
-                      setState(() => _selectingColorIdx = index),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                CustomButton(
-                  onTap: () => _onSave(context, ref),
-                  text: "Xác nhận",
-                ),
-              ],
+                  const SizedBox(height: Constants.defaultPadding),
+                  AppTextInput(
+                    title: "Tên thư mục",
+                    hintText: "Lý chương I",
+                    controller: _folderNameController,
+                    onEditingComplete: () {},
+                  ),
+                  const SizedBox(height: Constants.defaultPadding),
+                  _renderOption("Đổi màu thư mục", Icons.color_lens_rounded),
+                  ColorPicker(
+                    selectingColorIdx: _selectingColorIdx,
+                    onSelect: (index) =>
+                        setState(() => _selectingColorIdx = index),
+                  ),
+                  const SizedBox(height: Constants.defaultPadding),
+                  CustomButton(
+                    onTap: () => _onSave(context, ref),
+                    text: "Xác nhận",
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -101,7 +102,7 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
     );
   }
 
-  Widget _renderOption(String text, String iconPath, [VoidCallback? onTap]) {
+  Widget _renderOption(String text, IconData icon, [VoidCallback? onTap]) {
     bool canTap = onTap != null;
 
     return GestureDetector(
@@ -110,16 +111,7 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
         padding: const EdgeInsets.only(bottom: Constants.defaultPadding),
         child: Row(
           children: [
-            SvgPicture.asset(
-              iconPath,
-              width: 32,
-              height: 32,
-              // color: Palette.black,
-              colorFilter: const ColorFilter.mode(
-                Palette.black,
-                BlendMode.srcIn,
-              ),
-            ),
+            Icon(icon, size: 28),
             const SizedBox(width: Constants.defaultPadding),
             Text(
               text,

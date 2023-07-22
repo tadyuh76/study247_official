@@ -91,7 +91,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         // contentPadding:
                         // const EdgeInsets.all(Constants.defaultPadding / 2),
                         isDense: true,
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: Icon(Icons.email_rounded, size: 24),
                         hintText: "Email",
                         hintStyle:
                             TextStyle(fontSize: 14, color: Palette.darkGrey),
@@ -103,7 +103,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       controller: _passwordController,
                       obscureText: _passwordHide,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock),
+                        prefixIcon: const Icon(Icons.lock_rounded),
                         hintText: "Mật khẩu",
                         hintStyle: const TextStyle(
                           fontSize: 14,

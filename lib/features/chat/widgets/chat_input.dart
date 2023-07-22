@@ -66,7 +66,7 @@ class ChatInput extends StatelessWidget {
                   splashRadius: 28,
                   onPressed: () => _sendMessage(ref),
                   icon: const Icon(
-                    Icons.send,
+                    Icons.send_rounded,
                     color: Palette.primary,
                     size: 28,
                   ),

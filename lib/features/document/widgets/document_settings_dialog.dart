@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
-import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/color_picker.dart';
@@ -88,10 +86,13 @@ class _DocumentSettingsDialogState
                 const SizedBox(height: Constants.defaultPadding),
                 _renderOption(
                   _curFolder.isEmpty ? "Chọn thư mục" : _curFolder,
-                  IconPaths.folderAdd,
+                  Icons.create_new_folder_rounded,
                   _selectFolder,
                 ),
-                _renderOption("Đổi màu ghi chú", IconPaths.color),
+                _renderOption(
+                  "Đổi màu ghi chú",
+                  Icons.color_lens_rounded,
+                ),
                 ColorPicker(
                   selectingColorIdx: _selectingColorIdx,
                   onSelect: (index) =>
@@ -110,7 +111,7 @@ class _DocumentSettingsDialogState
     );
   }
 
-  Widget _renderOption(String text, String iconPath, [VoidCallback? onTap]) {
+  Widget _renderOption(String text, IconData icon, [VoidCallback? onTap]) {
     bool canTap = onTap != null;
 
     return GestureDetector(
@@ -119,16 +120,12 @@ class _DocumentSettingsDialogState
         padding: const EdgeInsets.only(bottom: Constants.defaultPadding),
         child: Row(
           children: [
-            SvgPicture.asset(
-              iconPath,
-              width: 32,
-              height: 32,
-              // color: Palette.black,
-              colorFilter: const ColorFilter.mode(
-                Palette.black,
-                BlendMode.srcIn,
-              ),
-            ),
+            // SvgPicture.asset(
+            //   iconPath,
+            //   width: 32,
+            //   height: 32,
+            // ),
+            Icon(icon, size: 28),
             const SizedBox(width: Constants.defaultPadding),
             Text(
               text,

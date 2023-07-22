@@ -33,15 +33,15 @@ class AppTextInput extends StatelessWidget {
             ),
             enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(
-                color: Palette.primary,
-                width: 2,
+                color: Palette.darkGrey,
+                width: 1,
                 style: BorderStyle.solid,
               ),
             ),
             focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(
                 color: Palette.primary,
-                width: 4,
+                width: 2,
                 style: BorderStyle.solid,
               ),
             ),
