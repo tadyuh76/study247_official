@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
+import 'package:study247/features/timer/widgets/breaktime_dialog.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final personalTimerProvider = ChangeNotifierProvider(
@@ -77,19 +78,19 @@ class PersonalTimer extends ChangeNotifier {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       remainTime--;
 
-      if (remainTime == 0) {
+      if (remainTime <= 0) {
         timer.cancel();
         isStudying = false;
+
+        showDialog(
+          context: globalKey.currentState!.context,
+          builder: (context) => const BreaktimeDialog(),
+        );
 
         personalTimerStart = DateTime.now().toString();
         setupBreaktimeTimer();
         startBreaktime();
-        // showCustomDialog(
-        //   context: globalKey.currentState!.context,
-        //   dialog: const BreaktimeDialog(),
-        //   canDismiss: false,
-        // );
-        showSnackBar(globalKey.currentState!.context, "hết giờ học");
+        updateTimer();
       }
 
       notifyListeners();
@@ -104,17 +105,13 @@ class PersonalTimer extends ChangeNotifier {
         timer.cancel();
         isStudying = true;
 
+        showSnackBar(globalKey.currentState!.context, "hết giờ nghỉ");
+
         personalTimerStart = DateTime.now().toString();
         personalTimerSessionNo++;
         setupStudyTimer();
         startStudying();
-
-        // showCustomDialog(
-        //   context: globalKey.currentState!.context,
-        //   dialog: const ReturnFromBreaktimeDialog(),
-        //   canDismiss: false,
-        // );
-        showSnackBar(globalKey.currentState!.context, "hết giờ nghỉ");
+        updateTimer();
       }
 
       notifyListeners();

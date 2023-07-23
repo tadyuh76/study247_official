@@ -39,7 +39,7 @@ class RoomTimerBox extends ConsumerWidget {
 
     return FeatureDialog(
       title: roomTimer.isStudying ? "Tập trung" : "Giải lao",
-      iconPath: IconPaths.clock,
+      iconPath: IconPaths.timer,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

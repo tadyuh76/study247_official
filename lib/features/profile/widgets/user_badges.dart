@@ -42,7 +42,7 @@ class UserBadges extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: SvgPicture.asset(
-                    IconPaths.clock2,
+                    IconPaths.clock,
                     width: 60,
                   ),
                 );

@@ -1,9 +1,11 @@
 class IconPaths {
+  static const clock = "assets/icons/colored/clock.svg";
+  static const streak = "assets/icons/colored/streak.svg";
+  static const coffee = "assets/icons/colored/coffee.svg";
+
   static const addPeople = "assets/icons/add_people.svg";
   static const cameraOff = "assets/icons/camera_off.svg";
   static const camera = "assets/icons/camera.svg";
-  static const clock = "assets/icons/clock.svg";
-  static const clock2 = "assets/icons/clock_2.svg";
   static const close = "assets/icons/close.svg";
   static const document = "assets/icons/document.svg";
   static const documents = "assets/icons/documents.svg";
@@ -39,7 +41,7 @@ class IconPaths {
   static const settings = 'assets/icons/settings.svg';
   static const share = "assets/icons/share.svg";
   static const showParticipants = "assets/icons/show_participants.svg";
-  static const streak = "assets/icons/streak.svg";
+  static const timer = "assets/icons/timer.svg";
   static const trashBin = "assets/icons/trash_bin.svg";
   static const unpin = "assets/icons/unpin.svg";
   static const defaultUser = "assets/icons/user.svg";

@@ -60,7 +60,7 @@ class PersonalTimerBox extends ConsumerWidget {
       title: personalTimer.isStudying
           ? "Tập trung (Cá nhân)"
           : "Giải lao (Cá nhân)",
-      iconPath: IconPaths.clock,
+      iconPath: IconPaths.timer,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -124,7 +124,7 @@ class PersonalTimerBox extends ConsumerWidget {
 
   Widget _renderPersonalTimerSettings(WidgetRef ref) {
     return FeatureDialog(
-      iconPath: IconPaths.clock,
+      iconPath: IconPaths.timer,
       title: "Đồng hồ cá nhân",
       child: Column(
         children: [
@@ -135,7 +135,7 @@ class PersonalTimerBox extends ConsumerWidget {
             hintText: "25",
             title: "Độ dài mỗi phiên học",
             maxValue: 90,
-            minValue: 20,
+            minValue: 15,
             interval: 5,
             onEditingComplete: () {},
           ),

@@ -37,7 +37,7 @@ class SoloTimerTab extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                IconPaths.clock,
+                IconPaths.timer,
                 width: 16,
                 height: 16,
                 // color: Palette.white,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 import 'package:study247/features/timer/repositories/room_timer_repository.dart';
+import 'package:study247/features/timer/widgets/breaktime_dialog.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final roomTimerProvider = ChangeNotifierProvider(
@@ -26,13 +27,9 @@ class RoomTimer extends ChangeNotifier {
 
   RoomTimer(this._ref);
 
-  Future<void> updateTimer() async {
-    // final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    // final hostId = _ref.read(roomControllerProvider).asData!.value!.hostUid;
-
-    // if (userId == hostId) {
+  Future<void> updateTimer({bool solo = false}) async {
+    if (solo) return;
     await _ref.read(roomTimerRepositoryProvider).updateRoomTimer();
-    // }
   }
 
   void setup() {
@@ -84,17 +81,17 @@ class RoomTimer extends ChangeNotifier {
         timer.cancel();
         isStudying = false;
 
+        showDialog(
+          context: globalKey.currentState!.context,
+          builder: (context) => const BreaktimeDialog(),
+        );
+
         roomTimerStart = DateTime.now().toString();
         setupBreaktimeTimer();
         startBreaktime();
         updateTimer();
-        // showCustomDialog(
-        //   context: globalKey.currentState!.context,
-        //   dialog: const BreaktimeDialog(),
-        //   canDismiss: false,
-        // );
-        showSnackBar(globalKey.currentState!.context, "hết phiên học");
       }
+
       notifyListeners();
     });
   }
@@ -107,18 +104,13 @@ class RoomTimer extends ChangeNotifier {
         timer.cancel();
         isStudying = true;
 
+        showSnackBar(globalKey.currentState!.context, "hết giờ nghỉ");
+
         roomTimerStart = DateTime.now().toString();
         roomTimerSessionNo++;
         setupStudyTimer();
         startStudying();
         updateTimer();
-
-        // showCustomDialog(
-        //   context: globalKey.currentState!.context,
-        //   dialog: const ReturnFromBreaktimeDialog(),
-        //   canDismiss: false,
-        // );
-        showSnackBar(globalKey.currentState!.context, "hết giờ nghỉ");
       }
 
       notifyListeners();

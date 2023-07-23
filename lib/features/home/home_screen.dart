@@ -208,7 +208,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                         const SizedBox(width: Constants.defaultPadding),
                         SvgPicture.asset(
-                          IconPaths.clock2,
+                          IconPaths.clock,
                           width: 20,
                         ),
                         const SizedBox(width: 5),
