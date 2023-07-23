@@ -12,6 +12,8 @@ class IconPaths {
   static const edit = "assets/icons/edit.svg";
   static const facebook = "assets/icons/facebook.svg";
   static const fileAdd = "assets/icons/file_add.svg";
+  static const fileChange = "assets/icons/file_change.svg";
+  static const fileUnknown = "assets/icons/file_unknown.svg";
   static const file = "assets/icons/file.svg";
   static const flashcards = "assets/icons/flashcards.svg";
   static const folderAdd = "assets/icons/folder_add.svg";

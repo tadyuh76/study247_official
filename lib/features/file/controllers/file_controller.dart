@@ -12,18 +12,20 @@ class FileController extends StateNotifier<AsyncValue<File?>> {
   final Ref _ref;
   FileController(this._ref) : super(const AsyncData(null));
 
-  Future<void> pickFile({bool solo = false}) async {
+  Future<bool> pickFile({bool solo = false}) async {
     state = const AsyncLoading();
     final result = await _ref.read(fileRepositoryProvider).pickFile(solo: solo);
 
     if (result case Success(value: final file)) {
       state = AsyncData(file);
+      return true;
     } else if (result case Failure()) {
       state = const AsyncData(null);
     }
+    return false;
   }
 
-  void reset() {
+  void removeFile() {
     state = const AsyncData(null);
     _ref.read(fileRepositoryProvider).removeFile();
   }

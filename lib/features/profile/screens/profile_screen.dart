@@ -6,7 +6,6 @@ import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/profile/widgets/monthly_statistics.dart';
-import 'package:study247/features/profile/widgets/user_badges.dart';
 import 'package:study247/features/profile/widgets/user_info.dart';
 import 'package:study247/features/profile/widgets/user_streak.dart';
 import 'package:study247/features/profile/widgets/weekly_statistics.dart';
@@ -33,8 +32,8 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 30),
                   UserInfo(user: user),
                   const SizedBox(height: Constants.defaultPadding),
-                  UserBadges(user: user),
-                  const SizedBox(height: Constants.defaultPadding),
+                  // UserBadges(user: user),
+                  // const SizedBox(height: Constants.defaultPadding),
                   UserStreak(user: user),
                   const SizedBox(height: Constants.defaultPadding),
                   WeeklyStatistics(user: user),

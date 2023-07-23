@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/black_background_button.dart';
@@ -43,7 +42,6 @@ class ExpandedMenu extends StatelessWidget {
             onTap: onHideMenu,
             child: SvgPicture.asset(
               IconPaths.close,
-              // color: Palette.white,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,
@@ -52,12 +50,11 @@ class ExpandedMenu extends StatelessWidget {
               height: 32,
             ),
           ),
-          const SizedBox(height: Constants.defaultPadding / 2),
+          const SizedBox(height: 5),
           BlackBackgroundButton(
             width: 60,
             child: SvgPicture.asset(
               IconPaths.music,
-              // color: Palette.white,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,
@@ -67,7 +64,7 @@ class ExpandedMenu extends StatelessWidget {
             ),
             onTap: () => _showMusicBox(context),
           ),
-          const SizedBox(height: Constants.defaultPadding / 2),
+          const SizedBox(height: 5),
           BlackBackgroundButton(
             onTap: () => _showRoomBackgroundBox(context),
             width: 60,
@@ -80,16 +77,16 @@ class ExpandedMenu extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: Constants.defaultPadding / 2),
+          const SizedBox(height: 5),
           BlackBackgroundButton(
             width: 60,
             child: SvgPicture.asset(
               IconPaths.documents,
+              width: 24,
               colorFilter: const ColorFilter.mode(
                 Palette.white,
                 BlendMode.srcIn,
               ),
-              width: 24,
             ),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(

@@ -64,7 +64,7 @@ class _SoloRoomScreenState extends ConsumerState<SoloRoomScreen> {
         child: const Text("Bạn có chắc chắn muốn rời khỏi phòng học?"),
         onAccept: () {
           if (ref.exists(fileControllerProvider)) {
-            ref.read(fileControllerProvider.notifier).reset();
+            ref.read(fileControllerProvider.notifier).removeFile();
             ref.invalidate(fileControllerProvider);
           }
           if (ref.exists(sessionGoalsControllerProvider)) {

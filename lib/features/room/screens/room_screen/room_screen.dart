@@ -39,7 +39,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:videosdk/videosdk.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-final GlobalKey globalKey = GlobalKey(debugLabel: "displaying dialogs");
+final GlobalKey globalKey =
+    GlobalKey(debugLabel: "displaying dialogs within room screen");
 
 class RoomScreen extends ConsumerStatefulWidget {
   final String roomId;
@@ -108,7 +109,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     _room.on(Events.roomJoined, () {
       setState(() {
         participants.putIfAbsent(
-            _room.localParticipant.id, () => _room.localParticipant);
+          _room.localParticipant.id,
+          () => _room.localParticipant,
+        );
       });
     });
 
@@ -123,9 +126,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
 
     _room.on(Events.participantLeft, (String participantId) {
       if (participants.containsKey(participantId)) {
-        setState(
-          () => participants.remove(participantId),
-        );
+        setState(() => participants.remove(participantId));
       }
     });
 
@@ -178,7 +179,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
             ref.invalidate(timerTypeProvider);
           }
           if (ref.exists(fileControllerProvider)) {
-            ref.read(fileControllerProvider.notifier).reset();
+            ref.read(fileControllerProvider.notifier).removeFile();
             ref.invalidate(fileControllerProvider);
           }
           if (ref.exists(sessionGoalsControllerProvider)) {
@@ -191,11 +192,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
           }
           if (ref.exists(roomTimerProvider)) {
             ref.read(roomTimerProvider.notifier).reset();
-            // ref.invalidate(roomTimerProvider);
           }
           if (ref.exists(personalTimerProvider)) {
             ref.read(personalTimerProvider.notifier).reset();
-            // ref.invalidate(personalTimerProvider);
           }
           if (ref.exists(chatListController)) {
             ref.invalidate(chatListController);
@@ -241,6 +240,15 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 
+  Future<void> _launchGooglePlay() async {
+    final url = Uri.parse(
+      "https://play.google.com/store/apps/details?id=com.tadyuh.studie&hl=en-VN",
+    );
+    if (!await launchUrl(url)) {
+      if (mounted) showSnackBar(context, "Không thể mở đường dẫn!");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ref.watch(roomControllerProvider).when(
@@ -266,26 +274,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.all(Constants.defaultPadding / 2)
-                                  .copyWith(top: landscape ? 10 : 100),
-                          child: Stack(
-                            children: [
-                              _renderParticipants(landscape),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const RoomTimerTab(),
-                                  const SizedBox(width: 10),
-                                  const SessionGoalsTab(),
-                                  if (!landscape) const Spacer(),
-                                  if (!landscape) const DotsMenu()
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        _renderMainView(landscape),
                         FileView(landscape: landscape),
                       ],
                     ),
@@ -298,7 +287,66 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
         );
   }
 
-  Opacity _renderParticipants(bool landscape) {
+  AppBar _renderAppBar() {
+    return AppBar(
+      backgroundColor: Palette.black.withOpacity(0.5),
+      foregroundColor: Palette.white,
+      titleSpacing: 0,
+      elevation: 0,
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              ref.read(roomControllerProvider).asData!.value!.name,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+          if (kIsWeb) _renderWebCTA(),
+          if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
+          const InviteButton(),
+          const SizedBox(width: Constants.defaultPadding),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderBackground() {
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: YoutubePlayer(
+          controller: ref.watch(
+            roomBackgroundControllerProvider
+                .select((value) => value.videoController),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _renderMainView(bool landscape) {
+    return Padding(
+      padding: const EdgeInsets.all(Constants.defaultPadding / 2)
+          .copyWith(top: landscape ? 10 : 100),
+      child: Stack(
+        children: [
+          _renderParticipants(landscape),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const RoomTimerTab(),
+              const SizedBox(width: 10),
+              const SessionGoalsTab(),
+              if (!landscape) const Spacer(),
+              if (!landscape) const DotsMenu()
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderParticipants(bool landscape) {
     return Opacity(
       opacity: _showParticipants ? 1 : 0,
       child: Container(
@@ -337,21 +385,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     );
   }
 
-  SizedBox _renderBackground() {
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: YoutubePlayer(
-          controller: ref.watch(
-            roomBackgroundControllerProvider
-                .select((value) => value.videoController),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding _renderFloatingActionButtons(bool landscape, BuildContext context) {
+  Widget _renderFloatingActionButtons(bool landscape, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: Constants.defaultPadding / 2,
@@ -372,6 +406,30 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
           _fullScreenButton(landscape),
         ],
       ),
+    );
+  }
+
+  Widget _renderNavigators() {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Constants.defaultPadding / 2,
+          ),
+          child: Align(
+            alignment:
+                _isSecondPage ? Alignment.centerLeft : Alignment.centerRight,
+            child: CustomIconButton(
+              backgroundColor: Palette.black.withOpacity(0.7),
+              size: 32,
+              onTap: _isSecondPage ? _onLeftNavigatorTap : _onRightNavigatorTap,
+              child: Icon(
+                _isSecondPage ? Icons.arrow_left : Icons.arrow_right,
+                size: 32,
+                color: Palette.white,
+              ),
+            ),
+          )),
     );
   }
 
@@ -467,62 +525,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
     );
   }
 
-  Align _renderNavigators() {
-    return Align(
-      alignment: Alignment.center,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Constants.defaultPadding / 2,
-          ),
-          child: Align(
-            alignment:
-                _isSecondPage ? Alignment.centerLeft : Alignment.centerRight,
-            child: CustomIconButton(
-              backgroundColor: Palette.black.withOpacity(0.7),
-              size: 32,
-              onTap: _isSecondPage ? _onLeftNavigatorTap : _onRightNavigatorTap,
-              child: Icon(
-                _isSecondPage ? Icons.arrow_left : Icons.arrow_right,
-                size: 32,
-                color: Palette.white,
-              ),
-            ),
-          )),
-    );
-  }
-
-  AppBar _renderAppBar() {
-    return AppBar(
-      backgroundColor: Palette.black.withOpacity(0.5),
-      foregroundColor: Palette.white,
-      titleSpacing: 0,
-      elevation: 0,
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(
-              ref.read(roomControllerProvider).asData!.value!.name,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          if (kIsWeb) _renderWebCTA(),
-          if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
-          const InviteButton(),
-          const SizedBox(width: Constants.defaultPadding),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _launchGooglePlay() async {
-    final url = Uri.parse(
-      "https://play.google.com/store/apps/details?id=com.tadyuh.studie&hl=en-VN",
-    );
-    if (!await launchUrl(url)) {
-      if (mounted) showSnackBar(context, "Không thể mở đường dẫn!");
-    }
-  }
-
   Widget _renderWebCTA() {
     return GestureDetector(
       onTap: _launchGooglePlay,
@@ -558,30 +560,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChatButton extends StatelessWidget {
-  const ChatButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlackBackgroundButton(
-      width: 60,
-      onTap: () => showDialog(
-        barrierColor: Colors.transparent,
-        context: context,
-        builder: (context) => const ChatView(),
-      ),
-      child: SvgPicture.asset(
-        IconPaths.message,
-        // color: Palette.white,
-        colorFilter: const ColorFilter.mode(
-          Palette.white,
-          BlendMode.srcIn,
         ),
       ),
     );
