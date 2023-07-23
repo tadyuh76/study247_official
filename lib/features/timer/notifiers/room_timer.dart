@@ -55,7 +55,7 @@ class RoomTimer extends ChangeNotifier {
   void setupStudyTimer() {
     final startTime = DateTime.parse(roomTimerStart);
     remainTime = startTime
-        .add(Duration(seconds: roomTimerDuration))
+        .add(Duration(seconds: roomTimerDuration + 1))
         .difference(DateTime.now())
         .inSeconds;
     notifyListeners();
@@ -67,7 +67,7 @@ class RoomTimer extends ChangeNotifier {
 
     final startTime = DateTime.parse(roomTimerStart);
     remainTime = startTime
-        .add(Duration(seconds: breaktime))
+        .add(Duration(seconds: breaktime + 1))
         .difference(DateTime.now())
         .inSeconds;
     notifyListeners();
@@ -88,8 +88,8 @@ class RoomTimer extends ChangeNotifier {
 
         roomTimerStart = DateTime.now().toString();
         setupBreaktimeTimer();
-        startBreaktime();
-        updateTimer();
+        // startBreaktime();
+        // updateTimer();
       }
 
       notifyListeners();

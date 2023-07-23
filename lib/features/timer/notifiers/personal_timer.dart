@@ -55,7 +55,7 @@ class PersonalTimer extends ChangeNotifier {
   void setupStudyTimer() {
     final startTime = DateTime.parse(personalTimerStart);
     remainTime = startTime
-        .add(Duration(seconds: personalTimerDuration))
+        .add(Duration(seconds: personalTimerDuration + 1))
         .difference(DateTime.now())
         .inSeconds;
     notifyListeners();
@@ -68,7 +68,7 @@ class PersonalTimer extends ChangeNotifier {
 
     final startTime = DateTime.parse(personalTimerStart);
     remainTime = startTime
-        .add(Duration(seconds: breaktime))
+        .add(Duration(seconds: breaktime + 1))
         .difference(DateTime.now())
         .inSeconds;
     notifyListeners();
@@ -89,8 +89,8 @@ class PersonalTimer extends ChangeNotifier {
 
         personalTimerStart = DateTime.now().toString();
         setupBreaktimeTimer();
-        startBreaktime();
-        updateTimer();
+        // startBreaktime();
+        // updateTimer();
       }
 
       notifyListeners();

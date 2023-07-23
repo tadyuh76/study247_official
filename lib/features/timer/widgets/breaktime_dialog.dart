@@ -7,6 +7,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
+import 'package:study247/features/timer/notifiers/personal_timer.dart';
 import 'package:study247/features/timer/notifiers/room_timer.dart';
 import 'package:study247/features/timer/providers/timer_type.dart';
 import 'package:study247/utils/format_time.dart';
@@ -19,6 +20,26 @@ class BreaktimeDialog extends ConsumerStatefulWidget {
 }
 
 class _BreaktimeDialogState extends ConsumerState<BreaktimeDialog> {
+  bool _started = false;
+
+  Future<void> _onStart() async {
+    if (_started) return;
+
+    final timerType = ref.read(timerTypeProvider);
+    if (timerType == TimerType.room) {
+      ref.read(roomTimerProvider.notifier)
+        ..startBreaktime()
+        ..updateTimer();
+    } else {
+      ref.read(personalTimerProvider.notifier)
+        ..startBreaktime()
+        ..updateTimer();
+    }
+
+    context.pop();
+    setState(() => _started = true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FeatureDialog(
@@ -47,15 +68,16 @@ class _BreaktimeDialogState extends ConsumerState<BreaktimeDialog> {
             if (timerType == TimerType.room) {
               remainTime = ref.watch(roomTimerProvider).remainTime;
             } else {
-              remainTime = ref.watch(roomTimerProvider).remainTime;
+              remainTime = ref.watch(personalTimerProvider).remainTime;
             }
 
-            if (remainTime == 0) context.pop();
+            // if (remainTime == 0) context.pop();
+
             return Text(
               formatTime(remainTime),
               style: TextStyle(
                 fontSize: 24,
-                color: Palette.primary,
+                color: _started ? Palette.primary : Palette.darkGrey,
                 fontWeight: FontWeight.bold,
               ),
             );
@@ -63,7 +85,7 @@ class _BreaktimeDialogState extends ConsumerState<BreaktimeDialog> {
           const SizedBox(height: Constants.defaultPadding),
           CustomButton(
             text: "Xác nhận",
-            onTap: context.pop,
+            onTap: _onStart,
             primary: true,
           ),
         ],
