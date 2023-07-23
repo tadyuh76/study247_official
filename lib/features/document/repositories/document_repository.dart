@@ -131,38 +131,43 @@ class DocumentRepository {
     String documentText,
   ) async {
     try {
+      // save document
       final db = _ref.read(firestoreProvider);
       final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-      final documentRef = db
+      final docRef = db
           .collection(FirebaseConstants.users)
           .doc(userId)
           .collection(FirebaseConstants.documents)
           .doc(documentId);
-      documentRef.update({
+      docRef.update({
         "title": documentTitle,
         "text": documentText,
         "lastEdit": DateTime.now().toString(),
       });
 
-      final currentflashcardList =
+      // save flashcards
+      final prevFlashcardList =
           _ref.read(flashcardListControllerProvider).asData?.value ?? [];
-      final newFlashcardList = _createFlashcards(documentText, documentTitle);
-      final filteredFlashcardList = newFlashcardList.where((f1) {
-        for (final f2 in currentflashcardList) {
+      final curFlashcardList = _createFlashcards(documentText, documentTitle);
+
+      final updatedFlashcardList = curFlashcardList.map((f1) {
+        for (final f2 in prevFlashcardList) {
           if (isFlashcardRepeated(f1, f2)) {
-            return false;
+            return f2;
           }
         }
-        final newRef =
-            documentRef.collection(FirebaseConstants.flashcards).doc();
-        newRef.set(f1.copyWith(id: newRef.id).toMap());
-        // _ref.read(flashcardListControllerProvider.notifier).updateFlashcardList(
-        //   [...currentflashcardList, f1.copyWith(id: newRef.id)],
-        // );
-        return true;
-      });
 
-      return Success(filteredFlashcardList.length);
+        final newRef = docRef.collection(FirebaseConstants.flashcards).doc();
+        final updatedIdFlashcard = f1.copyWith(id: newRef.id);
+        newRef.set(updatedIdFlashcard.toMap());
+        return updatedIdFlashcard;
+      }).toList();
+
+      _ref
+          .read(flashcardListControllerProvider.notifier)
+          .updateFlashcardList(updatedFlashcardList);
+
+      return Success(updatedFlashcardList.length);
     } on Exception catch (e) {
       return Failure(e);
     }

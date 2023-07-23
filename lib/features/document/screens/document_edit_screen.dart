@@ -27,11 +27,19 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   final _documentController = _DocCustomController();
   bool saved = true;
   bool saving = false;
+  int _flashcardsCreated = 0;
 
   @override
   void initState() {
     super.initState();
     _setUpDocument();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _documentController.dispose();
   }
 
   Future<void> _setUpDocument() async {
@@ -41,7 +49,11 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
 
     _titleController.text = document!.title;
     _documentController.text = document.text;
-    // setState(() => _flashcardsCreated = created);
+
+    _flashcardsCreated = await ref
+        .read(flashcardListControllerProvider.notifier)
+        .getFlashcardList();
+    setState(() {});
   }
 
   void _onTitleChanged(String newTitle) {
@@ -67,10 +79,11 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     await ref
         .read(documentControllerProvider.notifier)
         .saveDocument(context, widget.documentId, documentTitle, documentText);
+    _flashcardsCreated = await ref
+        .watch(flashcardListControllerProvider.notifier)
+        .getFlashcardList();
 
-    // if (mounted) {
     setState(() {
-      // _flashcardsCreated = created;
       saved = true;
       saving = false;
     });
@@ -135,49 +148,12 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _documentController.dispose();
-    _titleController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onExit,
       child: Unfocus(
         child: Scaffold(
-          appBar: AppBar(
-            titleSpacing: 0,
-            backgroundColor: Palette.white,
-            elevation: 0,
-            foregroundColor: Palette.black,
-            actions: [
-              // if (MediaQuery.of(context).viewInsets.bottom > 0.0)
-              //   ..._renderActiveLeading()
-              // else
-              ..._renderDefaultLeading(),
-              if (saving)
-                IconButton(
-                  onPressed: () {},
-                  icon: const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              if (!saved && !saving)
-                IconButton(
-                  splashRadius: 24,
-                  onPressed: _onSaved,
-                  icon: const Icon(
-                    Icons.check,
-                    color: Palette.primary,
-                    size: 24,
-                  ),
-                ),
-            ],
-          ),
+          appBar: _renderAppBar(),
           body: ScrollConfiguration(
             behavior: const ScrollBehavior().copyWith(overscroll: false),
             child: SingleChildScrollView(
@@ -188,64 +164,10 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(
-                      maxLines: null,
-                      controller: _titleController,
-                      onChanged: _onTitleChanged,
-                      style: const TextStyle(
-                        color: Palette.black,
-                        fontSize: 20,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: "Nhập tiêu đề...",
-                        hintStyle: TextStyle(color: Palette.darkGrey),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                    // const SizedBox(height: Constants.defaultPadding),
-                    Consumer(builder: (context, ref, child) {
-                      final lastEditTime = DateTime.parse(
-                        ref
-                                .watch(documentControllerProvider)
-                                .asData
-                                ?.value
-                                ?.lastEdit ??
-                            DateTime.now().toString(),
-                      );
-                      final lastEditHour =
-                          "${lastEditTime.hour.toString().padLeft(2, "0")}:${lastEditTime.minute.toString().padLeft(2, "0")}";
-                      final lastEditDay =
-                          "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
-
-                      return Text(
-                        "$lastEditHour - $lastEditDay",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Palette.darkGrey,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      );
-                    }),
+                    _renderTitleEditor(),
+                    _renderLastEdit(),
                     const SizedBox(height: Constants.defaultPadding / 2),
-                    TextField(
-                      maxLengthEnforcement: MaxLengthEnforcement.none,
-                      maxLength: TextField.noMaxLength,
-                      controller: _documentController,
-                      maxLines: null,
-                      onChanged: _onDocumentChanged,
-                      cursorColor: Palette.primary,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Palette.darkGrey),
-                        hintText: "Nhập nội dung...",
-                      ),
-                      style: const TextStyle(
-                        height: 1.5,
-                        color: Palette.black,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14,
-                      ),
-                    ),
+                    _renderDocumentEditor(),
                   ],
                 ),
               ),
@@ -256,7 +178,89 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     );
   }
 
-  _renderDefaultLeading() {
+  TextField _renderDocumentEditor() {
+    return TextField(
+      maxLengthEnforcement: MaxLengthEnforcement.none,
+      maxLength: TextField.noMaxLength,
+      controller: _documentController,
+      maxLines: null,
+      onChanged: _onDocumentChanged,
+      cursorColor: Palette.primary,
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        hintStyle: TextStyle(color: Palette.darkGrey),
+        hintText: "Nhập nội dung...",
+      ),
+      style: const TextStyle(
+        height: 1.5,
+        color: Palette.black,
+        fontWeight: FontWeight.w300,
+        fontSize: 14,
+      ),
+    );
+  }
+
+  TextField _renderTitleEditor() {
+    return TextField(
+      maxLines: null,
+      controller: _titleController,
+      onChanged: _onTitleChanged,
+      style: const TextStyle(
+        color: Palette.black,
+        fontSize: 20,
+      ),
+      decoration: const InputDecoration(
+        hintText: "Nhập tiêu đề...",
+        hintStyle: TextStyle(color: Palette.darkGrey),
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  Widget _renderLastEdit() {
+    return Text(
+      ref.watch(documentControllerProvider).asData?.value?.formattedLastEdit ??
+          "",
+      style: const TextStyle(
+        fontSize: 12,
+        color: Palette.darkGrey,
+        fontWeight: FontWeight.w300,
+      ),
+    );
+  }
+
+  AppBar _renderAppBar() {
+    return AppBar(
+      titleSpacing: 0,
+      backgroundColor: Palette.white,
+      elevation: 0,
+      foregroundColor: Palette.black,
+      actions: [
+        ..._renderDefaultLeading(),
+        if (saving)
+          IconButton(
+            onPressed: () {},
+            icon: const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        if (!saved && !saving)
+          IconButton(
+            splashRadius: 24,
+            onPressed: _onSaved,
+            icon: const Icon(
+              Icons.check,
+              color: Palette.primary,
+              size: 24,
+            ),
+          ),
+      ],
+    );
+  }
+
+  List<Widget> _renderDefaultLeading() {
     return [
       IconButton(
         splashRadius: 24,
@@ -280,47 +284,31 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       }),
       Padding(
         padding:
-            const EdgeInsets.only(right: Constants.defaultPadding, left: 5),
-        child: Material(
-          color: Colors.transparent,
-          child: Consumer(builder: (context, ref, child) {
-            final flashcardCreated = ref
-                    .watch(flashcardListControllerProvider)
-                    .asData
-                    ?.value
-                    .length ??
-                0;
-
-            return GestureDetector(
-              onTap: flashcardCreated == 0
-                  ? () => showSnackBar(
-                        context,
-                        "Không tìm thấy flashcard để ôn tập",
-                      )
-                  : () =>
-                      // context.go("/document/${widget.documentId}/flashcards"),
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const FlashcardScreen(),
-                        ),
-                      ),
-              child: SizedBox(
-                width: 24 + 10,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      IconPaths.flashcards,
-                      width: 24,
-                      height: 24,
+            const EdgeInsets.only(left: 5, right: Constants.defaultPadding),
+        child: GestureDetector(
+          onTap: _flashcardsCreated == 0
+              ? () =>
+                  showSnackBar(context, "Không tìm thấy flashcard để ôn tập")
+              : () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const FlashcardScreen(),
                     ),
-                    if (flashcardCreated != 0)
-                      _renderFlashcardsBadge(flashcardCreated)
-                  ],
+                  ),
+          child: SizedBox(
+            width: 24 + 10,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  IconPaths.flashcards,
+                  width: 24,
+                  height: 24,
                 ),
-              ),
-            );
-          }),
+                if (_flashcardsCreated != 0)
+                  _renderFlashcardsBadge(_flashcardsCreated)
+              ],
+            ),
+          ),
         ),
       ),
     ];

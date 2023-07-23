@@ -8,6 +8,18 @@ class Document {
   final String color;
   final String folderName;
 
+  String get formattedLastEdit {
+    final lastEditTime = DateTime.parse(lastEdit);
+
+    final lastEditHour = lastEditTime.hour.toString().padLeft(2, "0");
+    final lastEditMinute = lastEditTime.minute.toString().padLeft(2, "0");
+
+    final lastEditDay =
+        "${lastEditTime.day}/${lastEditTime.month}/${lastEditTime.year}";
+
+    return "$lastEditHour:$lastEditMinute - $lastEditDay";
+  }
+
   Document({
     this.id,
     required this.title,

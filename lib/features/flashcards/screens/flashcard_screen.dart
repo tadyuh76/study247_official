@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/flashcard.dart';
 import 'package:study247/core/palette.dart';
@@ -40,7 +39,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
       // TODO: implement saving new flashcards
       showDialog(
         context: context,
-        builder: (context) => CompleteDiaglog(hideDialog: context.pop),
+        builder: (context) => const CompleteDiaglog(),
       );
     }
   }

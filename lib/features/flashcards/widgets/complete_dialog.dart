@@ -5,8 +5,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 
 class CompleteDiaglog extends StatelessWidget {
-  final VoidCallback hideDialog;
-  const CompleteDiaglog({super.key, required this.hideDialog});
+  const CompleteDiaglog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,12 @@ class CompleteDiaglog extends StatelessWidget {
                   height: 200,
                   width: 200,
                 ),
-                CustomButton(text: "Trở lại", onTap: context.pop)
+                CustomButton(
+                  text: "Trở lại",
+                  onTap: () => context
+                    ..pop()
+                    ..pop(),
+                )
               ],
             ),
           ),

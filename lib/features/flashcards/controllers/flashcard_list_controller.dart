@@ -3,21 +3,30 @@ import 'package:study247/core/models/flashcard.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/features/flashcards/repositories/flashcard_list_repository.dart';
 
-final flashcardListControllerProvider = StreamProvider(
-  (ref) => FlashcardListController(ref).getFlashcardList(),
+final flashcardListControllerProvider =
+    StateNotifierProvider<FlashcardListController, AsyncValue<List<Flashcard>>>(
+  (ref) => FlashcardListController(ref),
 );
 
-class FlashcardListController {
+class FlashcardListController
+    extends StateNotifier<AsyncValue<List<Flashcard>>> {
   final Ref _ref;
-  FlashcardListController(this._ref) : super();
+  FlashcardListController(this._ref) : super(const AsyncLoading());
 
-  Stream<List<Flashcard>> getFlashcardList() {
+  Future<int> getFlashcardList() async {
     final result =
-        _ref.read(flashcardListRepositoryProvider).getFlashcardList();
+        await _ref.read(flashcardListRepositoryProvider).getFlashcardList();
 
     if (result case Success(value: final flashcardList)) {
-      return flashcardList;
+      state = AsyncData(flashcardList);
+      return flashcardList.length;
+    } else if (result case Failure(:final failure)) {
+      state = AsyncError(failure, StackTrace.current);
     }
-    return Stream.value([]);
+    return 0;
+  }
+
+  void updateFlashcardList(List<Flashcard> flashcardList) {
+    state = AsyncData(flashcardList);
   }
 }
