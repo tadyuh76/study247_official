@@ -144,17 +144,15 @@ class MessageWidget extends ConsumerWidget {
                                 onTap: () => _onUnpinMessage(ref, context),
                                 child: SvgPicture.asset(
                                   IconPaths.unpin,
-                                  // color: Palette.darkGrey,
                                   width: 16,
                                   colorFilter: const ColorFilter.mode(
-                                    Palette.black,
+                                    Palette.darkGrey,
                                     BlendMode.srcIn,
                                   ),
                                 ),
                               ),
                           ],
                         ),
-                        // const SizedBox(height: 3),
                         if (message.type == "text")
                           Flexible(
                             child: Text(

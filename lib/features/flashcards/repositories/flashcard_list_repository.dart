@@ -13,23 +13,22 @@ class FlashcardListRepository {
   final Ref _ref;
   FlashcardListRepository(this._ref);
 
-  Result<Stream<List<Flashcard>>, Exception> getFlashcardList() {
+  Future<Result<List<Flashcard>, Exception>> getFlashcardList() async {
     try {
       final db = _ref.read(firestoreProvider);
       final userId = _ref.read(authControllerProvider).asData!.value!.uid;
       final documentId =
-          _ref.watch(documentControllerProvider).asData!.value!.id;
+          _ref.read(documentControllerProvider).asData!.value!.id;
 
-      final snapshots = db
+      final snapshots = await db
           .collection(FirebaseConstants.users)
           .doc(userId)
           .collection(FirebaseConstants.documents)
           .doc(documentId)
           .collection(FirebaseConstants.flashcards)
-          .snapshots();
-      final flashcardList = snapshots.map(
-        (event) => event.docs.map((e) => Flashcard.fromMap(e.data())).toList(),
-      );
+          .get();
+      final flashcardList =
+          snapshots.docs.map((doc) => Flashcard.fromMap(doc.data())).toList();
       return Success(flashcardList);
     } on Exception catch (e) {
       return Failure(e);

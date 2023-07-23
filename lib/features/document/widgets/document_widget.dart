@@ -15,7 +15,7 @@ class DocumentWidget extends ConsumerWidget {
     required this.document,
   }) : super(key: key);
 
-  void _onDocumentTab(BuildContext context, WidgetRef ref) {
+  void _onDocumentTap(BuildContext context, WidgetRef ref) {
     // context.go("/document/${document.id}");
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -42,7 +42,7 @@ class DocumentWidget extends ConsumerWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
-          onTap: () => _onDocumentTab(context, ref),
+          onTap: () => _onDocumentTap(context, ref),
           child: Padding(
             padding: const EdgeInsetsDirectional.all(Constants.defaultPadding),
             child: Row(
