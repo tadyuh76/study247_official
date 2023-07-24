@@ -58,6 +58,7 @@ dependencies:
   url_launcher: ^6.1.11
   flutter_native_splash: ^2.3.1
   image_cropper: ^4.0.1
+  flutter_facebook_auth: ^5.0.11
 
 dev_dependencies:
   flutter_test:

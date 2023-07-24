@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:study247/constants/firebase.dart';
@@ -21,6 +22,30 @@ class AuthRepository {
   AuthRepository({required FirebaseAuth auth, required FirebaseFirestore db})
       : _auth = auth,
         _db = db;
+
+  Future<Result<UserCredential, Exception>> signInWithFacebook() async {
+    try {
+      final result = await FacebookAuth.instance.login(
+        permissions: ["email", "public_profile"],
+        loginBehavior: LoginBehavior.nativeWithFallback,
+      );
+      if (result.accessToken == null) {
+        return Failure(Exception("Đã có lỗi trong quá trình đăng nhập!"));
+      }
+
+      final facebookAuthCredential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+      final cred = await _auth.signInWithCredential(facebookAuthCredential);
+
+      if (cred.additionalUserInfo!.isNewUser) {
+        _uploadUserToDB(cred);
+      }
+
+      return Success(cred);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 
   Future<Result<UserCredential, Exception>> signInWithGoogle() async {
     try {
@@ -113,14 +138,17 @@ class AuthRepository {
   Future<void> _uploadUserToDB(
     UserCredential userCredential, {
     String? displayName,
+    String? email,
+    String? photoURL,
+    String? uid,
   }) async {
     final thisYear = DateTime.now().year;
 
     final newUser = UserModel(
-      uid: userCredential.user!.uid,
+      uid: uid ?? userCredential.user!.uid,
       displayName: displayName ?? userCredential.user!.displayName ?? "",
-      email: userCredential.user!.email ?? "",
-      photoURL: userCredential.user!.photoURL ?? "",
+      email: email ?? userCredential.user!.email ?? "",
+      photoURL: photoURL ?? userCredential.user!.photoURL ?? "",
       currentStreak: 0,
       longestStreak: 0,
       masteryLevel: 1,

@@ -52,6 +52,21 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     state = AsyncData(updatedUser);
   }
 
+  Future<void> signInWithFacebook(BuildContext context) async {
+    final result = await _ref.read(authRepositoryProvider).signInWithFacebook();
+    if (result case Success()) {
+      await updateUser();
+
+      if (mounted) {
+        showSnackBar(context, "Đã đăng nhập thành công!");
+      }
+    } else if (result case Failure(failure: final failure)) {
+      if (mounted) {
+        showSnackBar(context, failure.toString());
+      }
+    }
+  }
+
   Future<void> signInWithGoogle(BuildContext context) async {
     final result = await _ref.read(authRepositoryProvider).signInWithGoogle();
     if (result case Success()) {

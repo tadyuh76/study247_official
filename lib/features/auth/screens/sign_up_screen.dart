@@ -162,23 +162,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: Constants.defaultPadding / 2),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Palette.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        IconPaths.google,
-                        // color: Palette.white,
-                        colorFilter: const ColorFilter.mode(
-                          Palette.white,
-                          BlendMode.srcIn,
-                        ),
-                        width: 24,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _googleSignInButton(context),
+                        const SizedBox(width: 10),
+                        _facebookSignInButton(context),
+                      ],
                     ),
                     const SizedBox(height: Constants.defaultPadding),
                     Row(
@@ -203,6 +193,57 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _facebookSignInButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _loading = true;
+        });
+
+        ref.read(authControllerProvider.notifier).signInWithFacebook(context);
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          color: Palette.primary,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: Icon(Icons.facebook, color: Palette.white),
+      ),
+    );
+  }
+
+  GestureDetector _googleSignInButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _loading = true;
+        });
+
+        ref.read(authControllerProvider.notifier).signInWithGoogle(context);
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          color: Palette.primary,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: SvgPicture.asset(
+          IconPaths.google,
+          colorFilter: const ColorFilter.mode(
+            Palette.white,
+            BlendMode.srcIn,
+          ),
+          width: 24,
         ),
       ),
     );
