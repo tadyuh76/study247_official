@@ -151,8 +151,10 @@ class AuthRepository {
       photoURL: photoURL ?? userCredential.user!.photoURL ?? "",
       currentStreak: 0,
       longestStreak: 0,
-      masteryLevel: 1,
+      masteryLevel: 0,
       totalStudyTime: 0,
+      status: UserStatus.active.name,
+      studyingRoomId: "",
       badges: <String>[],
       commitBoard: {
         thisYear.toString(): {

@@ -25,10 +25,9 @@ class FileView extends ConsumerStatefulWidget {
   ConsumerState<FileView> createState() => _FileViewState();
 }
 
-class _FileViewState extends ConsumerState<FileView>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+class _FileViewState extends ConsumerState<FileView> {
+  // @override
+  // bool get wantKeepAlive => true;
 
   void _updateFileType() {
     ref.read(fileTypeProvider.notifier).update((state) =>
@@ -48,7 +47,7 @@ class _FileViewState extends ConsumerState<FileView>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
 
     return SafeArea(
       child: Scaffold(

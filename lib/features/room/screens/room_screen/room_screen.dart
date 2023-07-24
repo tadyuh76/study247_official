@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/screens/error_screen.dart';
 import 'package:study247/core/shared/screens/loading_screen.dart';
@@ -52,8 +53,7 @@ class RoomScreen extends ConsumerStatefulWidget {
   ConsumerState<RoomScreen> createState() => _RoomScreenState();
 }
 
-class _RoomScreenState extends ConsumerState<RoomScreen>
-    with WidgetsBindingObserver {
+class _RoomScreenState extends ConsumerState<RoomScreen> {
   final PageController _pageController = PageController();
   bool _isSecondPage = false;
   bool camEnabled = false;
@@ -61,14 +61,13 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
   bool _showParticipants = true;
 
   late Room _room;
-  Map<String, Participant> participants = {};
+  Map<String, (Participant, UserModel)> participants = {};
 
   late Timer _studyTimeTracker;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _studyTimeTracker = Timer.periodic(const Duration(seconds: 10), (_) {
       ref.read(profileControllerProvider).updateStudyTime();
     });
@@ -89,40 +88,33 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _studyTimeTracker.cancel();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // leave room temporarily when user pop out the app
-    // rejoin the room when user comes back
-    if (state == AppLifecycleState.paused) {
-      ref.read(roomControllerProvider.notifier).leaveRoom(true);
-    } else if (state == AppLifecycleState.resumed) {
-      ref.read(roomControllerProvider.notifier).joinRoom(widget.roomId);
-    }
-  }
-
   void _setMeetingEventListener() {
     _room.on(Events.roomJoined, () {
+      final user = ref.read(authControllerProvider).asData!.value!;
       setState(() {
         participants.putIfAbsent(
           _room.localParticipant.id,
-          () => _room.localParticipant,
+          () => (_room.localParticipant, user),
         );
       });
     });
 
-    _room.on(
-      Events.participantJoined,
-      (Participant participant) {
-        setState(
-          () => participants.putIfAbsent(participant.id, () => participant),
-        );
-      },
-    );
+    _room.on(Events.participantJoined, (Participant participant) async {
+      final user = await ref
+          .read(roomControllerProvider.notifier)
+          .getRoomUserByName(widget.roomId, participant.displayName);
+
+      setState(
+        () => participants.putIfAbsent(
+          participant.id,
+          () => (participant, user!),
+        ),
+      );
+    });
 
     _room.on(Events.participantLeft, (String participantId) {
       if (participants.containsKey(participantId)) {
@@ -215,6 +207,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
           ref
               .read(roomListControllerProvider.notifier)
               .getRoomList(refresh: true);
+          ref.read(profileControllerProvider).updateUserStatus(
+                status: UserStatus.active,
+                studyingRoomId: "",
+              );
           context
             ..pop()
             ..pop();
@@ -251,12 +247,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(roomControllerProvider).when(
-          error: (error, stk) => const ErrorScreen(),
-          loading: () => const LoadingScreen(),
-          data: (room) => WillPopScope(
-            onWillPop: _onExitRoom,
-            child: LayoutBuilder(builder: (context, constraints) {
+    return WillPopScope(
+      onWillPop: _onExitRoom,
+      child: ref.watch(roomControllerProvider).when(
+            error: (error, stk) => const ErrorScreen(),
+            loading: () => const LoadingScreen(),
+            data: (room) => LayoutBuilder(builder: (context, constraints) {
               final landscape = constraints.maxWidth > constraints.maxHeight;
 
               return Scaffold(
@@ -284,7 +280,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
               );
             }),
           ),
-        );
+    );
   }
 
   AppBar _renderAppBar() {
@@ -371,9 +367,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen>
                 itemBuilder: (context, index) {
                   return ParticipantTile(
                     key: Key(
-                      participants.values.elementAt(index).id,
+                      participants.values.elementAt(index).$1.id,
                     ),
-                    participant: participants.values.elementAt(index),
+                    participant: participants.values.elementAt(index).$1,
+                    user: participants.values.elementAt(index).$2,
                   );
                 },
                 itemCount: participants.length,

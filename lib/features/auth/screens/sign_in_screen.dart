@@ -153,8 +153,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _googleSignInButton(context),
-                        const SizedBox(width: 10),
-                        _facebookSignInButton(context),
+                        // const SizedBox(width: 10),
+                        // _facebookSignInButton(context),
                       ],
                     ),
                     const SizedBox(height: Constants.defaultPadding),
@@ -185,27 +185,27 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     );
   }
 
-  GestureDetector _facebookSignInButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _loading = true;
-        });
+  // GestureDetector _facebookSignInButton(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       setState(() {
+  //         _loading = true;
+  //       });
 
-        ref.read(authControllerProvider.notifier).signInWithFacebook(context);
-      },
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: const BoxDecoration(
-          color: Palette.primary,
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: Icon(Icons.facebook, color: Palette.white),
-      ),
-    );
-  }
+  //       ref.read(authControllerProvider.notifier).signInWithFacebook(context);
+  //     },
+  //     child: Container(
+  //       width: 40,
+  //       height: 40,
+  //       decoration: const BoxDecoration(
+  //         color: Palette.primary,
+  //         shape: BoxShape.circle,
+  //       ),
+  //       alignment: Alignment.center,
+  //       child: const Icon(Icons.facebook, color: Palette.white),
+  //     ),
+  //   );
+  // }
 
   GestureDetector _googleSignInButton(BuildContext context) {
     return GestureDetector(

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/shared/widgets/mastery_avatar.dart';
 import 'package:videosdk/videosdk.dart';
 
 class ParticipantTile extends StatefulWidget {
   final Participant participant;
-  const ParticipantTile({super.key, required this.participant});
+  final UserModel user;
+  const ParticipantTile(
+      {super.key, required this.participant, required this.user});
 
   @override
   State<ParticipantTile> createState() => _ParticipantTileState();
 }
 
-class _ParticipantTileState extends State<ParticipantTile>
-    with AutomaticKeepAliveClientMixin {
+class _ParticipantTileState extends State<ParticipantTile> {
   Stream? videoStream;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -46,8 +46,6 @@ class _ParticipantTileState extends State<ParticipantTile>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Stack(
       children: [
         Container(
@@ -55,7 +53,6 @@ class _ParticipantTileState extends State<ParticipantTile>
           clipBehavior: Clip.hardEdge,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Palette.black,
           ),
           child: videoStream != null
               ? RTCVideoView(
@@ -63,15 +60,7 @@ class _ParticipantTileState extends State<ParticipantTile>
                   mirror: true,
                   objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 )
-              : Container(
-                  color: Colors.grey.shade800,
-                  child: const Center(
-                    child: Icon(
-                      Icons.person,
-                      size: 100,
-                    ),
-                  ),
-                ),
+              : _renderNonVideoParticipant(),
         ),
         Align(
           alignment: Alignment.bottomLeft,
@@ -85,12 +74,25 @@ class _ParticipantTileState extends State<ParticipantTile>
               ),
             ),
             child: Text(
-              widget.participant.displayName,
+              widget.user.displayName,
               style: const TextStyle(fontSize: 12, color: Palette.white),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Container _renderNonVideoParticipant() {
+    return Container(
+      color: Colors.black.withOpacity(0.7),
+      child: Center(
+        child: MasteryAvatar(
+          radius: 40,
+          photoURL: widget.user.photoURL,
+          masteryLevel: widget.user.masteryLevel,
+        ),
+      ),
     );
   }
 }

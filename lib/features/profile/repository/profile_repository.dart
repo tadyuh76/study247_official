@@ -9,7 +9,7 @@ import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/features/room/screens/solo_room_screen/solo_room_screen.dart';
+import 'package:study247/features/room/screens/room_screen/room_screen.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final profileRepositoryProvider = Provider((ref) {
@@ -61,6 +61,22 @@ class ProfileRepository {
         "masteryLevel": newMasteryLevel,
       });
 
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> updateUserStatus(
+    String userId,
+    UserStatus status,
+    String studyingRoomId,
+  ) async {
+    try {
+      _db.collection(FirebaseConstants.users).doc(userId).update({
+        "status": status.name,
+        "studyingRoomId": studyingRoomId,
+      });
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);

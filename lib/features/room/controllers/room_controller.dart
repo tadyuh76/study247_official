@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/meeting/controllers/meeting_controler.dart';
@@ -52,13 +53,26 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
     await _ref.read(roomRepositoryProvider).joinRoom(roomId);
   }
 
-  Future<void> getRoomById(context, String roomId) async {
+  Future<void> getRoomById(BuildContext context, String roomId) async {
     final result = await _ref.read(roomRepositoryProvider).getRoomById(roomId);
     if (result case Success(value: final room)) {
       state = AsyncData(room);
     } else {
-      showSnackBar(context, "Phòng học đã bị xóa hoặc không tồn tại");
+      if (mounted) {
+        showSnackBar(context, "Phòng học đã bị xóa hoặc không tồn tại");
+      }
       state = AsyncData(RoomModel.empty());
+    }
+  }
+
+  Future<UserModel?> getRoomUserByName(String roomId, String name) async {
+    final result =
+        await _ref.read(roomRepositoryProvider).getRoomUserByName(roomId, name);
+
+    if (result case Success(value: final user)) {
+      return user;
+    } else {
+      return null;
     }
   }
 
@@ -72,7 +86,7 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
     state = const AsyncLoading();
   }
 
-  Future<void> leaveRoom([bool paused = false]) async {
+  Future<void> leaveRoom({bool paused = false}) async {
     final roomId = state.asData!.value!.id!;
     await _ref.read(roomRepositoryProvider).leaveRoom(roomId, paused: paused);
   }

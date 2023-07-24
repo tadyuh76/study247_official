@@ -21,7 +21,7 @@ class Step2 extends ConsumerWidget {
           hintText: "25",
           title: "Độ dài mỗi phiên học",
           maxValue: 90,
-          minValue: 20,
+          minValue: 15,
           interval: 5,
           onEditingComplete: () =>
               ref.read(roomInfoControllerProvider).updateRoomInfo(

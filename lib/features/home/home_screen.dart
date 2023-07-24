@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
@@ -11,7 +12,9 @@ import 'package:study247/features/document/screens/document_screen.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
 import 'package:study247/features/home/widgets/custom_drawer.dart';
 import 'package:study247/features/home/widgets/room_card/room_card.dart';
+import 'package:study247/features/profile/controller/profile_controller.dart';
 import 'package:study247/features/profile/screens/profile_screen.dart';
+import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/utils/unfocus.dart';
 
@@ -23,7 +26,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _menuController;
   double x = 0, y = 0;
   bool _menuOpened = false;
@@ -32,6 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _menuController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -41,7 +45,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     _menuController.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    final roomId = ref.read(roomControllerProvider).asData?.value?.id;
+
+    if (state == AppLifecycleState.paused) {
+      if (roomId != null) {
+        ref.read(roomControllerProvider.notifier).leaveRoom(paused: true);
+      }
+      ref.read(profileControllerProvider).updateUserStatus(
+            status: UserStatus.inactive,
+            studyingRoomId: "",
+          );
+    } else if (state == AppLifecycleState.resumed) {
+      if (roomId != null) {
+        ref.read(roomControllerProvider.notifier).joinRoom(roomId);
+        ref.read(profileControllerProvider).updateUserStatus(
+              status: UserStatus.studyingGroup,
+              studyingRoomId: roomId,
+            );
+      } else {
+        ref.read(profileControllerProvider).updateUserStatus(
+              status: UserStatus.studyingSolo,
+              studyingRoomId: "",
+            );
+      }
+    }
   }
 
   void _onMenuTap() {
@@ -234,7 +268,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  SizedBox _renderNavBar() {
+  Widget _renderNavBar() {
     return SizedBox(
       height: 60,
       child: Row(

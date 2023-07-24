@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 
@@ -38,17 +41,39 @@ class RoomRepository {
     }
   }
 
+  Future<Result<UserModel, Exception>> getRoomUserByName(
+    String roomId,
+    String name,
+  ) async {
+    try {
+      final snapshot = await _db
+          .collection(FirebaseConstants.users)
+          .where("displayName", isEqualTo: name)
+          .where("studyingRoomId", isEqualTo: roomId)
+          .get();
+      final user = snapshot.docs[0].data();
+      return Success(UserModel.fromMap(user));
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<String, Exception>> joinRoom(String roomId) async {
     try {
       final user = _ref.read(authControllerProvider).asData!.value!;
+
+      await _db.collection(FirebaseConstants.users).doc(user.uid).update({
+        "status": UserStatus.studyingGroup.name,
+        "studyingRoomId": roomId,
+      });
       await _roomRef
           .doc(roomId)
           .update({"curParticipants": FieldValue.increment(1)});
-      await _roomRef
-          .doc(roomId)
-          .collection(FirebaseConstants.participants)
-          .doc(user.uid)
-          .set(user.toMap());
+      // await _roomRef
+      //     .doc(roomId)
+      //     .collection(FirebaseConstants.participants)
+      //     .doc(user.uid)
+      //     .set(user.toMap());
 
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
@@ -56,19 +81,23 @@ class RoomRepository {
     }
   }
 
-  Future<Result<String, Exception>> leaveRoom(String roomId,
-      {bool paused = false}) async {
+  Future<Result<String, Exception>> leaveRoom(
+    String roomId, {
+    bool paused = false,
+  }) async {
     try {
       final currentRoomRef = _roomRef.doc(roomId);
-      final currentRoom = RoomModel.fromMap(
-        (await currentRoomRef.get()).data() as Map<String, dynamic>,
-      );
+      final snapshot = await currentRoomRef.get();
+      final currentRoom =
+          RoomModel.fromMap(snapshot.data() as Map<String, dynamic>);
 
-      if (currentRoom.curParticipants == 1 && !paused) {
+      // if user is not quitting the app
+      if (!paused && currentRoom.curParticipants == 1) {
         await currentRoomRef.delete();
       } else {
         currentRoomRef.update({"curParticipants": FieldValue.increment(-1)});
       }
+
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);

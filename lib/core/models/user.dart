@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+enum UserStatus { active, inactive, studyingSolo, studyingGroup }
+
 class UserModel {
   final String uid;
   final String displayName;
@@ -8,6 +10,8 @@ class UserModel {
   final int currentStreak;
   final int longestStreak;
   final int masteryLevel;
+  final String status;
+  final String studyingRoomId;
   final List<String> badges;
   final Map<String, Map<String, List<int>>> commitBoard;
   final int totalStudyTime;
@@ -25,6 +29,8 @@ class UserModel {
     required this.currentStreak,
     required this.longestStreak,
     required this.masteryLevel,
+    required this.status,
+    required this.studyingRoomId,
     required this.badges,
     required this.commitBoard,
     required this.totalStudyTime,
@@ -39,6 +45,8 @@ class UserModel {
     int? longestStreak,
     int? masteryLevel,
     List<String>? badges,
+    String? status,
+    String? studyingRoomId,
     Map<String, Map<String, List<int>>>? commitBoard,
     int? totalStudyTime,
   }) {
@@ -51,6 +59,8 @@ class UserModel {
       longestStreak: longestStreak ?? this.longestStreak,
       masteryLevel: masteryLevel ?? this.masteryLevel,
       badges: badges ?? this.badges,
+      status: status ?? this.status,
+      studyingRoomId: studyingRoomId ?? this.studyingRoomId,
       commitBoard: commitBoard ?? this.commitBoard,
       totalStudyTime: totalStudyTime ?? this.totalStudyTime,
     );
@@ -66,6 +76,8 @@ class UserModel {
       'longestStreak': longestStreak,
       'masteryLevel': masteryLevel,
       'badges': badges,
+      'status': status,
+      'studyingRoomId': studyingRoomId,
       'commitBoard': commitBoard,
       'totalStudyTime': totalStudyTime,
     };
@@ -74,7 +86,7 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map) {
     Map<String, dynamic> temp = map['commitBoard'];
     Map<String, Map<String, List<int>>> commitBoard = {};
-    // try {
+
     for (final year in temp.entries) {
       final Map<String, List<int>> monthBoard = {};
 
@@ -87,9 +99,6 @@ class UserModel {
 
       commitBoard.putIfAbsent(year.key, () => monthBoard);
     }
-    // } catch (e) {
-    //   print('error user from map: $e');
-    // }
 
     return UserModel(
       uid: map['uid'] ?? '',
@@ -100,14 +109,16 @@ class UserModel {
       longestStreak: map['longestStreak']?.toInt() ?? 0,
       masteryLevel: map['masteryLevel']?.toInt() ?? 0,
       badges: (map['badges'] as List).map((e) => e.toString()).toList(),
+      status: map['status'] ?? UserStatus.active.name,
+      studyingRoomId: map['studyingRoomId'] ?? '',
       commitBoard: commitBoard,
-      totalStudyTime: map['totalStudyTime'],
+      totalStudyTime: map['totalStudyTime'] ?? 0,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
+    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, status: $status, studyingRoomId: $studyingRoomId, commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
   }
 
   @override
@@ -122,6 +133,8 @@ class UserModel {
         other.currentStreak == currentStreak &&
         other.longestStreak == longestStreak &&
         other.masteryLevel == masteryLevel &&
+        other.status == status &&
+        other.studyingRoomId == studyingRoomId &&
         listEquals(other.badges, badges) &&
         mapEquals(other.commitBoard, commitBoard) &&
         other.totalStudyTime == totalStudyTime;
@@ -137,6 +150,8 @@ class UserModel {
         longestStreak.hashCode ^
         masteryLevel.hashCode ^
         badges.hashCode ^
+        status.hashCode ^
+        studyingRoomId.hashCode ^
         commitBoard.hashCode ^
         totalStudyTime.hashCode;
   }

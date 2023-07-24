@@ -10,6 +10,7 @@ import "package:study247/features/room/screens/create_room_screen/widgets/steps/
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step2.dart";
 import "package:study247/features/room/screens/create_room_screen/widgets/steps/step3.dart";
 import 'package:study247/utils/show_snack_bar.dart';
+import "package:study247/utils/unfocus.dart";
 
 final steps = [
   (0, "Cơ bản", const Step1()),
@@ -36,12 +37,10 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
     }
 
     if (_currentStep < steps.length) setState(() => _currentStep++);
-    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   void _onStepCancel() {
     if (_currentStep > 0) setState(() => _currentStep--);
-    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Future<void> _onSubmit() async {
@@ -79,20 +78,22 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
         backgroundColor: Palette.white,
       ),
       backgroundColor: Palette.white,
-      body: Stepper(
-        currentStep: _currentStep,
-        type: StepperType.horizontal,
-        elevation: 0,
-        controlsBuilder: _controlsBuilder,
-        steps: steps
-            .map(
-              (step) => Step(
-                isActive: _currentStep >= step.$1,
-                title: Text(step.$2),
-                content: step.$3,
-              ),
-            )
-            .toList(),
+      body: Unfocus(
+        child: Stepper(
+          currentStep: _currentStep,
+          type: StepperType.horizontal,
+          elevation: 0,
+          controlsBuilder: _controlsBuilder,
+          steps: steps
+              .map(
+                (step) => Step(
+                  isActive: _currentStep >= step.$1,
+                  title: Text(step.$2),
+                  content: step.$3,
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
   }

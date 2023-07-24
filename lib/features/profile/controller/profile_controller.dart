@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/core/models/result.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/profile/repository/profile_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
@@ -17,6 +18,14 @@ class ProfileController {
   void updateStudyTime() {
     final user = _ref.read(authControllerProvider).asData!.value!;
     _ref.read(profileRepositoryProvider).updateStudyTime(user);
+  }
+
+  Future<void> updateUserStatus(
+      {required UserStatus status, required String studyingRoomId}) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    await _ref
+        .read(profileRepositoryProvider)
+        .updateUserStatus(userId, status, studyingRoomId);
   }
 
   Future<void> updateProfile(
