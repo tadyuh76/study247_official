@@ -48,7 +48,7 @@ class _CreateRoomScreenState extends ConsumerState<CreateRoomScreen> {
     final room = ref.read(roomControllerProvider).asData!.value!;
 
     if (mounted) {
-      context.go("/room/${room.id}/${room.meetingId}");
+      context.go("/room/${room.id}?meetingId=${room.meetingId}");
     }
     ref.read(roomInfoControllerProvider).reset();
   }

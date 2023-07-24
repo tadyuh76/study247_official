@@ -88,8 +88,8 @@ class RoomTimer extends ChangeNotifier {
 
         roomTimerStart = DateTime.now().toString();
         setupBreaktimeTimer();
-        // startBreaktime();
-        // updateTimer();
+        startBreaktime();
+        updateTimer();
       }
 
       notifyListeners();

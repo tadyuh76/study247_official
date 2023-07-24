@@ -26,11 +26,7 @@ class _BreaktimeDialogState extends ConsumerState<BreaktimeDialog> {
     if (_started) return false;
 
     final timerType = ref.read(timerTypeProvider);
-    if (timerType == TimerType.room) {
-      ref.read(roomTimerProvider.notifier)
-        ..startBreaktime()
-        ..updateTimer();
-    } else {
+    if (timerType == TimerType.personal) {
       ref.read(personalTimerProvider.notifier)
         ..startBreaktime()
         ..updateTimer();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
+import 'package:study247/core/shared/widgets/user_mastery_progress_bar.dart';
 import 'package:study247/features/profile/widgets/update_user_dialog.dart';
 
 class UserInfo extends StatelessWidget {
@@ -47,6 +47,7 @@ class UserInfo extends StatelessWidget {
               Text(
                 user.displayName,
                 maxLines: 2,
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 20,
@@ -62,54 +63,9 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: Constants.defaultPadding),
-              LinearPercentIndicator(
-                animation: true,
-                backgroundColor: Palette.lightGrey,
-                lineHeight: 10,
-                animationDuration: 300,
-                barRadius: const Radius.circular(Constants.defaultBorderRadius),
-                percent: _maxLevel
-                    ? 1
-                    : user.totalStudyTime /
-                        minutesToMastery[user.masteryLevel + 1],
-                clipLinearGradient: true,
-                padding: const EdgeInsets.all(0),
-                // center: Text((user.totalStudyTime / 60).toStringAsFixed(1)),
-                leading: Text(
-                  "${(user.totalStudyTime / 60).toStringAsFixed(1)}h ",
-                  style: const TextStyle(fontSize: 14),
-                ),
-                linearGradient: LinearGradient(
-                  colors: [
-                    masteryColors[user.masteryLevel],
-                    _maxLevel
-                        ? masteryColors[user.masteryLevel]
-                        : masteryColors[user.masteryLevel + 1]
-                  ],
-                ),
-                trailing: _maxLevel
-                    ? null
-                    : Tooltip(
-                        triggerMode: TooltipTriggerMode.tap,
-                        preferBelow: false,
-                        message:
-                            "${masteryTitles[user.masteryLevel + 1]} (${minutesToMastery[user.masteryLevel + 1] ~/ 60}h+)",
-                        child: SvgPicture.asset(
-                          masteryIconPaths[user.masteryLevel + 1],
-                          width: 40,
-                          height: 40,
-                        ),
-                      ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                _maxLevel
-                    ? "Bạn đã đạt cấp độ cao nhất!"
-                    : "Học thêm ${((minutesToMastery[user.masteryLevel + 1] - user.totalStudyTime) / 60).toStringAsFixed(1)}h để đạt cấp độ tiếp theo!",
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Palette.darkGrey,
-                ),
+              UserMasteryProgressBar(
+                masteryLevel: user.masteryLevel,
+                totalStudyTime: user.totalStudyTime,
               ),
             ],
           ),

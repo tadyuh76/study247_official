@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
+import 'package:study247/features/room/screens/room_screen/widgets/dialogs/participant_info_dialog.dart';
 import 'package:videosdk/videosdk.dart';
 
 class ParticipantTile extends StatefulWidget {
@@ -30,7 +33,7 @@ class _ParticipantTileState extends State<ParticipantTile> {
     super.initState();
   }
 
-  _initStreamListeners() {
+  void _initStreamListeners() {
     widget.participant.on(Events.streamEnabled, (Stream stream) {
       if (stream.kind == 'video') {
         setState(() => videoStream = stream);
@@ -42,6 +45,13 @@ class _ParticipantTileState extends State<ParticipantTile> {
         setState(() => videoStream = null);
       }
     });
+  }
+
+  void _showParticipantInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => ParticipantInfoDialog(user: widget.user),
+    );
   }
 
   @override
@@ -60,37 +70,51 @@ class _ParticipantTileState extends State<ParticipantTile> {
                   mirror: true,
                   objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 )
-              : _renderNonVideoParticipant(),
+              : Container(
+                  color: Colors.black.withOpacity(0.7),
+                  child: Center(
+                    child: MasteryAvatar(
+                      radius: 40,
+                      photoURL: widget.user.photoURL,
+                      masteryLevel: widget.user.masteryLevel,
+                    ),
+                  ),
+                ),
         ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: Palette.black.withOpacity(0.7),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-            ),
-            child: Text(
-              widget.user.displayName,
-              style: const TextStyle(fontSize: 12, color: Palette.white),
-            ),
-          ),
-        ),
+        _renderParticipantInfo(),
       ],
     );
   }
 
-  Container _renderNonVideoParticipant() {
-    return Container(
-      color: Colors.black.withOpacity(0.7),
-      child: Center(
-        child: MasteryAvatar(
-          radius: 40,
-          photoURL: widget.user.photoURL,
-          masteryLevel: widget.user.masteryLevel,
+  Widget _renderParticipantInfo() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: GestureDetector(
+        onTap: _showParticipantInfoDialog,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: Palette.black.withOpacity(0.7),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                masteryIconPaths[widget.user.masteryLevel],
+                width: 20,
+                height: 20,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                widget.user.displayName,
+                style: const TextStyle(fontSize: 12, color: Palette.white),
+              ),
+            ],
+          ),
         ),
       ),
     );

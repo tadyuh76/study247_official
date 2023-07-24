@@ -11,9 +11,9 @@ class FeatureDialog extends StatelessWidget {
   final String iconPath;
   const FeatureDialog({
     Key? key,
-    required this.child,
     required this.title,
     required this.iconPath,
+    required this.child,
   }) : super(key: key);
 
   @override
