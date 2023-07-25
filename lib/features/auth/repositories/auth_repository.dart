@@ -165,6 +165,7 @@ class AuthRepository {
         }
       },
     );
+
     await _db
         .collection(FirebaseConstants.users)
         .doc(userCredential.user!.uid)

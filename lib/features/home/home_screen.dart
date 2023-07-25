@@ -9,6 +9,7 @@ import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
+import 'package:study247/features/friends/widgets/friend_list_widget.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
 import 'package:study247/features/home/widgets/custom_drawer.dart';
 import 'package:study247/features/home/widgets/room_card/room_card.dart';
@@ -147,6 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             _renderHeader(),
             const CreateCard(),
             // const AppSearchBar(hintText: "Tìm phòng học..."),
+            const FriendList(),
             const SizedBox(height: Constants.defaultPadding),
             const Padding(
               padding: EdgeInsets.only(left: Constants.defaultPadding),
