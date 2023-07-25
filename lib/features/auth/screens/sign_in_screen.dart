@@ -149,14 +149,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       ),
                     ),
                     const SizedBox(height: Constants.defaultPadding / 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _googleSignInButton(context),
-                        // const SizedBox(width: 10),
-                        // _facebookSignInButton(context),
-                      ],
-                    ),
+                    // Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // children: [
+                    _googleSignInButton(context),
+                    // const SizedBox(width: 10),
+                    // _facebookSignInButton(context),
+                    // ],
+                    // ),
                     const SizedBox(height: Constants.defaultPadding),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
