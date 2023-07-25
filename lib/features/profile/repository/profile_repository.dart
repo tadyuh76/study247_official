@@ -46,11 +46,10 @@ class ProfileRepository {
       }
 
       int newStudyTime = currentUser.totalStudyTime + 1;
-      int newMasteryLevel = currentUser.masteryLevel;
-      if (user.masteryLevel != 9 &&
-          newStudyTime == minutesToMastery[user.masteryLevel + 1]) {
-        newMasteryLevel++;
-        showSnackBar(globalKey.currentContext!, "Đã đạt cấp độ tiếp theo!");
+      for (int i = 0; i < minutesToMastery.length; i++) {
+        if (newStudyTime == minutesToMastery[i]) {
+          showSnackBar(globalKey.currentContext!, "Bạn vừa đạt cấp độ mới!");
+        }
       }
 
       await _db.collection(FirebaseConstants.users).doc(user.uid).update({
@@ -58,7 +57,6 @@ class ProfileRepository {
         "commitBoard": updatedCommitBoard,
         "currentStreak": newStreak,
         "longestStreak": newLongestStreak,
-        "masteryLevel": newMasteryLevel,
       });
 
       return const Success(Constants.successMessage);

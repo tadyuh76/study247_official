@@ -1,6 +1,22 @@
 import 'package:flutter/foundation.dart';
+import 'package:study247/constants/common.dart';
+import 'package:study247/core/palette.dart';
 
 enum UserStatus { active, inactive, studyingSolo, studyingGroup }
+
+final userStatusColors = {
+  UserStatus.active.name: Palette.complete,
+  UserStatus.studyingGroup.name: Palette.primary,
+  UserStatus.studyingSolo.name: Palette.warning,
+  UserStatus.inactive.name: Palette.darkGrey,
+};
+
+final userStatusTitles = {
+  UserStatus.active.name: "Đang hoat động",
+  UserStatus.studyingGroup.name: "Đang trong phòng học nhóm",
+  UserStatus.studyingSolo.name: "Đang trong phòng học cá nhân",
+  UserStatus.inactive.name: "Không hoạt động",
+};
 
 class UserModel {
   final String uid;
@@ -9,7 +25,6 @@ class UserModel {
   final String photoURL;
   final int currentStreak;
   final int longestStreak;
-  final int masteryLevel;
   final String status;
   final String studyingRoomId;
   final String studyingMeetingId;
@@ -23,6 +38,29 @@ class UserModel {
       commitBoard[_now.year.toString()]![_now.month.toString()]!
           .fold(0, (previousValue, element) => previousValue + element);
 
+  int getMonthStudyTime({int? month, int? year}) {
+    final now = DateTime.now();
+    month ??= now.month;
+    year ??= now.year;
+
+    return commitBoard[year.toString()]![month.toString()]!
+        .fold(0, (previousValue, element) => previousValue + element);
+  }
+
+  int getMasteryLevel({int? month, int? year}) {
+    final now = DateTime.now();
+    month ??= now.month;
+    year ??= now.year;
+
+    final studyTime = getMonthStudyTime(month: month, year: year);
+    for (int i = 0; i < minutesToMastery.length; i++) {
+      if (studyTime < minutesToMastery[i]) {
+        return i - 1;
+      }
+    }
+    return Constants.numberOfMasteryLevels - 1;
+  }
+
   bool isFriendWith(String friendId) {
     return friends.contains(friendId);
   }
@@ -34,7 +72,6 @@ class UserModel {
     required this.photoURL,
     required this.currentStreak,
     required this.longestStreak,
-    required this.masteryLevel,
     required this.status,
     required this.studyingRoomId,
     required this.studyingMeetingId,
@@ -67,7 +104,6 @@ class UserModel {
       photoURL: photoURL ?? this.photoURL,
       currentStreak: currentStreak ?? this.currentStreak,
       longestStreak: longestStreak ?? this.longestStreak,
-      masteryLevel: masteryLevel ?? this.masteryLevel,
       badges: badges ?? this.badges,
       status: status ?? this.status,
       studyingRoomId: studyingRoomId ?? this.studyingRoomId,
@@ -86,7 +122,6 @@ class UserModel {
       'photoURL': photoURL,
       'currentStreak': currentStreak,
       'longestStreak': longestStreak,
-      'masteryLevel': masteryLevel,
       'badges': badges,
       'status': status,
       'friends': friends,
@@ -121,7 +156,6 @@ class UserModel {
       photoURL: map['photoURL'] ?? '',
       currentStreak: map['currentStreak']?.toInt() ?? 0,
       longestStreak: map['longestStreak']?.toInt() ?? 0,
-      masteryLevel: map['masteryLevel']?.toInt() ?? 0,
       badges: (map['badges'] as List).map((e) => e.toString()).toList(),
       friends: (map['friends'] as List).map((e) => e.toString()).toList(),
       status: map['status'] ?? UserStatus.active.name,
@@ -134,7 +168,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, status: $status, friends: $friends, studyingRoomId: $studyingRoomId, studyingMeetingId: $studyingMeetingId commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
+    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, badges: $badges, status: $status, friends: $friends, studyingRoomId: $studyingRoomId, studyingMeetingId: $studyingMeetingId commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
   }
 
   @override
@@ -148,7 +182,6 @@ class UserModel {
         other.photoURL == photoURL &&
         other.currentStreak == currentStreak &&
         other.longestStreak == longestStreak &&
-        other.masteryLevel == masteryLevel &&
         other.status == status &&
         other.studyingRoomId == studyingRoomId &&
         other.studyingMeetingId == studyingMeetingId &&
@@ -166,7 +199,6 @@ class UserModel {
         photoURL.hashCode ^
         currentStreak.hashCode ^
         longestStreak.hashCode ^
-        masteryLevel.hashCode ^
         badges.hashCode ^
         friends.hashCode ^
         status.hashCode ^

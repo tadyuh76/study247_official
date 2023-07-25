@@ -15,10 +15,10 @@ import 'package:study247/features/profile/controller/profile_controller.dart';
 import 'package:study247/features/profile/screens/profile_screen.dart';
 import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 
-class ParticipantInfoDialog extends StatelessWidget {
+class UserInfoDialog extends StatelessWidget {
   final UserModel user;
   final bool joinable;
-  const ParticipantInfoDialog({
+  const UserInfoDialog({
     super.key,
     required this.user,
     this.joinable = false,
@@ -49,6 +49,8 @@ class ParticipantInfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userMasteryLevel = user.getMasteryLevel();
+
     return FeatureDialog(
       title: "Hồ sơ",
       iconPath: IconPaths.profile,
@@ -59,7 +61,7 @@ class ParticipantInfoDialog extends StatelessWidget {
             child: MasteryAvatar(
               radius: 50,
               photoURL: user.photoURL,
-              masteryLevel: user.masteryLevel,
+              masteryLevel: userMasteryLevel,
               status: user.status,
             ),
           ),
@@ -73,21 +75,15 @@ class ParticipantInfoDialog extends StatelessWidget {
           ),
           const SizedBox(height: 3),
           Text(
-            "- ${masteryTitles[user.masteryLevel]} -",
+            "- ${masteryTitles[userMasteryLevel]} -",
             style: const TextStyle(color: Palette.darkGrey),
           ),
-          const SizedBox(height: Constants.defaultPadding),
-          // const Text(
-          //   "Trạng thái",
-          //   style: TextStyle(color: Palette.darkGrey),
-          // ),
-          // const SizedBox(height: 3),
+          const SizedBox(height: 10),
           Text(
             userStatusTitles[user.status]!,
             style: TextStyle(
               color: userStatusColors[user.status],
               fontWeight: FontWeight.w500,
-              decoration: _isStudyingGroup ? TextDecoration.underline : null,
             ),
           ),
           if (_isStudyingGroup && joinable) const SizedBox(height: 10),
@@ -107,7 +103,7 @@ class ParticipantInfoDialog extends StatelessWidget {
               return isSameUser
                   ? UserMasteryProgressBar(
                       totalStudyTime: user.totalStudyTime,
-                      masteryLevel: user.masteryLevel,
+                      masteryLevel: userMasteryLevel,
                     )
                   : _AddFriendButton(participantId: user.uid);
             },

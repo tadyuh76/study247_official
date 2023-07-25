@@ -50,9 +50,30 @@ class MonthlyStatistics extends StatelessWidget {
                 data: (user) {
                   if (user == null) return const AppLoading();
                   final now = DateTime.now();
-                  final thisYear = user.commitBoard[now.year.toString()]!;
+                  // final thisYear = user.commitBoard[now.year.toString()]!;
 
-                  return _renderMonthCalendar(thisYear);
+                  return SizedBox(
+                    height: 400,
+                    child: PageView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      reverse: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        final willPrevYear = (now.month - index) <= 0;
+                        final newYear = now.year - (willPrevYear ? 1 : 0);
+                        final newMonth = willPrevYear
+                            ? (now.month - index) + 12
+                            : now.month - index;
+
+                        return _renderMonthCalendar(
+                          user.commitBoard,
+                          newYear,
+                          newMonth,
+                        );
+                      },
+                    ),
+                  );
                 });
           })
         ],
@@ -60,95 +81,103 @@ class MonthlyStatistics extends StatelessWidget {
     );
   }
 
-  Widget _renderMonthCalendar(Map<String, List<int>> thisYear) {
+  Widget _renderMonthCalendar(
+    Map<String, Map<String, List<int>>> commitBoard,
+    int year,
+    int month,
+  ) {
     final now = DateTime.now();
-    final thisMonth = thisYear[now.month.toString()]!;
 
-    final firstDayIndex = DateTime(now.year, now.month, 1, 1).weekday;
-    final blankDays = firstDayIndex;
+    final firstDayIndex = DateTime(year, month, 1, 1).weekday;
+    final blankDays = firstDayIndex - 1;
     final renderData = [
       ...List.generate(blankDays + 7, (_) => -1),
-      ...thisMonth
+      ...commitBoard[year.toString()]![month.toString()]!
     ];
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
                 Icons.chevron_left,
-                color: Palette.darkGrey,
+                color: month > now.month - 5 ? Palette.black : Palette.grey,
+                size: 24,
               ),
-            ),
-            Text(
-              "THÁNG ${now.month}",
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Palette.darkGrey,
-                fontSize: 16,
+              Text(
+                "THÁNG $month",
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Palette.black,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
+              Icon(
                 Icons.chevron_right,
-                color: Palette.darkGrey,
+                color: month < now.month ? Palette.black : Palette.grey,
+                size: 24,
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1,
               ),
-            ),
-          ],
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
-            ),
-            itemCount: renderData.length,
-            itemBuilder: (context, index) {
-              if (index < 7) return _renderWeekdays(index);
-              if (renderData[index] == -1) return const SizedBox.shrink();
+              itemCount: renderData.length,
+              itemBuilder: (context, index) {
+                if (index < 7) return _renderWeekdays(index);
+                if (renderData[index] == -1) return const SizedBox.shrink();
 
-              final dayNumber = index - 7 - (blankDays - 1);
-              final isEmpty = renderData[index] == 0;
-              final isToday = dayNumber == now.day;
+                final dayNumber = index - 7 - (blankDays - 1);
+                final isEmpty = renderData[index] == 0;
+                final isToday = dayNumber == now.day && month == now.month;
+                final isFuture = dayNumber > now.day && month == now.month;
 
-              return Tooltip(
-                triggerMode: TooltipTriggerMode.tap,
-                message: "${(renderData[index] / 60).toStringAsFixed(1)}h",
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: isToday
-                        ? Border.all(color: Palette.complete, width: 2)
-                        : null,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: _getTileColor(
-                        renderData[index] / _minutesForMaxOpacity),
-                  ),
-                  child: Center(
-                    child: Text(
-                      dayNumber.toString(),
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: isEmpty ? Palette.darkGrey : Palette.white,
+                return Tooltip(
+                  triggerMode: TooltipTriggerMode.tap,
+                  message: "${(renderData[index] / 60).toStringAsFixed(1)}h",
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: isToday
+                          ? Border.all(color: Palette.complete, width: 2)
+                          : null,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: _getTileColor(
+                          renderData[index] / _minutesForMaxOpacity),
+                    ),
+                    child: Center(
+                      child: Text(
+                        dayNumber.toString(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: isFuture
+                              ? Palette.grey
+                              : isEmpty
+                                  ? Palette.darkGrey
+                                  : Palette.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

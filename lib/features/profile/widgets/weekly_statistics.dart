@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/user.dart';
@@ -10,6 +12,20 @@ const double textSize = 25;
 class WeeklyStatistics extends StatelessWidget {
   final UserModel user;
   const WeeklyStatistics({super.key, required this.user});
+
+  double get _maxCrossAxis {
+    int maxMinutes = 0;
+    final now = DateTime.now();
+    for (int i = 0; i < 7; i++) {
+      final curDay = now.subtract(Duration(days: i));
+      final curYearData = user.commitBoard[curDay.year.toString()]!;
+      final curMonthData = curYearData[curDay.month.toString()]!;
+      maxMinutes = max(maxMinutes, curMonthData[curDay.day - 1]);
+    }
+    final maxHours = maxMinutes / 60;
+    final maxCrossAxis = maxHours.round();
+    return maxCrossAxis * 1.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +64,10 @@ class WeeklyStatistics extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          _renderChartBackground(maxCrossAxis),
-                          _renderChartBackground(maxCrossAxis * 3 / 4),
-                          _renderChartBackground(maxCrossAxis * 2 / 4),
-                          _renderChartBackground(maxCrossAxis * 1 / 4),
+                          _renderChartBackground(_maxCrossAxis),
+                          _renderChartBackground(_maxCrossAxis * 3 / 4),
+                          _renderChartBackground(_maxCrossAxis * 2 / 4),
+                          _renderChartBackground(_maxCrossAxis * 1 / 4),
                           _renderChartBase(),
                         ],
                       ),
@@ -75,7 +91,7 @@ class WeeklyStatistics extends StatelessWidget {
                             day: curDay.day,
                             month: curDay.month,
                             percent: curMonthData[curDay.day - 1] /
-                                (60 * maxCrossAxis),
+                                (60 * _maxCrossAxis),
                           );
                         })
                       ],
@@ -158,7 +174,7 @@ class WeeklyStatistics extends StatelessWidget {
     required int month,
   }) {
     return Tooltip(
-      message: "${(percent * maxCrossAxis).toStringAsFixed(1)}h",
+      message: "${(percent * _maxCrossAxis).toStringAsFixed(1)}h",
       triggerMode: TooltipTriggerMode.tap,
       child: Column(
         children: [

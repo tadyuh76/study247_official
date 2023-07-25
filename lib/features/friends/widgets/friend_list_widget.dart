@@ -6,7 +6,7 @@ import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
 import 'package:study247/features/friends/controller/friend_list_controller.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/dialogs/participant_info_dialog.dart';
+import 'package:study247/features/room/screens/room_screen/widgets/dialogs/user_info_dialog.dart';
 
 class FriendList extends ConsumerWidget {
   const FriendList({super.key});
@@ -14,7 +14,7 @@ class FriendList extends ConsumerWidget {
   void _showUserProfile(BuildContext context, UserModel user) {
     showDialog(
       context: context,
-      builder: (context) => ParticipantInfoDialog(user: user, joinable: true),
+      builder: (context) => UserInfoDialog(user: user, joinable: true),
     );
   }
 
@@ -40,7 +40,7 @@ class FriendList extends ConsumerWidget {
                   SizedBox(
                     height: 110,
                     child: ListView.builder(
-                      itemCount: friendList.length  ,
+                      itemCount: friendList.length,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
@@ -70,7 +70,7 @@ class FriendList extends ConsumerWidget {
               MasteryAvatar(
                 radius: 25,
                 photoURL: user.photoURL,
-                masteryLevel: user.masteryLevel,
+                masteryLevel: user.getMasteryLevel(),
                 status: user.status,
               ),
               const SizedBox(height: 10),

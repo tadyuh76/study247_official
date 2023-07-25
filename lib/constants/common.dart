@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
-
-final userStatusColors = {
-  UserStatus.active.name: Palette.complete,
-  UserStatus.studyingGroup.name: Palette.primary,
-  UserStatus.studyingSolo.name: Palette.warning,
-  UserStatus.inactive.name: Palette.darkGrey,
-};
-
-final userStatusTitles = {
-  UserStatus.active.name: "Đang hoat động",
-  UserStatus.studyingGroup.name: "Đang trong phòng học nhóm",
-  UserStatus.studyingSolo.name: "Đang trong phòng học cá nhân",
-  UserStatus.inactive.name: "Không hoạt động",
-};
 
 const bannerColors = {
   "blue": Palette.primary,
@@ -97,6 +82,11 @@ class Constants {
   static const appFontName = "Lexend";
   static const videoSDKToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI4MTUyMjA3NC02ODc0LTQ0NWYtOTY2Yi02MDNiZjM2Nzg3ZTAiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTY4NjkyNzY0NiwiZXhwIjoxNzE4NDYzNjQ2fQ.Zt09lMfpxHeuROO4Y5881ZsCliJ5d6N5WCkFHzfiE1s";
+
+  // statistics
+  static const numberOfMasteryLevels = 10;
+  static const minutesToMaxOpacityCalendar = 120;
+  static const minutesPerDayToContinueStreak = 15;
 
   // message
   static const authFailedMessage = "Đăng nhập không thành công";

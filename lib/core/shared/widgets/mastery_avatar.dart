@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 
 class MasteryAvatar extends StatelessWidget {

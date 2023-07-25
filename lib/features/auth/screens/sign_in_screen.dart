@@ -64,7 +64,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/images/Logo.png",
+                      "assets/images/logo.png",
                       width: 60,
                       height: 60,
                     ),

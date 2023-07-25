@@ -269,7 +269,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         ),
                         Text(
                           // total number of hours studied in the current month
-                          "${(user.monthStudyTime / 60).toStringAsFixed(1)}h",
+                          "${(user.getMonthStudyTime() / 60).toStringAsFixed(1)}h",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,

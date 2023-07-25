@@ -4,7 +4,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
-import 'package:study247/features/room/screens/room_screen/widgets/dialogs/participant_info_dialog.dart';
+import 'package:study247/features/room/screens/room_screen/widgets/dialogs/user_info_dialog.dart';
 import 'package:videosdk/videosdk.dart';
 
 class ParticipantTile extends StatefulWidget {
@@ -50,12 +50,14 @@ class _ParticipantTileState extends State<ParticipantTile> {
   void _showParticipantInfoDialog() {
     showDialog(
       context: context,
-      builder: (context) => ParticipantInfoDialog(user: widget.user),
+      builder: (context) => UserInfoDialog(user: widget.user),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final userMasteryLevel = widget.user.getMasteryLevel();
+
     return Stack(
       children: [
         Container(
@@ -76,17 +78,17 @@ class _ParticipantTileState extends State<ParticipantTile> {
                     child: MasteryAvatar(
                       radius: 40,
                       photoURL: widget.user.photoURL,
-                      masteryLevel: widget.user.masteryLevel,
+                      masteryLevel: userMasteryLevel,
                     ),
                   ),
                 ),
         ),
-        _renderParticipantInfo(),
+        _renderParticipantInfo(userMasteryLevel),
       ],
     );
   }
 
-  Widget _renderParticipantInfo() {
+  Widget _renderParticipantInfo(int userMasteryLevel) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: GestureDetector(
@@ -104,7 +106,7 @@ class _ParticipantTileState extends State<ParticipantTile> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-                masteryIconPaths[widget.user.masteryLevel],
+                masteryIconPaths[userMasteryLevel],
                 width: 20,
                 height: 20,
               ),

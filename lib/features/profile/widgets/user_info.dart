@@ -22,6 +22,8 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userMasteryLevel = user.getMasteryLevel();
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -55,7 +57,7 @@ class UserInfo extends StatelessWidget {
               ),
               const SizedBox(height: 3),
               Text(
-                "- ${masteryTitles[user.masteryLevel]} -",
+                "- ${masteryTitles[userMasteryLevel]} -",
                 style: const TextStyle(
                   fontSize: 12,
                   color: Palette.darkGrey,
@@ -63,7 +65,7 @@ class UserInfo extends StatelessWidget {
               ),
               const SizedBox(height: Constants.defaultPadding),
               UserMasteryProgressBar(
-                masteryLevel: user.masteryLevel,
+                masteryLevel: userMasteryLevel,
                 totalStudyTime: user.totalStudyTime,
               ),
             ],
@@ -77,7 +79,7 @@ class UserInfo extends StatelessWidget {
             child: MasteryAvatar(
               radius: 40,
               photoURL: user.photoURL,
-              masteryLevel: user.masteryLevel,
+              masteryLevel: userMasteryLevel,
             ),
           ),
         ),

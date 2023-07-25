@@ -32,8 +32,8 @@ class UserStreak extends StatelessWidget {
           const SizedBox(height: Constants.defaultPadding),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Spacer(),
               SvgPicture.asset(
                 IconPaths.streak,
                 width: 120,
@@ -93,8 +93,13 @@ class UserStreak extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
+          ),
+          const SizedBox(height: Constants.defaultPadding),
+          const Text(
+            "Học 15 phút mỗi ngày trong các phòng học để tiếp tục ngọn lửa này nhé!",
+            style: TextStyle(color: Palette.darkGrey, fontSize: 12),
           )
         ],
       ),
