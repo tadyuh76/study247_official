@@ -155,6 +155,7 @@ class AuthRepository {
       totalStudyTime: 0,
       status: UserStatus.active.name,
       studyingRoomId: "",
+      studyingMeetingId: "",
       badges: [],
       friends: [],
       commitBoard: {

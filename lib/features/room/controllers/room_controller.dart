@@ -49,8 +49,8 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
     }
   }
 
-  Future<void> joinRoom(String roomId) async {
-    await _ref.read(roomRepositoryProvider).joinRoom(roomId);
+  Future<void> joinRoom(String roomId, String meetingId) async {
+    await _ref.read(roomRepositoryProvider).joinRoom(roomId, meetingId);
   }
 
   Future<void> getRoomById(BuildContext context, String roomId) async {

@@ -131,7 +131,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   Future<void> _setup() async {
     ref.read(roomControllerProvider.notifier)
       ..getRoomById(context, widget.roomId)
-      ..joinRoom(widget.roomId)
+      ..joinRoom(widget.roomId, widget.meetingId)
           .whenComplete(() => ref.read(roomTimerProvider.notifier).setup());
   }
 
@@ -210,6 +210,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           ref.read(profileControllerProvider).updateUserStatus(
                 status: UserStatus.active,
                 studyingRoomId: "",
+                studyingMeetingId: "",
               );
           context
             ..pop()

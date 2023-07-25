@@ -12,5 +12,6 @@ class Palette {
   static const shadow = Color(0xFFD0D0D0);
 
   static const complete = Color(0xFF6CA148);
+  static const warning = Color(0xFFE7B75D);
   static const error = Color(0xFFFF3939);
 }

@@ -99,11 +99,13 @@ class ProfileRepository {
     String userId,
     UserStatus status,
     String studyingRoomId,
+    String studyingMeetingId,
   ) async {
     try {
       _db.collection(FirebaseConstants.users).doc(userId).update({
         "status": status.name,
         "studyingRoomId": studyingRoomId,
+        "studyingMeetingId": studyingMeetingId,
       });
       return const Success(Constants.successMessage);
     } on Exception catch (e) {

@@ -9,6 +9,7 @@ import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
+import 'package:study247/features/friends/controller/friend_list_controller.dart';
 import 'package:study247/features/friends/widgets/friend_list_widget.dart';
 import 'package:study247/features/home/widgets/create_card.dart';
 import 'package:study247/features/home/widgets/custom_drawer.dart';
@@ -53,27 +54,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    final roomId = ref.read(roomControllerProvider).asData?.value?.id;
+    final room = ref.read(roomControllerProvider).asData?.value;
 
     if (state == AppLifecycleState.paused) {
-      if (roomId != null) {
+      if (room != null) {
         ref.read(roomControllerProvider.notifier).leaveRoom(paused: true);
       }
       ref.read(profileControllerProvider).updateUserStatus(
             status: UserStatus.inactive,
             studyingRoomId: "",
+            studyingMeetingId: "",
           );
-    } else if (state == AppLifecycleState.resumed) {
-      if (roomId != null) {
-        ref.read(roomControllerProvider.notifier).joinRoom(roomId);
+      return;
+    }
+
+    if (state == AppLifecycleState.resumed) {
+      if (room != null) {
+        ref
+            .read(roomControllerProvider.notifier)
+            .joinRoom(room.id!, room.meetingId);
+
         ref.read(profileControllerProvider).updateUserStatus(
               status: UserStatus.studyingGroup,
-              studyingRoomId: roomId,
+              studyingRoomId: room.id!,
+              studyingMeetingId: room.meetingId,
             );
       } else {
         ref.read(profileControllerProvider).updateUserStatus(
               status: UserStatus.studyingSolo,
               studyingRoomId: "",
+              studyingMeetingId: "",
             );
       }
     }
@@ -93,6 +103,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     }
     _menuOpened = !_menuOpened;
     setState(() {});
+  }
+
+  Future<void> _refresh() async {
+    ref.read(roomListControllerProvider.notifier).getRoomList(refresh: true);
+    ref
+        .read(friendListControllerProvider.notifier)
+        .getFriendList(refresh: true);
   }
 
   @override
@@ -138,9 +155,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Widget _renderHomeScreenContent() {
     return RefreshIndicator(
-      onRefresh: () => ref
-          .read(roomListControllerProvider.notifier)
-          .getRoomList(refresh: true),
+      onRefresh: _refresh,
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

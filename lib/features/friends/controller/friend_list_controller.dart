@@ -13,7 +13,9 @@ class FriendListController extends StateNotifier<AsyncValue<List<UserModel>>> {
   final Ref _ref;
   FriendListController(this._ref) : super(const AsyncLoading());
 
-  Future<void> getFriendList() async {
+  Future<void> getFriendList({bool refresh = false}) async {
+    if (refresh) state = const AsyncLoading();
+
     final friendIds = _ref.read(authControllerProvider).asData!.value!.friends;
     final result =
         await _ref.read(friendListRepositoryProvider).getFriendList(friendIds);

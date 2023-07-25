@@ -35,11 +35,12 @@ class ProfileController {
   Future<void> updateUserStatus({
     required UserStatus status,
     required String studyingRoomId,
+    required String studyingMeetingId,
   }) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     await _ref
         .read(profileRepositoryProvider)
-        .updateUserStatus(userId, status, studyingRoomId);
+        .updateUserStatus(userId, status, studyingRoomId, studyingMeetingId);
   }
 
   Future<void> updateProfile(

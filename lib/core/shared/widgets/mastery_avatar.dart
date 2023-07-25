@@ -8,12 +8,14 @@ class MasteryAvatar extends StatelessWidget {
   final double radius;
   final String photoURL;
   final int masteryLevel;
+  final String? status;
 
   const MasteryAvatar({
     super.key,
     required this.radius,
     required this.photoURL,
     required this.masteryLevel,
+    this.status,
   });
 
   @override
@@ -58,7 +60,21 @@ class MasteryAvatar extends StatelessWidget {
               height: radius,
             ),
           ),
-        )
+        ),
+        if (status != null)
+          Positioned(
+            bottom: radius / 10,
+            right: radius / 10,
+            child: Container(
+              width: radius / 2,
+              height: radius / 2,
+              decoration: BoxDecoration(
+                border: Border.all(color: Palette.white, width: radius / 16),
+                shape: BoxShape.circle,
+                color: userStatusColors[status],
+              ),
+            ),
+          )
       ],
     );
   }

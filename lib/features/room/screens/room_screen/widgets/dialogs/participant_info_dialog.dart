@@ -6,6 +6,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
 import 'package:study247/core/shared/widgets/user_mastery_progress_bar.dart';
@@ -16,7 +17,14 @@ import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave
 
 class ParticipantInfoDialog extends StatelessWidget {
   final UserModel user;
-  const ParticipantInfoDialog({super.key, required this.user});
+  final bool joinable;
+  const ParticipantInfoDialog({
+    super.key,
+    required this.user,
+    this.joinable = false,
+  });
+
+  bool get _isStudyingGroup => user.status == UserStatus.studyingGroup.name;
 
   void _showUserProfile(BuildContext context) {
     Navigator.of(context).push(
@@ -34,6 +42,11 @@ class ParticipantInfoDialog extends StatelessWidget {
     );
   }
 
+  void _studyWithFriend(BuildContext context) {
+    context
+        .go("/room/${user.studyingRoomId}?meetingId=${user.studyingMeetingId}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return FeatureDialog(
@@ -47,6 +60,7 @@ class ParticipantInfoDialog extends StatelessWidget {
               radius: 50,
               photoURL: user.photoURL,
               masteryLevel: user.masteryLevel,
+              status: user.status,
             ),
           ),
           const SizedBox(height: 20),
@@ -63,6 +77,27 @@ class ParticipantInfoDialog extends StatelessWidget {
             style: const TextStyle(color: Palette.darkGrey),
           ),
           const SizedBox(height: Constants.defaultPadding),
+          // const Text(
+          //   "Trạng thái",
+          //   style: TextStyle(color: Palette.darkGrey),
+          // ),
+          // const SizedBox(height: 3),
+          Text(
+            userStatusTitles[user.status]!,
+            style: TextStyle(
+              color: userStatusColors[user.status],
+              fontWeight: FontWeight.w500,
+              decoration: _isStudyingGroup ? TextDecoration.underline : null,
+            ),
+          ),
+          if (_isStudyingGroup && joinable) const SizedBox(height: 10),
+          if (_isStudyingGroup && joinable)
+            CustomButton(
+              text: "Học cùng ${user.displayName}",
+              onTap: () => _studyWithFriend(context),
+              primary: true,
+            ),
+          const SizedBox(height: 10),
           Consumer(
             builder: (context, ref, child) {
               final userId =

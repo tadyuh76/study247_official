@@ -58,13 +58,15 @@ class RoomRepository {
     }
   }
 
-  Future<Result<String, Exception>> joinRoom(String roomId) async {
+  Future<Result<String, Exception>> joinRoom(
+      String roomId, String meetingId) async {
     try {
       final user = _ref.read(authControllerProvider).asData!.value!;
 
       await _db.collection(FirebaseConstants.users).doc(user.uid).update({
         "status": UserStatus.studyingGroup.name,
         "studyingRoomId": roomId,
+        "studyingMeetingId": meetingId,
       });
       await _roomRef
           .doc(roomId)

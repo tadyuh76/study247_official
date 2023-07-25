@@ -155,7 +155,7 @@ class MonthlyStatistics extends StatelessWidget {
   Center _renderWeekdays(int index) {
     return Center(
       child: Text(
-        Constants.weekdayMap[index],
+        weekdayMap[index],
         style: const TextStyle(
           color: Palette.darkGrey,
           fontSize: 16,

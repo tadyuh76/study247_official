@@ -41,6 +41,8 @@ class CustomButton extends StatelessWidget {
                 )
               : Text(
                   text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: primary ? Palette.white : Palette.primary,

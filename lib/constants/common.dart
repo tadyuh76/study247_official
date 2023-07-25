@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+
+final userStatusColors = {
+  UserStatus.active.name: Palette.complete,
+  UserStatus.studyingGroup.name: Palette.primary,
+  UserStatus.studyingSolo.name: Palette.warning,
+  UserStatus.inactive.name: Palette.darkGrey,
+};
+
+final userStatusTitles = {
+  UserStatus.active.name: "Đang hoat động",
+  UserStatus.studyingGroup.name: "Đang trong phòng học nhóm",
+  UserStatus.studyingSolo.name: "Đang trong phòng học cá nhân",
+  UserStatus.inactive.name: "Không hoạt động",
+};
 
 const bannerColors = {
   "blue": Palette.primary,
@@ -7,7 +22,7 @@ const bannerColors = {
   "pink": Color(0xFFD168B1),
   "red": Color(0xFFD35766),
   "orange": Color(0xFFD27057),
-  "yellow": Color(0xFFE7B75D),
+  "yellow": Palette.warning,
   "green": Color(0xFF3ABE87),
   "grey": Palette.darkGrey,
   "brown": Color(0xFF4B321A),
@@ -28,6 +43,7 @@ const minutesToMastery = [
   120 * 60,
   200 * 60
 ];
+
 const masteryTitles = [
   "Khởi đầu",
   "Sơ cấp",
@@ -86,35 +102,6 @@ class Constants {
   static const authFailedMessage = "Đăng nhập không thành công";
   static const failedMessage = "Đã có lỗi xảy ra";
   static const successMessage = "success";
-
-  // map
-  static const bannerColors = {
-    "blue": Palette.primary,
-    "lavender": Color(0xFF7464EC),
-    "pink": Color(0xFFD168B1),
-    "red": Color(0xFFD35766),
-    "orange": Color(0xFFD27057),
-    "yellow": Color(0xFFE7B75D),
-    "green": Color(0xFF3ABE87),
-    "grey": Palette.darkGrey,
-    "brown": Color(0xFF4B321A),
-    "black": Palette.black,
-  };
-
-  static const masteryColors = {
-    1: Color(0xFF23B0E2),
-    2: Color(0xFF236FE2),
-    3: Color(0xFF6023E2),
-    4: Color(0xFF8C26DC),
-    5: Color(0xFFB023E2),
-    6: Color(0xFFDE23E2),
-    7: Color(0xFFE223A1),
-    8: Color(0xFFE22373),
-    9: Color(0xFFE22351),
-    10: Color(0xFFA32D4A),
-  };
-
-  static const weekdayMap = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
   // flashcard
   static const flashcardForward = ">> ";
