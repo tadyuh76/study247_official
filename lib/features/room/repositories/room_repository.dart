@@ -92,7 +92,7 @@ class RoomRepository {
           RoomModel.fromMap(snapshot.data() as Map<String, dynamic>);
 
       // if user is not quitting the app
-      if (!paused && currentRoom.curParticipants == 1) {
+      if (!paused && currentRoom.curParticipants <= 1) {
         await currentRoomRef.delete();
       } else {
         currentRoomRef.update({"curParticipants": FieldValue.increment(-1)});

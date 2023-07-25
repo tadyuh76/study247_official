@@ -12,14 +12,19 @@ class UserModel {
   final int masteryLevel;
   final String status;
   final String studyingRoomId;
+  final int totalStudyTime;
+  final List<String> friends;
   final List<String> badges;
   final Map<String, Map<String, List<int>>> commitBoard;
-  final int totalStudyTime;
 
   DateTime get _now => DateTime.now();
   int get monthStudyTime =>
       commitBoard[_now.year.toString()]![_now.month.toString()]!
           .fold(0, (previousValue, element) => previousValue + element);
+
+  bool isFriendWith(String friendId) {
+    return friends.contains(friendId);
+  }
 
   UserModel({
     required this.uid,
@@ -32,6 +37,7 @@ class UserModel {
     required this.status,
     required this.studyingRoomId,
     required this.badges,
+    required this.friends,
     required this.commitBoard,
     required this.totalStudyTime,
   });
@@ -46,6 +52,7 @@ class UserModel {
     int? masteryLevel,
     List<String>? badges,
     String? status,
+    List<String>? friends,
     String? studyingRoomId,
     Map<String, Map<String, List<int>>>? commitBoard,
     int? totalStudyTime,
@@ -61,6 +68,7 @@ class UserModel {
       badges: badges ?? this.badges,
       status: status ?? this.status,
       studyingRoomId: studyingRoomId ?? this.studyingRoomId,
+      friends: friends ?? this.friends,
       commitBoard: commitBoard ?? this.commitBoard,
       totalStudyTime: totalStudyTime ?? this.totalStudyTime,
     );
@@ -77,6 +85,7 @@ class UserModel {
       'masteryLevel': masteryLevel,
       'badges': badges,
       'status': status,
+      'friends': friends,
       'studyingRoomId': studyingRoomId,
       'commitBoard': commitBoard,
       'totalStudyTime': totalStudyTime,
@@ -109,6 +118,7 @@ class UserModel {
       longestStreak: map['longestStreak']?.toInt() ?? 0,
       masteryLevel: map['masteryLevel']?.toInt() ?? 0,
       badges: (map['badges'] as List).map((e) => e.toString()).toList(),
+      friends: (map['friends'] as List).map((e) => e.toString()).toList(),
       status: map['status'] ?? UserStatus.active.name,
       studyingRoomId: map['studyingRoomId'] ?? '',
       commitBoard: commitBoard,
@@ -118,7 +128,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, status: $status, studyingRoomId: $studyingRoomId, commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
+    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, masteryLevel: $masteryLevel, badges: $badges, status: $status, friends: $friends, studyingRoomId: $studyingRoomId, commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
   }
 
   @override
@@ -135,6 +145,7 @@ class UserModel {
         other.masteryLevel == masteryLevel &&
         other.status == status &&
         other.studyingRoomId == studyingRoomId &&
+        other.friends == friends &&
         listEquals(other.badges, badges) &&
         mapEquals(other.commitBoard, commitBoard) &&
         other.totalStudyTime == totalStudyTime;
@@ -150,6 +161,7 @@ class UserModel {
         longestStreak.hashCode ^
         masteryLevel.hashCode ^
         badges.hashCode ^
+        friends.hashCode ^
         status.hashCode ^
         studyingRoomId.hashCode ^
         commitBoard.hashCode ^

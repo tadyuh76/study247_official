@@ -67,6 +67,34 @@ class ProfileRepository {
     }
   }
 
+  Future<Result<String, Exception>> addFriend(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      await _db.collection(FirebaseConstants.users).doc(userId).update({
+        "friends": FieldValue.arrayUnion([friendId])
+      });
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> unFriend(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      await _db.collection(FirebaseConstants.users).doc(userId).update({
+        "friends": FieldValue.arrayRemove([friendId])
+      });
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<String, Exception>> updateUserStatus(
     String userId,
     UserStatus status,

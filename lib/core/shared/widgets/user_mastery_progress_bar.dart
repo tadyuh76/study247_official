@@ -39,7 +39,9 @@ class UserMasteryProgressBar extends StatelessWidget {
           ),
           percent: _maxLevel
               ? 1
-              : totalStudyTime / minutesToMastery[masteryLevel + 1],
+              : totalStudyTime / minutesToMastery[masteryLevel + 1] > 1
+                  ? 1
+                  : totalStudyTime / minutesToMastery[masteryLevel + 1],
           leading: Text(
             "${(totalStudyTime / 60).toStringAsFixed(1)}h ",
             style: const TextStyle(fontSize: 14),

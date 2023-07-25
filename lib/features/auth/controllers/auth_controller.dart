@@ -52,6 +52,20 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     state = AsyncData(updatedUser);
   }
 
+  void addFriend(String friendId) {
+    final currentUser = state.asData!.value!;
+    state = AsyncData(
+      currentUser.copyWith(friends: [...currentUser.friends, friendId]),
+    );
+  }
+
+  void unFriend(String friendId) {
+    final currentUser = state.asData!.value!;
+    state = AsyncData(currentUser.copyWith(
+      friends: currentUser.friends.where((id) => id != friendId).toList(),
+    ));
+  }
+
   Future<void> signInWithFacebook(BuildContext context) async {
     final result = await _ref.read(authRepositoryProvider).signInWithFacebook();
     if (result case Success()) {

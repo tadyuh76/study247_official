@@ -155,7 +155,8 @@ class AuthRepository {
       totalStudyTime: 0,
       status: UserStatus.active.name,
       studyingRoomId: "",
-      badges: <String>[],
+      badges: [],
+      friends: [],
       commitBoard: {
         thisYear.toString(): {
           for (int month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])

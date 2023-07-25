@@ -10,9 +10,8 @@ import 'package:study247/features/profile/widgets/update_user_dialog.dart';
 
 class UserInfo extends StatelessWidget {
   final UserModel user;
-  const UserInfo({super.key, required this.user});
-
-  bool get _maxLevel => user.masteryLevel == 9;
+  final bool editable;
+  const UserInfo({super.key, required this.user, required this.editable});
 
   void _showInfoEdittingBox(BuildContext context) {
     showDialog(
@@ -82,22 +81,23 @@ class UserInfo extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          right: Constants.defaultPadding,
-          top: 0,
-          child: IconButton(
-            splashRadius: 25,
-            onPressed: () => _showInfoEdittingBox(context),
-            icon: SvgPicture.asset(
-              IconPaths.edit,
-              colorFilter: const ColorFilter.mode(
-                Palette.darkGrey,
-                BlendMode.srcIn,
+        if (editable)
+          Positioned(
+            right: Constants.defaultPadding,
+            top: 0,
+            child: IconButton(
+              splashRadius: 25,
+              onPressed: () => _showInfoEdittingBox(context),
+              icon: SvgPicture.asset(
+                IconPaths.edit,
+                colorFilter: const ColorFilter.mode(
+                  Palette.darkGrey,
+                  BlendMode.srcIn,
+                ),
               ),
+              color: Palette.darkGrey,
             ),
-            color: Palette.darkGrey,
           ),
-        ),
       ],
     );
   }

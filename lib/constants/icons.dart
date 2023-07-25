@@ -7,6 +7,7 @@ class IconPaths {
   static const cameraOff = "assets/icons/camera_off.svg";
   static const camera = "assets/icons/camera.svg";
   static const close = "assets/icons/close.svg";
+  static const deletePeople = "assets/icons/delete_people.svg";
   static const document = "assets/icons/document.svg";
   static const documents = "assets/icons/documents.svg";
   static const edit = "assets/icons/edit.svg";

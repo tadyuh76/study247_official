@@ -20,8 +20,22 @@ class ProfileController {
     _ref.read(profileRepositoryProvider).updateStudyTime(user);
   }
 
-  Future<void> updateUserStatus(
-      {required UserStatus status, required String studyingRoomId}) async {
+  void addFriend(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).addFriend(userId, friendId);
+    _ref.read(authControllerProvider.notifier).addFriend(friendId);
+  }
+
+  void unFriend(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).unFriend(userId, friendId);
+    _ref.read(authControllerProvider.notifier).unFriend(friendId);
+  }
+
+  Future<void> updateUserStatus({
+    required UserStatus status,
+    required String studyingRoomId,
+  }) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     await _ref
         .read(profileRepositoryProvider)

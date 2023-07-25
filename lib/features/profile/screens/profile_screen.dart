@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
@@ -11,39 +12,49 @@ import 'package:study247/features/profile/widgets/user_streak.dart';
 import 'package:study247/features/profile/widgets/weekly_statistics.dart';
 
 class ProfileScreen extends ConsumerWidget {
-  const ProfileScreen({super.key});
+  final UserModel? user;
+  const ProfileScreen({super.key, this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return RefreshIndicator(
-      onRefresh: () => ref.read(authControllerProvider.notifier).updateUser(),
+      onRefresh: user == null
+          ? () => ref.read(authControllerProvider.notifier).updateUser()
+          : () async {},
       child: SingleChildScrollView(
-        child: ref.watch(authControllerProvider).when(
-            error: (err, stk) => const AppError(),
-            loading: () => const AppLoading(),
-            data: (user) {
-              if (user == null) return const Text("Đã có lỗi xảy ra...");
+        child: user != null
+            ? _renderProfileScreen(user!)
+            : ref.watch(authControllerProvider).when(
+                  error: (err, stk) => const AppError(),
+                  loading: () => const AppLoading(),
+                  data: (user) {
+                    if (user == null) return const Text("Đã có lỗi xảy ra...");
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _renderHeader(),
-                  const SizedBox(height: 30),
-                  UserInfo(user: user),
-                  const SizedBox(height: Constants.defaultPadding),
-                  // UserBadges(user: user),
-                  // const SizedBox(height: Constants.defaultPadding),
-                  UserStreak(user: user),
-                  const SizedBox(height: Constants.defaultPadding),
-                  WeeklyStatistics(user: user),
-                  const SizedBox(height: Constants.defaultPadding),
-                  MonthlyStatistics(user: user),
-                  const SizedBox(height: Constants.defaultPadding),
-                ],
-              );
-            }),
+                    return _renderProfileScreen(user, editable: true);
+                  },
+                ),
       ),
+    );
+  }
+
+  Widget _renderProfileScreen(UserModel user, {bool editable = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _renderHeader(),
+        const SizedBox(height: 30),
+        UserInfo(user: user, editable: editable),
+        const SizedBox(height: Constants.defaultPadding),
+        // UserBadges(user: user),
+        // const SizedBox(height: Constants.defaultPadding),
+        UserStreak(user: user),
+        const SizedBox(height: Constants.defaultPadding),
+        WeeklyStatistics(user: user),
+        const SizedBox(height: Constants.defaultPadding),
+        MonthlyStatistics(user: user),
+        const SizedBox(height: Constants.defaultPadding),
+      ],
     );
   }
 
