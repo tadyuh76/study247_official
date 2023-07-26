@@ -53,12 +53,12 @@ class UserModel {
     year ??= now.year;
 
     final studyTime = getMonthStudyTime(month: month, year: year);
-    for (int i = 0; i < minutesToMastery.length; i++) {
-      if (studyTime < minutesToMastery[i]) {
-        return i - 1;
+    for (int i = minutesToMastery.length - 1; i >= 0; i--) {
+      if (studyTime >= minutesToMastery[i]) {
+        return i;
       }
     }
-    return Constants.numberOfMasteryLevels - 1;
+    return 0;
   }
 
   bool isFriendWith(String friendId) {

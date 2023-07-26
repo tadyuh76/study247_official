@@ -24,7 +24,7 @@ class WeeklyStatistics extends StatelessWidget {
     }
     final maxHours = maxMinutes / 60;
     final maxCrossAxis = maxHours.round();
-    return maxCrossAxis * 1.0;
+    return maxCrossAxis >= 2 ? maxCrossAxis * 1.0 : 2;
   }
 
   @override

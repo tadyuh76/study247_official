@@ -43,16 +43,16 @@ const masteryTitles = [
 ];
 
 const masteryColors = [
-  Color(0xFF23B0E2),
-  Color(0xFF236FE2),
-  Color(0xFF6023E2),
-  Color(0xFF8C26DC),
-  Color(0xFF9817C6),
-  Color(0xFFA9129A),
-  Color(0xFFD61795),
-  Color(0xFFCA1460),
-  Color(0xFFBD0E38),
-  Color(0xFF780722),
+  Color(0xFF9BC4E1),
+  Color(0xFF82A4D7),
+  Color(0xFF6386DF),
+  Color(0xFF416CDB),
+  Color(0xFF1F54BC),
+  Color(0xFF27419D),
+  Color(0xFF222C84),
+  Color(0xFF2E1A80),
+  Color(0xFF391468),
+  Color(0xFF41074A),
 ];
 
 const tags = [

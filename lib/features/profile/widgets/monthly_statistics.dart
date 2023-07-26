@@ -39,7 +39,7 @@ class MonthlyStatistics extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Thống kê tháng này",
+            "Thống kê tháng",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: Constants.defaultPadding),

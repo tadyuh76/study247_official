@@ -15,8 +15,11 @@ class FriendListRepository {
   FriendListRepository(this._db);
 
   Future<Result<List<UserModel>, Exception>> getFriendList(
-      List<String> friendIds) async {
+    List<String> friendIds,
+  ) async {
     try {
+      if (friendIds.isEmpty) return const Success([]);
+
       final snapshot = await _db
           .collection(FirebaseConstants.users)
           .where("uid", whereIn: friendIds)
@@ -26,6 +29,7 @@ class FriendListRepository {
 
       return Success(friendList);
     } on Exception catch (e) {
+      print(e);
       return Failure(e);
     }
   }
