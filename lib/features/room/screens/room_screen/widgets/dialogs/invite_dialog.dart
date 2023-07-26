@@ -27,7 +27,7 @@ class _InviteDialogState extends ConsumerState<InviteDialog> {
     final room = ref.read(roomControllerProvider).asData!.value!;
 
     _urlController.text =
-        "study247.vercel.app/#/room/${room.id}/${room.meetingId}";
+        "study247.vercel.app/#/room/${room.id}?meetingId=${room.meetingId}";
   }
 
   void _copyUrl(BuildContext context) {
