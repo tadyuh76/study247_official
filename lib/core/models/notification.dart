@@ -20,7 +20,8 @@ enum NotificationType { friendAccept, friendRequest, newBadge, levelUp }
 /// [seen]: sent to user, and user saw it.
 enum NotificationStatus { accepted, rejected, pending, seen }
 
-class Notification {
+class NotificationModel {
+  final String id;
   final String type;
   final String text;
   final String timestamp;
@@ -28,7 +29,8 @@ class Notification {
   final String payload; // e.g. userId
   final String status;
 
-  Notification({
+  NotificationModel({
+    required this.id,
     required this.type,
     required this.text,
     required this.timestamp,
@@ -37,7 +39,8 @@ class Notification {
     required this.status,
   });
 
-  Notification copyWith({
+  NotificationModel copyWith({
+    String? id,
     String? type,
     String? text,
     String? timestamp,
@@ -45,7 +48,8 @@ class Notification {
     String? payload,
     String? status,
   }) {
-    return Notification(
+    return NotificationModel(
+      id: id ?? this.id,
       type: type ?? this.type,
       text: text ?? this.text,
       timestamp: timestamp ?? this.timestamp,
@@ -57,6 +61,7 @@ class Notification {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'type': type,
       'text': text,
       'timestamp': timestamp,
@@ -66,8 +71,9 @@ class Notification {
     };
   }
 
-  factory Notification.fromMap(Map<String, dynamic> map) {
-    return Notification(
+  factory NotificationModel.fromMap(Map<String, dynamic> map) {
+    return NotificationModel(
+      id: map['id'] ?? '',
       type: map['type'] ?? '',
       text: map['text'] ?? '',
       timestamp: map['timestamp'] ?? '',
@@ -79,14 +85,15 @@ class Notification {
 
   @override
   String toString() {
-    return 'Notification(type: $type, text: $text, timestamp: $timestamp, photoURL: $photoURL, payload: $payload, status: $status)';
+    return 'NotificationModel(id: $id, type: $type, text: $text, timestamp: $timestamp, photoURL: $photoURL, payload: $payload, status: $status)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Notification &&
+    return other is NotificationModel &&
+        other.id == id &&
         other.type == type &&
         other.text == text &&
         other.timestamp == timestamp &&
@@ -97,7 +104,8 @@ class Notification {
 
   @override
   int get hashCode {
-    return type.hashCode ^
+    return id.hashCode ^
+        type.hashCode ^
         text.hashCode ^
         timestamp.hashCode ^
         photoURL.hashCode ^

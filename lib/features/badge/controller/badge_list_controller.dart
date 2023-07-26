@@ -3,6 +3,7 @@ import 'package:study247/core/models/badge.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/badge/repository/badge_list_repository.dart';
+import 'package:study247/features/notification/controller/notification_controller.dart';
 
 final badgeListControllerProvider =
     StateNotifierProvider<BadgeListController, AsyncValue<List<BadgeModel>>>(
@@ -28,11 +29,6 @@ class BadgeListController extends StateNotifier<AsyncValue<List<BadgeModel>>> {
   Future<void> addBadges(List<String> newBadges) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     await _ref.read(badgeListRepositoryProvider).addBadges(userId, newBadges);
-
-    // if (result case Success(value: final badge)) {
-    //   state = AsyncData([...(state.asData?.value ?? []), badge]);
-    // } else if (result case Failure(:final failure)) {
-    //   state = AsyncError(failure, StackTrace.current);
-    // }
+    _ref.read(notificationControllerProvider.notifier).getNotifications();
   }
 }

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:study247/constants/badge.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/badge.dart';
+import 'package:study247/core/models/notification.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 
@@ -42,13 +44,33 @@ class BadgeListRepository {
       final badgeList =
           newBadges.map((badgeName) => BadgeModel.fromBadgeName(badgeName));
 
-      //add to collection
       for (int i = 0; i < badgeList.length; i++) {
+        // add to collection
         await _db
             .collection(FirebaseConstants.users)
             .doc(userId)
             .collection(FirebaseConstants.badgeList)
             .add(badgeList.elementAt(i).toMap());
+
+        // sent notification
+        final newRef = _db
+            .collection(FirebaseConstants.users)
+            .doc(userId)
+            .collection(FirebaseConstants.notifications)
+            .doc();
+
+        await newRef.set(
+          NotificationModel(
+            id: newRef.id,
+            text:
+                "Bạn vừa nhận được một huy hiệu mới: ${badgeTitles[newBadges[i]]!}",
+            timestamp: DateTime.now().toString(),
+            photoURL: "",
+            payload: "",
+            type: NotificationType.newBadge.name,
+            status: NotificationStatus.pending.name,
+          ).toMap(),
+        );
       }
 
       return const Success(Constants.successMessage);

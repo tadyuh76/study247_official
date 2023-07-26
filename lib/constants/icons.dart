@@ -31,6 +31,7 @@ class IconPaths {
   static const mic = "assets/icons/mic.svg";
   static const more = "assets/icons/more.svg";
   static const music = "assets/icons/music.svg";
+  static const notification = "assets/icons/notification.svg";
   static const palette = "assets/icons/palette.svg";
   static const pause = "assets/icons/pause.svg";
   static const people = "assets/icons/people.svg";

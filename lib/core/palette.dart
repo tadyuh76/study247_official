@@ -14,4 +14,5 @@ class Palette {
   static const complete = Color(0xFF6CA148);
   static const warning = Color(0xFFE7B75D);
   static const error = Color(0xFFFF3939);
+  static const notification = Color(0xFFFA3E3E);
 }

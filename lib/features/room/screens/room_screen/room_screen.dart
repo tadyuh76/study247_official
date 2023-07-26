@@ -124,7 +124,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
     _room.on(Events.roomLeft, () {
       participants.clear();
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+      // Navigator.popUntil(context, ModalRoute.withName('/'));
     });
   }
 

@@ -31,15 +31,16 @@ class UserBadges extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 "Huy hiệu của tôi",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
+              const Spacer(),
               GestureDetector(
                 child: const Text(
-                  "> Thêm",
+                  "Thêm",
                   style: TextStyle(
                     color: Palette.primary,
                     fontWeight: FontWeight.w500,
@@ -47,6 +48,7 @@ class UserBadges extends StatelessWidget {
                   ),
                 ),
               ),
+              const Icon(Icons.chevron_right, color: Palette.primary, size: 16),
             ],
           ),
           const SizedBox(height: Constants.defaultPadding),
