@@ -29,14 +29,10 @@ class UserModel {
   final String studyingRoomId;
   final String studyingMeetingId;
   final int totalStudyTime;
+  final int totalActiveDays;
   final List<String> friends;
   final List<String> badges;
   final Map<String, Map<String, List<int>>> commitBoard;
-
-  DateTime get _now => DateTime.now();
-  int get monthStudyTime =>
-      commitBoard[_now.year.toString()]![_now.month.toString()]!
-          .fold(0, (previousValue, element) => previousValue + element);
 
   int getMonthStudyTime({int? month, int? year}) {
     final now = DateTime.now();
@@ -79,24 +75,25 @@ class UserModel {
     required this.friends,
     required this.commitBoard,
     required this.totalStudyTime,
+    required this.totalActiveDays,
   });
 
-  UserModel copyWith({
-    String? uid,
-    String? displayName,
-    String? email,
-    String? photoURL,
-    int? currentStreak,
-    int? longestStreak,
-    int? masteryLevel,
-    List<String>? badges,
-    String? status,
-    List<String>? friends,
-    String? studyingRoomId,
-    String? studyingMeetingId,
-    Map<String, Map<String, List<int>>>? commitBoard,
-    int? totalStudyTime,
-  }) {
+  UserModel copyWith(
+      {String? uid,
+      String? displayName,
+      String? email,
+      String? photoURL,
+      int? currentStreak,
+      int? longestStreak,
+      int? masteryLevel,
+      List<String>? badges,
+      String? status,
+      List<String>? friends,
+      String? studyingRoomId,
+      String? studyingMeetingId,
+      Map<String, Map<String, List<int>>>? commitBoard,
+      int? totalStudyTime,
+      int? totalActiveDays}) {
     return UserModel(
       uid: uid ?? this.uid,
       displayName: displayName ?? this.displayName,
@@ -111,6 +108,7 @@ class UserModel {
       friends: friends ?? this.friends,
       commitBoard: commitBoard ?? this.commitBoard,
       totalStudyTime: totalStudyTime ?? this.totalStudyTime,
+      totalActiveDays: totalActiveDays ?? this.totalActiveDays,
     );
   }
 
@@ -129,6 +127,7 @@ class UserModel {
       'studyingMeetingId': studyingMeetingId,
       'commitBoard': commitBoard,
       'totalStudyTime': totalStudyTime,
+      'totalActiveDays': totalActiveDays,
     };
   }
 
@@ -163,12 +162,13 @@ class UserModel {
       studyingMeetingId: map['studyingMeetingId'] ?? '',
       commitBoard: commitBoard,
       totalStudyTime: map['totalStudyTime'] ?? 0,
+      totalActiveDays: map['totalActiveDays'] ?? 0,
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, badges: $badges, status: $status, friends: $friends, studyingRoomId: $studyingRoomId, studyingMeetingId: $studyingMeetingId commitBoard: $commitBoard, totalStudyTime: $totalStudyTime)';
+    return 'UserModel(uid: $uid, displayName: $displayName, email: $email, photoURL: $photoURL, currentStreak: $currentStreak, longestStreak: $longestStreak, badges: $badges, status: $status, friends: $friends, studyingRoomId: $studyingRoomId, studyingMeetingId: $studyingMeetingId commitBoard: $commitBoard, totalStudyTime: $totalStudyTime, totalActiveDays: $totalActiveDays)';
   }
 
   @override
@@ -188,7 +188,8 @@ class UserModel {
         other.friends == friends &&
         listEquals(other.badges, badges) &&
         mapEquals(other.commitBoard, commitBoard) &&
-        other.totalStudyTime == totalStudyTime;
+        other.totalStudyTime == totalStudyTime &&
+        other.totalActiveDays == totalActiveDays;
   }
 
   @override
@@ -205,6 +206,7 @@ class UserModel {
         studyingRoomId.hashCode ^
         studyingMeetingId.hashCode ^
         commitBoard.hashCode ^
-        totalStudyTime.hashCode;
+        totalStudyTime.hashCode ^
+        totalActiveDays.hashCode;
   }
 }

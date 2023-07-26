@@ -6,7 +6,9 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
+import 'package:study247/features/badge/controller/badge_list_controller.dart';
 import 'package:study247/features/profile/widgets/monthly_statistics.dart';
+import 'package:study247/features/profile/widgets/user_badges.dart';
 import 'package:study247/features/profile/widgets/user_info.dart';
 import 'package:study247/features/profile/widgets/user_streak.dart';
 import 'package:study247/features/profile/widgets/weekly_statistics.dart';
@@ -15,12 +17,16 @@ class ProfileScreen extends ConsumerWidget {
   final UserModel? user;
   const ProfileScreen({super.key, this.user});
 
+  Future<void> _onRefresh(WidgetRef ref) async {
+    ref.read(authControllerProvider.notifier).updateUser();
+    ref.read(badgeListControllerProvider.notifier).getBadgeList();
+    // if (user == null) return;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return RefreshIndicator(
-      onRefresh: user == null
-          ? () => ref.read(authControllerProvider.notifier).updateUser()
-          : () async {},
+      onRefresh: () => _onRefresh(ref),
       child: SingleChildScrollView(
         child: user != null
             ? _renderProfileScreen(user!)
@@ -46,8 +52,8 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: 30),
         UserInfo(user: user, editable: editable),
         const SizedBox(height: Constants.defaultPadding),
-        // UserBadges(user: user),
-        // const SizedBox(height: Constants.defaultPadding),
+        UserBadges(user: user),
+        const SizedBox(height: Constants.defaultPadding),
         UserStreak(user: user),
         const SizedBox(height: Constants.defaultPadding),
         WeeklyStatistics(user: user),

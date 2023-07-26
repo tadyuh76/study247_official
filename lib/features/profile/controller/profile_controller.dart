@@ -16,8 +16,8 @@ class ProfileController {
   ProfileController(this._ref);
 
   void updateStudyTime() {
-    final user = _ref.read(authControllerProvider).asData!.value!;
-    _ref.read(profileRepositoryProvider).updateStudyTime(user);
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).updateStudyTime(userId);
   }
 
   void addFriend(String friendId) async {

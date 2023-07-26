@@ -10,7 +10,7 @@ import 'package:study247/core/shared/screens/loading_screen.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/flashcards/widgets/complete_dialog.dart';
-import 'package:study247/features/notifications/notification_service.dart';
+import 'package:study247/features/push_notifications/push_notification_service.dart';
 
 const defaultTextStyle = TextStyle(
   color: Palette.black,
@@ -46,7 +46,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
 
   void _onEasy(Flashcard flashcard) {
     _nextPage();
-    NotificationService().showNotification(
+    PushNotificationService().showNotification(
       id: Random().nextInt(762005),
       title: flashcard.title,
       body: flashcard.front,
@@ -60,7 +60,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
 
   void _onHard(Flashcard flashcard) {
     _nextPage();
-    NotificationService().showNotification(
+    PushNotificationService().showNotification(
       id: Random().nextInt(762005),
       title: flashcard.title,
       body: flashcard.front,
@@ -74,7 +74,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
 
   void _onMedium(Flashcard flashcard) {
     _nextPage();
-    NotificationService().showNotification(
+    PushNotificationService().showNotification(
       id: Random().nextInt(762005),
       title: flashcard.title,
       body: flashcard.front,

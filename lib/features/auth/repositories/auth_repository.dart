@@ -152,6 +152,7 @@ class AuthRepository {
       currentStreak: 0,
       longestStreak: 0,
       totalStudyTime: 0,
+      totalActiveDays: 0,
       status: UserStatus.active.name,
       studyingRoomId: "",
       studyingMeetingId: "",

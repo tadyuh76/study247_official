@@ -132,7 +132,7 @@ class WeeklyStatistics extends StatelessWidget {
             height: 20,
             child: Center(
               child: Text(
-                "${value}h",
+                "${value.toStringAsFixed(1)}h",
                 style: const TextStyle(
                   color: Palette.darkGrey,
                   height: 1.0,

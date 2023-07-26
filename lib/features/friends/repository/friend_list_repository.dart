@@ -29,7 +29,6 @@ class FriendListRepository {
 
       return Success(friendList);
     } on Exception catch (e) {
-      print(e);
       return Failure(e);
     }
   }
