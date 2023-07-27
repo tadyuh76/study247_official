@@ -76,7 +76,7 @@ class NotificationRepository {
     }
   }
 
-  Future<Result<NotificationModel, Exception>> requestFriend(
+  Future<Result<String, Exception>> requestFriend(
     UserModel user,
     String friendId,
   ) async {
@@ -96,7 +96,7 @@ class NotificationRepository {
       );
       await notiRef.set(friendRequest.toMap());
 
-      return Success(friendRequest);
+      return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
     }
@@ -171,6 +171,29 @@ class NotificationRepository {
       }
 
       return Success(notificationsToRead.map((e) => e.id).toList());
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> sendLevelUpNotification(
+    String userId,
+    int masteryLevel,
+  ) async {
+    try {
+      final userRef = _db.collection(FirebaseConstants.users).doc(userId);
+      final notiRef = userRef.collection(FirebaseConstants.notifications).doc();
+      final newNoti = NotificationModel(
+        id: notiRef.id,
+        text: "Bạn vừa đạt cấp độ tháng mới: ${masteryTitles[masteryLevel]}",
+        timestamp: DateTime.now().toString(),
+        photoURL: "",
+        payload: masteryLevel.toString(),
+        type: NotificationType.levelUp.name,
+        status: NotificationStatus.pending.name,
+      );
+      await notiRef.set(newNoti.toMap());
+      return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
     }

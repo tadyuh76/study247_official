@@ -86,4 +86,11 @@ class NotificationController
       state = AsyncData(newState);
     }
   }
+
+  Future<void> sendLevelUpNotification(int masteryLevel) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref
+        .read(notificationRepositoryProvider)
+        .sendLevelUpNotification(userId, masteryLevel);
+  }
 }

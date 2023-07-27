@@ -11,6 +11,7 @@ import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/badge/controller/badge_list_controller.dart';
+import 'package:study247/features/notification/controller/notification_controller.dart';
 
 final profileRepositoryProvider = Provider((ref) {
   final db = ref.read(firestoreProvider);
@@ -23,6 +24,8 @@ class ProfileRepository {
   final FirebaseFirestore _db;
   final FirebaseStorage _storage;
   ProfileRepository(this._ref, this._db, this._storage);
+
+  int monthStudyTime = -1;
 
   Future<Result<String, Exception>> updateStudyTime(String userId) async {
     try {
@@ -47,18 +50,6 @@ class ProfileRepository {
   UserModel _checkForAchievements(UserModel user) {
     final List<String> newBadges = [];
 
-    // check for hardwork badge
-    final newStudyTime = user.totalStudyTime + 1;
-    for (int i = hardworkBadgeRequirements.length - 1; i >= 0; i--) {
-      final badgeName = "${i + 1}_hardwork";
-      if (newStudyTime / 60 >= hardworkBadgeRequirements[i] &&
-          !user.badges.contains(badgeName)) {
-        newBadges.add(badgeName);
-        break;
-      }
-    }
-
-    // check for focus badge
     final now = DateTime.now();
     final year = now.year.toString();
     final month = now.month.toString();
@@ -68,9 +59,36 @@ class ProfileRepository {
     updatedCommitBoard[year]![month]![dayIdx] += 1;
     final todayStudyTime = updatedCommitBoard[year]![month]![dayIdx];
 
+    // check for focus badge
     for (int i = focusBadgeRequirements.length - 1; i >= 0; i--) {
       final badgeName = "${i + 1}_focus";
       if (todayStudyTime / 60 >= focusBadgeRequirements[i] &&
+          !user.badges.contains(badgeName)) {
+        newBadges.add(badgeName);
+        break;
+      }
+    }
+
+    // check for monthly level
+    if (monthStudyTime == -1) {
+      monthStudyTime = user.getMonthStudyTime();
+    } else {
+      monthStudyTime++;
+    }
+
+    for (int i = minutesToMastery.length - 1; i >= 0; i--) {
+      if (monthStudyTime == minutesToMastery[i]) {
+        _ref
+            .read(notificationControllerProvider.notifier)
+            .sendLevelUpNotification(i);
+      }
+    }
+
+    // check for hardwork badge
+    final newStudyTime = user.totalStudyTime + 1;
+    for (int i = hardworkBadgeRequirements.length - 1; i >= 0; i--) {
+      final badgeName = "${i + 1}_hardwork";
+      if (newStudyTime / 60 >= hardworkBadgeRequirements[i] &&
           !user.badges.contains(badgeName)) {
         newBadges.add(badgeName);
         break;
@@ -133,6 +151,21 @@ class ProfileRepository {
     }
   }
 
+  Future<Result<String, Exception>> unRequest(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      await _db.collection(FirebaseConstants.users).doc(userId).update({
+        "friendRequests": FieldValue.arrayRemove([friendId])
+      });
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<String, Exception>> rejectFriend(
     String userId,
     String friendId,
@@ -183,21 +216,6 @@ class ProfileRepository {
       // friend side
       await _db.collection(FirebaseConstants.users).doc(friendId).update({
         "friends": FieldValue.arrayRemove([userId])
-      });
-
-      return const Success(Constants.successMessage);
-    } on Exception catch (e) {
-      return Failure(e);
-    }
-  }
-
-  Future<Result<String, Exception>> unRequest(
-    String userId,
-    String friendId,
-  ) async {
-    try {
-      await _db.collection(FirebaseConstants.users).doc(userId).update({
-        "friendRequests": FieldValue.arrayRemove([friendId])
       });
 
       return const Success(Constants.successMessage);

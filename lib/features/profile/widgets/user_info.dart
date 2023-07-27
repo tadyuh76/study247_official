@@ -66,7 +66,7 @@ class UserInfo extends StatelessWidget {
               const SizedBox(height: Constants.defaultPadding),
               UserMasteryProgressBar(
                 masteryLevel: userMasteryLevel,
-                totalStudyTime: user.totalStudyTime,
+                totalStudyTime: user.getMonthStudyTime(),
               ),
             ],
           ),
