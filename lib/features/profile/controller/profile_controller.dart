@@ -28,23 +28,30 @@ class ProfileController {
     _ref.read(notificationControllerProvider.notifier).requestFriend(friendId);
   }
 
-  void addFriend(String friendId) async {
+  void unRequest(String friendId) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    _ref.read(profileRepositoryProvider).requestFriend(userId, friendId);
-    _ref.read(authControllerProvider.notifier).requestFriend(friendId);
+    _ref.read(profileRepositoryProvider).unRequest(userId, friendId);
+    _ref.read(authControllerProvider.notifier).unRequest(friendId);
+    _ref.read(notificationControllerProvider.notifier).unRequest(friendId);
+  }
+
+  void acceptFriend(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).acceptFriend(userId, friendId);
+    _ref.read(authControllerProvider.notifier).acceptFriend(friendId);
+    _ref.read(notificationControllerProvider.notifier).acceptFriend(friendId);
+  }
+
+  void rejectFriend(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).rejectFriend(userId, friendId);
+    _ref.read(notificationControllerProvider.notifier).rejectFriend(friendId);
   }
 
   void unFriend(String friendId) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     _ref.read(profileRepositoryProvider).unFriend(userId, friendId);
     _ref.read(authControllerProvider.notifier).unFriend(friendId);
-  }
-
-  void unRequest(String friendId) async {
-    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    _ref.read(profileRepositoryProvider).unRequest(userId, friendId);
-    _ref.read(authControllerProvider.notifier).unRequest(friendId);
-    _ref.read(notificationControllerProvider.notifier).unRequest(friendId);
   }
 
   Future<void> updateUserStatus({

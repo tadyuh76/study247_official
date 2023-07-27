@@ -14,6 +14,36 @@ class NotificationController
   final Ref _ref;
   NotificationController(this._ref) : super(const AsyncLoading());
 
+  Future<void> acceptFriend(String friendId) async {
+    final user = _ref.read(authControllerProvider).asData!.value!;
+    await _ref
+        .read(notificationRepositoryProvider)
+        .acceptFriend(user, friendId);
+
+    state = AsyncData(
+      state.asData!.value
+          .map((e) => e.payload == friendId
+              ? e.copyWith(status: NotificationStatus.accepted.name)
+              : e)
+          .toList(),
+    );
+  }
+
+  Future<void> rejectFriend(String friendId) async {
+    final user = _ref.read(authControllerProvider).asData!.value!;
+    await _ref
+        .read(notificationRepositoryProvider)
+        .rejectFriend(user, friendId);
+
+    state = AsyncData(
+      state.asData!.value
+          .map((e) => e.payload == friendId
+              ? e.copyWith(status: NotificationStatus.rejected.name)
+              : e)
+          .toList(),
+    );
+  }
+
   Future<void> requestFriend(String friendId) async {
     final user = _ref.read(authControllerProvider).asData!.value!;
     await _ref

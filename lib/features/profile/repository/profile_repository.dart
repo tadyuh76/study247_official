@@ -133,7 +133,22 @@ class ProfileRepository {
     }
   }
 
-  Future<Result<String, Exception>> addFriend(
+  Future<Result<String, Exception>> rejectFriend(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      await _db.collection(FirebaseConstants.users).doc(friendId).update({
+        "friendRequests": FieldValue.arrayRemove([userId])
+      });
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> acceptFriend(
     String userId,
     String friendId,
   ) async {
@@ -145,7 +160,8 @@ class ProfileRepository {
 
       // friend side
       await _db.collection(FirebaseConstants.users).doc(friendId).update({
-        "friends": FieldValue.arrayUnion([userId])
+        "friends": FieldValue.arrayUnion([userId]),
+        "friendRequests": FieldValue.arrayRemove([userId]),
       });
 
       return const Success(Constants.successMessage);

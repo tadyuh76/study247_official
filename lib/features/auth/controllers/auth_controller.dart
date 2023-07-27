@@ -61,7 +61,7 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     );
   }
 
-  void addFriend(String friendId) {
+  void acceptFriend(String friendId) {
     final currentUser = state.asData!.value!;
     state = AsyncData(
       currentUser.copyWith(friends: [...currentUser.friends, friendId]),

@@ -16,6 +16,66 @@ class NotificationRepository {
   final FirebaseFirestore _db;
   NotificationRepository(this._db);
 
+  Future<Result<String, Exception>> rejectFriend(
+    UserModel user,
+    String friendId,
+  ) async {
+    try {
+      // user side
+      final userRef = _db.collection(FirebaseConstants.users).doc(user.uid);
+      final notiRef = userRef.collection(FirebaseConstants.notifications);
+      final snapshot =
+          await notiRef.where("payload", isEqualTo: friendId).get();
+      final notiId = snapshot.docs[0].id;
+
+      await notiRef
+          .doc(notiId)
+          .update({"status": NotificationStatus.rejected.name});
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> acceptFriend(
+    UserModel user,
+    String friendId,
+  ) async {
+    try {
+      // user side
+      final userRef = _db.collection(FirebaseConstants.users).doc(user.uid);
+      final notiRef = userRef.collection(FirebaseConstants.notifications);
+      final snapshot =
+          await notiRef.where("payload", isEqualTo: friendId).get();
+      final notiId = snapshot.docs[0].id;
+      await notiRef
+          .doc(notiId)
+          .update({"status": NotificationStatus.accepted.name});
+
+      // friend side
+      final newNotiRef = _db
+          .collection(FirebaseConstants.users)
+          .doc(friendId)
+          .collection(FirebaseConstants.notifications)
+          .doc();
+      final acceptedNoti = NotificationModel(
+        id: newNotiRef.id,
+        text: "${user.displayName} đã chấp nhận lời mời kết bạn của bạn.",
+        timestamp: DateTime.now().toString(),
+        photoURL: user.photoURL,
+        payload: "",
+        type: NotificationType.friendAccept.name,
+        status: NotificationStatus.pending.name,
+      );
+      await newNotiRef.set(acceptedNoti.toMap());
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<NotificationModel, Exception>> requestFriend(
     UserModel user,
     String friendId,
