@@ -81,6 +81,7 @@ class DocumentFromFolderScreen extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           return DocumentWidget(
                             document: documentList[index],
+                            controlable: true,
                           );
                         },
                       ),

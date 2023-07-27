@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/features/document/screens/document_edit_screen.dart';
+import 'package:study247/features/document/screens/document_control_screen.dart';
 import 'package:study247/features/document/widgets/document_settings_dialog.dart';
 
 class DocumentWidget extends ConsumerWidget {
   final Document document;
+  final bool controlable;
   const DocumentWidget({
     Key? key,
     required this.document,
+    required this.controlable,
   }) : super(key: key);
 
   void _onDocumentTap(BuildContext context, WidgetRef ref) {
-    // context.go("/document/${document.id}");
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DocumentEditScreen(documentId: document.id!),
-      ),
-    );
+    if (controlable) {
+      context.go("/document/${document.id}");
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DocumentControlScreen(documentId: document.id!),
+        ),
+      );
+    }
   }
 
   void _showDocumentEditDialog(BuildContext context) {

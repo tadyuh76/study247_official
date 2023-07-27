@@ -94,15 +94,13 @@ class DocumentRepository {
     }
   }
 
-  Future<Result<String, Exception>> copyDocument(String documentInText) async {
+  Future<Result<String, Exception>> copyDocument(
+    String userId,
+    String title,
+    String text,
+  ) async {
     try {
-      final userId = _ref.read(authControllerProvider).asData!.value!.uid;
       final db = _ref.read(firestoreProvider);
-
-      List<String> parts = documentInText.split("[TEXT]:");
-      final documentTitle = parts[0].substring("[TITLE]:".length);
-      final documentText = parts[1];
-
       final newRef = db
           .collection(FirebaseConstants.users)
           .doc(userId)
@@ -111,8 +109,8 @@ class DocumentRepository {
 
       final newDocument = Document(
         id: newRef.id,
-        title: documentTitle,
-        text: documentText,
+        title: title,
+        text: text,
         lastEdit: DateTime.now().toString(),
         color: "blue",
         folderName: "",

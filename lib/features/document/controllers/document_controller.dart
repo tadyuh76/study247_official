@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/models/folder.dart';
 import 'package:study247/core/models/result.dart';
+import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/repositories/document_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
@@ -168,10 +169,11 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     }
   }
 
-  Future<String> copyDocument(String documentInText) async {
+  Future<String> copyDocument(String title, String text) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     final result = await _ref
         .read(documentRepositoryProvider)
-        .copyDocument(documentInText);
+        .copyDocument(userId, title, text);
 
     if (result case Success(value: final documentId)) {
       return documentId;

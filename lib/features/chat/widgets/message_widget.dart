@@ -8,7 +8,7 @@ import 'package:study247/core/palette.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/chat/controllers/chat_controller.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
-import 'package:study247/features/document/screens/document_edit_screen.dart';
+import 'package:study247/features/document/screens/read_only_document_screen.dart';
 import 'package:study247/features/home/widgets/room_card/avatar.dart';
 import 'package:study247/utils/format_date.dart';
 
@@ -184,25 +184,14 @@ class _MessageWithDocument extends ConsumerWidget {
   const _MessageWithDocument({required this.message});
 
   void _onDocumentTap(BuildContext context, WidgetRef ref) {
-    final userId = ref.read(authControllerProvider).asData!.value!.uid;
-    if (message.senderId == userId) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DocumentEditScreen(documentId: message.noteId!),
-        ),
-      );
-      return;
-    }
+    // final userId = ref.read(authControllerProvider).asData!.value!.uid;
 
-    ref
-        .read(documentControllerProvider.notifier)
-        .copyDocument(message.text)
-        .then((documentId) => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    DocumentEditScreen(documentId: documentId),
-              ),
-            ));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            ReadOnlyDocumentScreen(documentText: message.text),
+      ),
+    );
   }
 
   void _onDocumentHold(WidgetRef ref) {

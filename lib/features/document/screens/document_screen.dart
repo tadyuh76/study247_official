@@ -7,8 +7,11 @@ import 'package:study247/features/document/screens/folder_tab.dart';
 import 'package:study247/features/document/widgets/document_create_dialog.dart';
 
 class DocumentScreen extends ConsumerStatefulWidget {
-  final bool renderAppBar;
-  const DocumentScreen({super.key, this.renderAppBar = false});
+  final bool navigateFromRoom;
+  const DocumentScreen({
+    super.key,
+    this.navigateFromRoom = false,
+  });
 
   @override
   ConsumerState<DocumentScreen> createState() => _DocumentScreenState();
@@ -38,7 +41,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.lightGrey,
-      appBar: widget.renderAppBar ? _renderAppBar() : null,
+      appBar: widget.navigateFromRoom ? _renderAppBar() : null,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateDialog(context),
         backgroundColor: Palette.white,

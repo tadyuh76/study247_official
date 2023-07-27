@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
+import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
@@ -15,8 +16,8 @@ import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/utils/unfocus.dart';
 
 class DocumentEditScreen extends ConsumerStatefulWidget {
-  final String documentId;
-  const DocumentEditScreen({super.key, required this.documentId});
+  final Document document;
+  const DocumentEditScreen({super.key, required this.document});
 
   @override
   ConsumerState<DocumentEditScreen> createState() => _DocumentEditScreenState();
@@ -43,12 +44,8 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   }
 
   Future<void> _setUpDocument() async {
-    final document = await ref
-        .read(documentControllerProvider.notifier)
-        .fetchDocumentById(widget.documentId);
-
-    _titleController.text = document!.title;
-    _documentController.text = document.text;
+    _titleController.text = widget.document.title;
+    _documentController.text = widget.document.text;
 
     _flashcardsCreated = await ref
         .read(flashcardListControllerProvider.notifier)
@@ -76,9 +73,8 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     setState(() => saving = true);
     final documentText = _documentController.text.trim();
     final documentTitle = _titleController.text.trim();
-    await ref
-        .read(documentControllerProvider.notifier)
-        .saveDocument(context, widget.documentId, documentTitle, documentText);
+    await ref.read(documentControllerProvider.notifier).saveDocument(
+        context, widget.document.id!, documentTitle, documentText);
     _flashcardsCreated = await ref
         .watch(flashcardListControllerProvider.notifier)
         .getFlashcardList();
@@ -90,7 +86,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     // }
   }
 
-  Future<void> _shareNote(BuildContext context, WidgetRef ref) async {
+  Future<void> _shareNote() async {
     final roomId = ref.read(roomControllerProvider).asData?.value?.id;
     if (roomId == null) {
       showSnackBar(context, "Bạn cần ở trong một phòng học mới có thể chia sẻ");
@@ -125,7 +121,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     return false;
   }
 
-  void _onDelete(BuildContext context) {
+  void _onDelete() {
     showDialog(
       context: context,
       builder: (context) => LeaveDialog(
@@ -139,7 +135,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   void _deleteDocument() {
     ref
         .read(documentControllerProvider.notifier)
-        .deleteDocument(context, widget.documentId);
+        .deleteDocument(context, widget.document.id!);
     if (mounted) {
       context
         ..pop()
@@ -194,7 +190,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       style: const TextStyle(
         height: 1.5,
         color: Palette.black,
-        fontWeight: FontWeight.w300,
+        // fontWeight: FontWeight.w300,
         fontSize: 14,
       ),
     );
@@ -208,6 +204,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       style: const TextStyle(
         color: Palette.black,
         fontSize: 20,
+        fontWeight: FontWeight.w500,
       ),
       decoration: const InputDecoration(
         hintText: "Nhập tiêu đề...",
@@ -264,24 +261,22 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     return [
       IconButton(
         splashRadius: 24,
-        onPressed: () => _onDelete(context),
+        onPressed: _onDelete,
         icon: SvgPicture.asset(
           IconPaths.trashBin,
           height: 24,
           width: 24,
         ),
       ),
-      Consumer(builder: (context, ref, _) {
-        return IconButton(
-          splashRadius: 24,
-          onPressed: () => _shareNote(context, ref),
-          icon: SvgPicture.asset(
-            IconPaths.share,
-            height: 24,
-            width: 24,
-          ),
-        );
-      }),
+      IconButton(
+        splashRadius: 24,
+        onPressed: _shareNote,
+        icon: SvgPicture.asset(
+          IconPaths.share,
+          height: 24,
+          width: 24,
+        ),
+      ),
       Padding(
         padding:
             const EdgeInsets.only(left: 5, right: Constants.defaultPadding),

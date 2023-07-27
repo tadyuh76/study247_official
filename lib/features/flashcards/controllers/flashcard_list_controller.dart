@@ -20,8 +20,8 @@ class FlashcardListController
     if (result case Success(value: final flashcardList)) {
       state = AsyncData(flashcardList);
       return flashcardList.length;
-    } else if (result case Failure(:final failure)) {
-      state = AsyncError(failure, StackTrace.current);
+    } else if (result case Failure()) {
+      state = const AsyncData([]);
     }
     return 0;
   }

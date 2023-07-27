@@ -66,7 +66,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
       body: flashcard.front,
       duration: Duration(
         minutes: int.parse(
-          (flashcard.currentInterval * 1.5).toStringAsFixed(0),
+          (flashcard.currentInterval * 60 * 1.5).toStringAsFixed(0),
         ),
       ),
     );

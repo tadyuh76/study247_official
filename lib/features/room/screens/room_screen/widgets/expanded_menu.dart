@@ -90,7 +90,8 @@ class ExpandedMenu extends StatelessWidget {
             ),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const DocumentScreen(renderAppBar: true),
+                builder: (context) =>
+                    const DocumentScreen(navigateFromRoom: true),
               ),
             ),
           ),
