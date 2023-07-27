@@ -36,6 +36,25 @@ class BadgeListRepository {
     }
   }
 
+  Future<Result<List<BadgeModel>, Exception>> getBadgeListById(
+    String userId,
+  ) async {
+    try {
+      final snapshot = await _db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.badgeList)
+          .get();
+      final badgeList =
+          snapshot.docs.map((e) => BadgeModel.fromMap(e.data())).toList();
+      badgeList.sort((a, b) => b.name.compareTo(a.name));
+
+      return Success(badgeList);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<String, Exception>> addBadges(
     String userId,
     List<String> newBadges,

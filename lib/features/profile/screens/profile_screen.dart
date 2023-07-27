@@ -20,7 +20,6 @@ class ProfileScreen extends ConsumerWidget {
   Future<void> _onRefresh(WidgetRef ref) async {
     ref.read(authControllerProvider.notifier).updateUser();
     ref.read(badgeListControllerProvider.notifier).getBadgeList();
-    // if (user == null) return;
   }
 
   @override
@@ -52,7 +51,7 @@ class ProfileScreen extends ConsumerWidget {
         const SizedBox(height: 30),
         UserInfo(user: user, editable: editable),
         const SizedBox(height: Constants.defaultPadding),
-        UserBadges(user: user),
+        UserBadges(user: user, editable: editable),
         const SizedBox(height: Constants.defaultPadding),
         UserStreak(user: user),
         const SizedBox(height: Constants.defaultPadding),

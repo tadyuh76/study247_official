@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:study247/features/badge/screen/badge_screen.dart';
 import 'package:study247/features/document/screens/document_edit_screen.dart';
 import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/home/home_screen.dart';
@@ -38,6 +39,10 @@ final authenticatedRouter = GoRouter(
           path: "solo",
           builder: (context, state) => SoloRoomScreen(),
         ),
+        GoRoute(
+          path: "badges",
+          builder: (context, state) => const BadgeScreen(),
+        )
       ],
     ),
   ],

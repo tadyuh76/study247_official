@@ -76,7 +76,7 @@ class ProfileRepository {
       monthStudyTime++;
     }
 
-    for (int i = minutesToMastery.length - 1; i >= 0; i--) {
+    for (int i = minutesToMastery.length - 1; i > 0; i--) {
       if (monthStudyTime == minutesToMastery[i]) {
         _ref
             .read(notificationControllerProvider.notifier)
@@ -98,7 +98,7 @@ class ProfileRepository {
     int newStreak = user.currentStreak;
     int newLongestStreak = user.longestStreak;
     int totalActiveDays = user.totalActiveDays;
-    if (todayStudyTime == 15) {
+    if (todayStudyTime == Constants.minutesPerDayToContinueStreak) {
       newStreak++;
       totalActiveDays++;
       newLongestStreak = max(newLongestStreak, newStreak);

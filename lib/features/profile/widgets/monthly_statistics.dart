@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
-import 'package:study247/core/shared/widgets/app_error.dart';
-import 'package:study247/core/shared/widgets/app_loading.dart';
-import 'package:study247/features/auth/controllers/auth_controller.dart';
-
-const int _minutesForMaxOpacity = 120;
 
 class MonthlyStatistics extends StatelessWidget {
   final UserModel user;
@@ -43,39 +37,29 @@ class MonthlyStatistics extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: Constants.defaultPadding),
-          Consumer(builder: (context, ref, child) {
-            return ref.watch(authControllerProvider).when(
-                error: (err, stk) => const AppError(),
-                loading: () => const AppLoading(),
-                data: (user) {
-                  if (user == null) return const AppLoading();
-                  final now = DateTime.now();
-                  // final thisYear = user.commitBoard[now.year.toString()]!;
+          SizedBox(
+            height: 400,
+            child: PageView.builder(
+              physics: const BouncingScrollPhysics(),
+              reverse: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                final now = DateTime.now();
 
-                  return SizedBox(
-                    height: 400,
-                    child: PageView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      reverse: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        final willPrevYear = (now.month - index) <= 0;
-                        final newYear = now.year - (willPrevYear ? 1 : 0);
-                        final newMonth = willPrevYear
-                            ? (now.month - index) + 12
-                            : now.month - index;
+                final willPrevYear = (now.month - index) <= 0;
+                final newYear = now.year - (willPrevYear ? 1 : 0);
+                final newMonth =
+                    willPrevYear ? (now.month - index) + 12 : now.month - index;
 
-                        return _renderMonthCalendar(
-                          user.commitBoard,
-                          newYear,
-                          newMonth,
-                        );
-                      },
-                    ),
-                  );
-                });
-          })
+                return _renderMonthCalendar(
+                  user.commitBoard,
+                  newYear,
+                  newMonth,
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -154,8 +138,8 @@ class MonthlyStatistics extends StatelessWidget {
                           ? Border.all(color: Palette.complete, width: 2)
                           : null,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: _getTileColor(
-                          renderData[index] / _minutesForMaxOpacity),
+                      color: _getTileColor(renderData[index] /
+                          Constants.minutesToMaxOpacityCalendar),
                     ),
                     child: Center(
                       child: Text(

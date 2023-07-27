@@ -26,6 +26,17 @@ class BadgeListController extends StateNotifier<AsyncValue<List<BadgeModel>>> {
     }
   }
 
+  Future<List<BadgeModel>> getBadgeListById(String userId) async {
+    final result =
+        await _ref.read(badgeListRepositoryProvider).getBadgeListById(userId);
+
+    if (result case Success(value: final badgeList)) {
+      return badgeList;
+    } else {
+      return [];
+    }
+  }
+
   Future<void> addBadges(List<String> newBadges) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     await _ref.read(badgeListRepositoryProvider).addBadges(userId, newBadges);
