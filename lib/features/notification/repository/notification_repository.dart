@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/notification.dart';
 import 'package:study247/core/models/result.dart';
+import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 
 final notificationRepositoryProvider = Provider((ref) {
@@ -14,6 +16,59 @@ class NotificationRepository {
   final FirebaseFirestore _db;
   NotificationRepository(this._db);
 
+  Future<Result<NotificationModel, Exception>> requestFriend(
+    UserModel user,
+    String friendId,
+  ) async {
+    try {
+      final friendRef = _db.collection(FirebaseConstants.users).doc(friendId);
+      final notiRef =
+          friendRef.collection(FirebaseConstants.notifications).doc();
+
+      final friendRequest = NotificationModel(
+        id: notiRef.id,
+        text: "${user.displayName} đã gửi cho bạn một lời mời kết bạn.",
+        timestamp: DateTime.now().toString(),
+        photoURL: user.photoURL,
+        payload: user.uid,
+        type: NotificationType.friendRequest.name,
+        status: NotificationStatus.pending.name,
+      );
+      await notiRef.set(friendRequest.toMap());
+
+      return Success(friendRequest);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> unRequest(
+    UserModel user,
+    String friendId,
+  ) async {
+    try {
+      // friend side
+      final friendRef = _db.collection(FirebaseConstants.users).doc(friendId);
+      final notiRef = friendRef.collection(FirebaseConstants.notifications);
+
+      final snapshot =
+          await notiRef.where("payload", isEqualTo: user.uid).get();
+      final notiId = snapshot.docs[0].id;
+
+      await notiRef.doc(notiId).delete();
+
+      // user side
+      final userRef = _db.collection(FirebaseConstants.users).doc(user.uid);
+      await userRef.update({
+        "friendRequests": FieldValue.arrayRemove([friendId])
+      });
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<List<NotificationModel>, Exception>> getNotifications(
     String userId,
   ) async {
@@ -22,6 +77,7 @@ class NotificationRepository {
           .collection(FirebaseConstants.users)
           .doc(userId)
           .collection(FirebaseConstants.notifications)
+          .orderBy("timestamp", descending: true)
           .get();
       final notificationList = snapshot.docs
           .map((e) => NotificationModel.fromMap(e.data()))

@@ -52,6 +52,15 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     state = AsyncData(updatedUser);
   }
 
+  void requestFriend(String friendId) {
+    final currentUser = state.asData!.value!;
+    state = AsyncData(
+      currentUser.copyWith(
+        friendRequests: [...currentUser.friendRequests, friendId],
+      ),
+    );
+  }
+
   void addFriend(String friendId) {
     final currentUser = state.asData!.value!;
     state = AsyncData(
@@ -63,6 +72,14 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     final currentUser = state.asData!.value!;
     state = AsyncData(currentUser.copyWith(
       friends: currentUser.friends.where((id) => id != friendId).toList(),
+    ));
+  }
+
+  void unRequest(String friendId) {
+    final currentUser = state.asData!.value!;
+    state = AsyncData(currentUser.copyWith(
+      friendRequests:
+          currentUser.friendRequests.where((id) => id != friendId).toList(),
     ));
   }
 

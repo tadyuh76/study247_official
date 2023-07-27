@@ -33,7 +33,7 @@ class FeatureDialog extends StatelessWidget {
               color: Colors.transparent,
               child: ConstrainedBox(
                 constraints:
-                    const BoxConstraints(maxHeight: 500, maxWidth: 500),
+                    const BoxConstraints(maxHeight: 500, maxWidth: 400),
                 child: Container(
                   width: landscape && !kIsWeb ? 400 : null,
                   padding: const EdgeInsets.all(
@@ -53,15 +53,8 @@ class FeatureDialog extends StatelessWidget {
                       _renderHeader(context),
                       const SizedBox(height: Constants.defaultPadding / 2),
                       landscape && !kIsWeb
-                          ? Expanded(
-                              child: SingleChildScrollView(
-                                child: child,
-                              ),
-                            )
-                          : SizedBox(
-                              width: double.infinity,
-                              child: child,
-                            )
+                          ? Expanded(child: SingleChildScrollView(child: child))
+                          : SizedBox(width: double.infinity, child: child)
                     ],
                   ),
                 ),

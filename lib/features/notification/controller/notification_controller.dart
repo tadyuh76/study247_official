@@ -14,6 +14,18 @@ class NotificationController
   final Ref _ref;
   NotificationController(this._ref) : super(const AsyncLoading());
 
+  Future<void> requestFriend(String friendId) async {
+    final user = _ref.read(authControllerProvider).asData!.value!;
+    await _ref
+        .read(notificationRepositoryProvider)
+        .requestFriend(user, friendId);
+  }
+
+  Future<void> unRequest(String friendId) async {
+    final user = _ref.read(authControllerProvider).asData!.value!;
+    await _ref.read(notificationRepositoryProvider).unRequest(user, friendId);
+  }
+
   Future<void> getNotifications() async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     final result = await _ref
@@ -34,6 +46,8 @@ class NotificationController
         .readAllNotifications(userId);
 
     if (result case Success(value: final readNotificationIds)) {
+      if (readNotificationIds.isEmpty) return;
+
       final newState = state.asData!.value
           .map((e) => readNotificationIds.contains(e.id)
               ? e.copyWith(status: NotificationStatus.seen.name)

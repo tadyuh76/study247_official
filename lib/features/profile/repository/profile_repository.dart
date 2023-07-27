@@ -118,14 +118,36 @@ class ProfileRepository {
     );
   }
 
-  Future<Result<String, Exception>> addFriend(
+  Future<Result<String, Exception>> requestFriend(
     String userId,
     String friendId,
   ) async {
     try {
       await _db.collection(FirebaseConstants.users).doc(userId).update({
+        "friendRequests": FieldValue.arrayUnion([friendId])
+      });
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> addFriend(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      // user side
+      await _db.collection(FirebaseConstants.users).doc(userId).update({
         "friends": FieldValue.arrayUnion([friendId])
       });
+
+      // friend side
+      await _db.collection(FirebaseConstants.users).doc(friendId).update({
+        "friends": FieldValue.arrayUnion([userId])
+      });
+
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
@@ -137,9 +159,31 @@ class ProfileRepository {
     String friendId,
   ) async {
     try {
+      // user side
       await _db.collection(FirebaseConstants.users).doc(userId).update({
         "friends": FieldValue.arrayRemove([friendId])
       });
+
+      // friend side
+      await _db.collection(FirebaseConstants.users).doc(friendId).update({
+        "friends": FieldValue.arrayRemove([userId])
+      });
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> unRequest(
+    String userId,
+    String friendId,
+  ) async {
+    try {
+      await _db.collection(FirebaseConstants.users).doc(userId).update({
+        "friendRequests": FieldValue.arrayRemove([friendId])
+      });
+
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);

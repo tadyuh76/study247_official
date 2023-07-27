@@ -124,6 +124,7 @@ class _AddFriendButton extends ConsumerStatefulWidget {
 
 class _AddFriendButtonState extends ConsumerState<_AddFriendButton> {
   bool _added = false;
+  bool _requested = false;
 
   @override
   void initState() {
@@ -131,14 +132,15 @@ class _AddFriendButtonState extends ConsumerState<_AddFriendButton> {
 
     final user = ref.read(authControllerProvider).asData!.value!;
     final participantId = widget.participantId;
-    final isFriend = user.isFriendWith(participantId);
 
-    setState(() => _added = isFriend);
+    _added = user.isFriendWith(participantId);
+    _requested = user.isFriendRequestPending(participantId);
+    setState(() {});
   }
 
-  Future<void> _addFriend() async {
-    ref.read(profileControllerProvider).addFriend(widget.participantId);
-    setState(() => _added = true);
+  Future<void> _requestFriend() async {
+    ref.read(profileControllerProvider).requestFriend(widget.participantId);
+    setState(() => _requested = true);
   }
 
   Future<void> _unFriend() async {
@@ -158,20 +160,30 @@ class _AddFriendButtonState extends ConsumerState<_AddFriendButton> {
     );
   }
 
+  Future<void> _unRequest() async {
+    ref.read(profileControllerProvider).unRequest(widget.participantId);
+    setState(() => _requested = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       return Material(
-        color: _added ? Palette.white : Palette.primary,
+        color: _added || _requested ? Palette.white : Palette.primary,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         clipBehavior: Clip.hardEdge,
         child: InkWell(
-          onTap: _added ? _unFriend : _addFriend,
+          onTap: _added
+              ? _unFriend
+              : _requested
+                  ? _unRequest
+                  : _requestFriend,
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border:
-                  _added ? Border.all(color: Palette.primary, width: 2) : null,
+              border: _added || _requested
+                  ? Border.all(color: Palette.primary, width: 2)
+                  : null,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
@@ -180,17 +192,25 @@ class _AddFriendButtonState extends ConsumerState<_AddFriendButton> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SvgPicture.asset(
-                      _added ? IconPaths.deletePeople : IconPaths.addPeople,
+                      _added || _requested
+                          ? IconPaths.deletePeople
+                          : IconPaths.addPeople,
                       colorFilter: ColorFilter.mode(
-                        _added ? Palette.primary : Palette.white,
+                        _added || _requested ? Palette.primary : Palette.white,
                         BlendMode.srcIn,
                       ),
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      _added ? 'Huỷ kết bạn' : 'Thêm bạn',
+                      _added
+                          ? 'Huỷ kết bạn'
+                          : _requested
+                              ? 'Huỷ lời mời'
+                              : 'Thêm bạn',
                       style: TextStyle(
-                        color: _added ? Palette.primary : Palette.white,
+                        color: _added || _requested
+                            ? Palette.primary
+                            : Palette.white,
                         fontWeight: FontWeight.w500,
                       ),
                     )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/icons.dart';
+import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
@@ -26,14 +27,22 @@ class NotificationDialog extends ConsumerWidget {
                 );
               }
 
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: notificationList.length,
-                itemBuilder: (context, index) {
-                  return NotificationWidget(
-                    notification: notificationList[index],
-                  );
-                },
+              return SizedBox(
+                height: 300,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: notificationList.length,
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 10,
+                    color: Palette.grey,
+                  ),
+                  itemBuilder: (context, index) {
+                    return NotificationWidget(
+                      notification: notificationList[index],
+                    );
+                  },
+                ),
               );
             },
           ),

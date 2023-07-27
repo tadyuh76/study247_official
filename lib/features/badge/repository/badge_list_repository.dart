@@ -66,7 +66,7 @@ class BadgeListRepository {
                 "Bạn vừa nhận được một huy hiệu mới: ${badgeTitles[newBadges[i]]!}",
             timestamp: DateTime.now().toString(),
             photoURL: "",
-            payload: "",
+            payload: newBadges[i],
             type: NotificationType.newBadge.name,
             status: NotificationStatus.pending.name,
           ).toMap(),

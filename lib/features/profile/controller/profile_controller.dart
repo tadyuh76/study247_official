@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
+import 'package:study247/features/notification/controller/notification_controller.dart';
 import 'package:study247/features/profile/repository/profile_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
@@ -20,16 +21,30 @@ class ProfileController {
     _ref.read(profileRepositoryProvider).updateStudyTime(userId);
   }
 
+  void requestFriend(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).requestFriend(userId, friendId);
+    _ref.read(authControllerProvider.notifier).requestFriend(friendId);
+    _ref.read(notificationControllerProvider.notifier).requestFriend(friendId);
+  }
+
   void addFriend(String friendId) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
-    _ref.read(profileRepositoryProvider).addFriend(userId, friendId);
-    _ref.read(authControllerProvider.notifier).addFriend(friendId);
+    _ref.read(profileRepositoryProvider).requestFriend(userId, friendId);
+    _ref.read(authControllerProvider.notifier).requestFriend(friendId);
   }
 
   void unFriend(String friendId) async {
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     _ref.read(profileRepositoryProvider).unFriend(userId, friendId);
     _ref.read(authControllerProvider.notifier).unFriend(friendId);
+  }
+
+  void unRequest(String friendId) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    _ref.read(profileRepositoryProvider).unRequest(userId, friendId);
+    _ref.read(authControllerProvider.notifier).unRequest(friendId);
+    _ref.read(notificationControllerProvider.notifier).unRequest(friendId);
   }
 
   Future<void> updateUserStatus({
