@@ -1,24 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
+import 'package:study247/features/document/controllers/document_controller.dart';
+import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 
 enum StudyMode { longterm, speedrun }
 
-class StudyModeDialog extends StatefulWidget {
+class StudyModeDialog extends ConsumerStatefulWidget {
   const StudyModeDialog({super.key});
 
   @override
-  State<StudyModeDialog> createState() => _StudyModeDialogState();
+  ConsumerState<StudyModeDialog> createState() => _StudyModeDialogState();
 }
 
-class _StudyModeDialogState extends State<StudyModeDialog> {
-  StudyMode _selectingMode = StudyMode.longterm;
-  bool get _selectingLongterm => _selectingMode == StudyMode.longterm;
+class _StudyModeDialogState extends ConsumerState<StudyModeDialog> {
+  late String _defaultStudyMode;
+  String _selectingMode = StudyMode.longterm.name;
+  bool _updating = false;
 
-  void _updateStudyMode() {}
+  bool get _editted => _selectingMode != _defaultStudyMode;
+  bool get _selectingLongterm => _selectingMode == StudyMode.longterm.name;
+
+  @override
+  void initState() {
+    super.initState();
+    _defaultStudyMode =
+        ref.read(documentControllerProvider).asData!.value!.studyMode;
+    _selectingMode = _defaultStudyMode;
+  }
+
+  Future<void> _updateStudyMode() async {
+    if (!_editted) return;
+    setState(() => _updating = true);
+
+    await ref
+        .read(documentControllerProvider.notifier)
+        .updateStudyMode(_selectingMode);
+    await ref
+        .read(flashcardListControllerProvider.notifier)
+        .updateStudyMode(_selectingMode);
+
+    if (mounted) context.pop();
+    setState(() => _updating = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +79,7 @@ class _StudyModeDialogState extends State<StudyModeDialog> {
                       iconPath: IconPaths.people,
                       title: "Ghi nhớ dài hạn",
                       onTap: () => setState(
-                        () => _selectingMode = StudyMode.longterm,
+                        () => _selectingMode = StudyMode.longterm.name,
                       ),
                     ),
                     const SizedBox(width: Constants.defaultPadding / 2),
@@ -59,7 +88,7 @@ class _StudyModeDialogState extends State<StudyModeDialog> {
                       iconPath: IconPaths.person,
                       title: "Ôn tập nước rút",
                       onTap: () => setState(
-                        () => _selectingMode = StudyMode.speedrun,
+                        () => _selectingMode = StudyMode.speedrun.name,
                       ),
                     ),
                   ],
@@ -80,6 +109,8 @@ class _StudyModeDialogState extends State<StudyModeDialog> {
                   text: "Xác nhận",
                   onTap: _updateStudyMode,
                   primary: true,
+                  disabled: _selectingMode == _defaultStudyMode,
+                  loading: _updating,
                 ),
                 const SizedBox(height: 5),
                 const Text(

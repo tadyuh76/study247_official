@@ -73,13 +73,22 @@ class DocumentWidget extends ConsumerWidget {
                         style:
                             const TextStyle(color: Palette.white, fontSize: 16),
                       ),
-                      const SizedBox(height: Constants.defaultPadding / 2),
+                      const SizedBox(height: 5),
                       Text(
                         document.folderName,
                         style: const TextStyle(
                           color: Palette.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        document.formattedStudyMode,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                          color: Palette.white,
                         ),
                       ),
                     ],

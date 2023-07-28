@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
@@ -8,14 +9,35 @@ import 'package:study247/core/models/message.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
+import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 
-final documentRepositoryProvider = Provider((ref) => DocumentRepository(ref));
+final documentRepositoryProvider = Provider((ref) {
+  final db = ref.read(firestoreProvider);
+  return DocumentRepository(ref, db);
+});
 
 class DocumentRepository {
   final Ref _ref;
-  DocumentRepository(this._ref);
+  final FirebaseFirestore _db;
+  DocumentRepository(this._ref, this._db);
+
+  Future<Result<String, Exception>> updateStudyMode(
+      String userId, String documentId, String studyMode) async {
+    try {
+      final docRef = _db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.documents)
+          .doc(documentId);
+      docRef.update({"studyMode": studyMode});
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 
   Future<Result<Document, Exception>> createNewDocument() async {
     try {
@@ -33,6 +55,7 @@ class DocumentRepository {
         lastEdit: DateTime.now().toString(),
         color: "blue",
         folderName: "",
+        studyMode: StudyMode.longterm.name,
       );
       newRef.set(newDocument.toMap());
       return Success(newDocument);
@@ -114,6 +137,7 @@ class DocumentRepository {
         lastEdit: DateTime.now().toString(),
         color: "blue",
         folderName: "",
+        studyMode: StudyMode.longterm.name,
       );
       newRef.set(newDocument.toMap());
 
@@ -127,6 +151,7 @@ class DocumentRepository {
     String documentId,
     String documentTitle,
     String documentText,
+    String studyMode,
   ) async {
     try {
       // save document
@@ -146,7 +171,8 @@ class DocumentRepository {
       // save flashcards
       final prevFlashcardList =
           _ref.read(flashcardListControllerProvider).asData?.value ?? [];
-      final curFlashcardList = _createFlashcards(documentText, documentTitle);
+      final curFlashcardList =
+          _createFlashcards(documentText, documentTitle, studyMode);
 
       final updatedFlashcardList = curFlashcardList.map((f1) {
         for (final f2 in prevFlashcardList) {
@@ -178,6 +204,7 @@ class DocumentRepository {
   List<Flashcard> _createFlashcards(
     String documentText,
     String documentTitle,
+    String studyMode,
   ) {
     final List<Flashcard> flashcardList = [];
     String curTitle = "";
@@ -199,11 +226,24 @@ class DocumentRepository {
         return;
       }
 
+      double priorityRate = 1;
+      if (line.startsWith('!')) {
+        priorityRate = 1.25;
+      } else if (line.startsWith('!!')) {
+        priorityRate = 1.5;
+      } else if (line.startsWith('!!!')) {
+        priorityRate = 2;
+      }
+
       final newFlashcard = Flashcard(
         front: sides[0].trim(),
         back: sides[1].trim(),
-        ease: 1.3,
+        ease: 2.5,
         currentInterval: 1,
+        level: 0,
+        priorityRate: priorityRate,
+        revisableAfter: DateTime.now().toString(),
+        type: studyMode,
         title: curTitle,
         documentName: documentTitle,
       );

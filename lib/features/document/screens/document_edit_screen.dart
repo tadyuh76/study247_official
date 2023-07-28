@@ -74,7 +74,11 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     final documentText = _documentController.text.trim();
     final documentTitle = _titleController.text.trim();
     await ref.read(documentControllerProvider.notifier).saveDocument(
-        context, widget.document.id!, documentTitle, documentText);
+        context,
+        widget.document.id!,
+        documentTitle,
+        documentText,
+        widget.document.studyMode);
     _flashcardsCreated = await ref
         .watch(flashcardListControllerProvider.notifier)
         .getFlashcardList();

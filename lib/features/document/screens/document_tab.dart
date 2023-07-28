@@ -29,7 +29,6 @@ class DocumentTab extends ConsumerWidget {
             final room = ref.watch(roomControllerProvider).asData?.value ??
                 RoomModel.empty();
             final notInRoom = room == RoomModel.empty();
-            print(notInRoom);
 
             return ListView.builder(
               padding: const EdgeInsets.all(Constants.defaultPadding),

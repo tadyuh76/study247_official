@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/core/models/flashcard.dart';
 import 'package:study247/core/models/result.dart';
+import 'package:study247/features/auth/controllers/auth_controller.dart';
+import 'package:study247/features/document/controllers/document_controller.dart';
 import 'package:study247/features/flashcards/repositories/flashcard_list_repository.dart';
 
 final flashcardListControllerProvider =
@@ -28,5 +30,17 @@ class FlashcardListController
 
   void updateFlashcardList(List<Flashcard> flashcardList) {
     state = AsyncData(flashcardList);
+  }
+
+  Future<void> updateStudyMode(String studyMode) async {
+    final userid = _ref.read(authControllerProvider).asData!.value!.uid;
+    final documentId = _ref.read(documentControllerProvider).asData!.value!.id!;
+    final result = await _ref
+        .read(flashcardListRepositoryProvider)
+        .updateStudyMode(userid, documentId, studyMode);
+
+    if (result case Success(value: final resetFlashcardList)) {
+      state = AsyncData(resetFlashcardList);
+    }
   }
 }

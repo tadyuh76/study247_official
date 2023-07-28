@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
@@ -29,17 +30,23 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   @override
   void initState() {
     super.initState();
-    ref
+    _setUp();
+  }
+
+  Future<void> _setUp() async {
+    await ref
         .read(documentControllerProvider.notifier)
         .fetchDocumentById(widget.documentId);
-    ref.read(flashcardListControllerProvider.notifier).getFlashcardList();
+    await ref.read(flashcardListControllerProvider.notifier).getFlashcardList();
   }
 
   void _showStudyModeDialog() {
     showDialog(context: context, builder: (context) => const StudyModeDialog());
   }
 
-  void _practiceFlashcards() {}
+  void _practiceFlashcards() {
+    context.go("/document/${widget.documentId}/flashcards");
+  }
 
   void _editDocument(Document document) {
     Navigator.of(context).push(
@@ -114,9 +121,13 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             ),
             GestureDetector(
               onTap: _showStudyModeDialog,
-              child: const Text(
-                "Ôn tập nước rút",
-                style: TextStyle(
+              child: Text(
+                ref.watch(documentControllerProvider).when(
+                      data: (doc) => doc!.formattedStudyMode,
+                      error: (err, stk) => "",
+                      loading: () => "",
+                    ),
+                style: const TextStyle(
                   color: Palette.primary,
                   fontWeight: FontWeight.w500,
                   decoration: TextDecoration.underline,
@@ -130,6 +141,17 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   }
 
   Widget _renderFlashcardStatus() {
+    final flashcardList =
+        ref.watch(flashcardListControllerProvider).asData?.value ?? [];
+    final now = DateTime.now();
+    final totalFlashcard = flashcardList.length;
+
+    final revisableFlashcard = flashcardList.fold(
+        0,
+        (revisable, f) => now.isAfter(DateTime.parse(f.revisableAfter))
+            ? revisable + 1
+            : revisable);
+
     return Container(
       decoration: const BoxDecoration(
         color: Palette.white,
@@ -154,15 +176,15 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             child: CircularPercentIndicator(
               radius: 80,
               progressColor: Palette.complete,
-              percent: 4 / 17,
+              percent: revisableFlashcard / totalFlashcard,
               backgroundColor: Palette.lightGrey,
               animation: true,
               circularStrokeCap: CircularStrokeCap.round,
               lineWidth: 16,
-              center: const Text(
-                "17",
-                style: TextStyle(
-                  fontSize: 32,
+              center: Text(
+                totalFlashcard.toString(),
+                style: const TextStyle(
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                   color: Palette.darkGrey,
                 ),
@@ -170,18 +192,24 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
                 width: 100,
                 child: Column(
                   children: [
-                    Icon(Icons.document_scanner, size: 32),
-                    Text("Đang chờ"),
+                    SvgPicture.asset(
+                      IconPaths.bookmark,
+                      colorFilter: const ColorFilter.mode(
+                        Palette.darkGrey,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const Text("Đang chờ"),
                     Text(
-                      "13",
-                      style: TextStyle(fontSize: 16),
+                      (totalFlashcard - revisableFlashcard).toString(),
+                      style: const TextStyle(fontSize: 16),
                     )
                   ],
                 ),
@@ -190,15 +218,15 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
                 width: 100,
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.history_edu_sharp,
-                      color: Palette.primary,
-                      size: 32,
+                    SvgPicture.asset(
+                      IconPaths.academicCap,
+                      colorFilter: const ColorFilter.mode(
+                          Palette.complete, BlendMode.srcIn),
                     ),
-                    Text("Cần ôn tập"),
+                    const Text("Cần ôn tập"),
                     Text(
-                      "4",
-                      style: TextStyle(fontSize: 16),
+                      revisableFlashcard.toString(),
+                      style: const TextStyle(fontSize: 16),
                     )
                   ],
                 ),
@@ -241,7 +269,11 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             document.text,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            // style: const TextStyle(fontWeight: FontWeight.w300),
+            style: const TextStyle(color: Palette.darkGrey),
+          ),
+          const Text(
+            "...",
+            style: TextStyle(color: Palette.darkGrey),
           ),
           const SizedBox(height: 20),
           CustomButton(

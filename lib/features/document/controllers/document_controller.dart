@@ -30,11 +30,27 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     _ref.read(documentRepositoryProvider).editFolder(folder);
   }
 
-  Future<int> saveDocument(BuildContext context, String documentId,
-      String documentTitle, String documentText) async {
+  Future<void> updateStudyMode(String studyMode) async {
+    final documentId = state.asData!.value!.id!;
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
     final result = await _ref
         .read(documentRepositoryProvider)
-        .saveDocument(documentId, documentTitle, documentText);
+        .updateStudyMode(userId, documentId, studyMode);
+    if (result case Success()) {
+      state = AsyncData(state.asData!.value!.copyWith(studyMode: studyMode));
+    }
+  }
+
+  Future<int> saveDocument(
+    BuildContext context,
+    String documentId,
+    String documentTitle,
+    String documentText,
+    String studyMode,
+  ) async {
+    final result = await _ref
+        .read(documentRepositoryProvider)
+        .saveDocument(documentId, documentTitle, documentText, studyMode);
     state = AsyncData(
       state.asData!.value!.copyWith(title: documentTitle, text: documentText),
     );

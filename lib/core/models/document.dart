@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 
 class Document {
   String? id;
@@ -7,6 +7,11 @@ class Document {
   final String lastEdit;
   final String color;
   final String folderName;
+  final String studyMode;
+
+  String get formattedStudyMode => studyMode == StudyMode.longterm.name
+      ? "Ghi nhớ dài dạn"
+      : "Ôn tập nước rút";
 
   String get formattedLastEdit {
     final lastEditTime = DateTime.parse(lastEdit);
@@ -27,6 +32,7 @@ class Document {
     required this.lastEdit,
     required this.color,
     required this.folderName,
+    required this.studyMode,
   });
 
   Document copyWith({
@@ -36,6 +42,7 @@ class Document {
     String? lastEdit,
     String? color,
     String? folderName,
+    String? studyMode,
   }) {
     return Document(
       id: id ?? this.id,
@@ -44,46 +51,51 @@ class Document {
       lastEdit: lastEdit ?? this.lastEdit,
       color: color ?? this.color,
       folderName: folderName ?? this.folderName,
+      studyMode: studyMode ?? this.studyMode,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'title': title,
       'text': text,
       'lastEdit': lastEdit,
       'color': color,
       'folderName': folderName,
+      'studyMode': studyMode,
     };
   }
 
   factory Document.fromMap(Map<String, dynamic> map) {
     return Document(
-      id: map['id'] != null ? map['id'] as String : null,
-      title: map['title'] as String,
-      text: map['text'] as String,
-      lastEdit: map['lastEdit'] as String,
-      color: map['color'] as String,
-      folderName: map['folderName'] as String,
+      id: map['id'],
+      title: map['title'] ?? '',
+      text: map['text'] ?? '',
+      lastEdit: map['lastEdit'] ?? '',
+      color: map['color'] ?? '',
+      folderName: map['folderName'] ?? '',
+      studyMode: map['studyMode'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Note(id: $id, title: $title, text: $text, lastEdit: $lastEdit, color: $color, folderName: $folderName)';
+    return 'Document(id: $id, title: $title, text: $text, lastEdit: $lastEdit, color: $color, folderName: $folderName, studyMode: $studyMode)';
   }
 
   @override
-  bool operator ==(covariant Document other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other.id == id &&
+    return other is Document &&
+        other.id == id &&
         other.title == title &&
         other.text == text &&
         other.lastEdit == lastEdit &&
         other.color == color &&
-        other.folderName == folderName;
+        other.folderName == folderName &&
+        other.studyMode == studyMode;
   }
 
   @override
@@ -93,6 +105,7 @@ class Document {
         text.hashCode ^
         lastEdit.hashCode ^
         color.hashCode ^
-        folderName.hashCode;
+        folderName.hashCode ^
+        studyMode.hashCode;
   }
 }

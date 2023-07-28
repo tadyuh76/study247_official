@@ -4,6 +4,8 @@ class IconPaths {
   static const coffee = "assets/icons/colored/coffee.svg";
 
   static const addPeople = "assets/icons/add_people.svg";
+  static const academicCap = "assets/icons/academic_cap.svg";
+  static const bookmark = "assets/icons/bookmark.svg";
   static const cameraOff = "assets/icons/camera_off.svg";
   static const camera = "assets/icons/camera.svg";
   static const close = "assets/icons/close.svg";
