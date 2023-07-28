@@ -56,9 +56,12 @@ class RoomScreen extends ConsumerStatefulWidget {
 class _RoomScreenState extends ConsumerState<RoomScreen> {
   final PageController _pageController = PageController();
   bool _isSecondPage = false;
+  bool _showParticipants = true;
   bool camEnabled = false;
   bool micEnabled = false;
-  bool _showParticipants = true;
+
+  bool allowMic = false;
+  bool allowCamera = true;
 
   late Room _room;
   Map<String, (Participant, UserModel)> participants = {};
@@ -129,10 +132,16 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Future<void> _setup() async {
-    ref.read(roomControllerProvider.notifier)
-      ..getRoomById(context, widget.roomId)
-      ..joinRoom(widget.roomId, widget.meetingId)
-          .whenComplete(() => ref.read(roomTimerProvider.notifier).setup());
+    final roomController = ref.read(roomControllerProvider.notifier);
+
+    await roomController.getRoomById(context, widget.roomId);
+    await roomController.joinRoom(widget.roomId, widget.meetingId);
+    ref.read(roomTimerProvider.notifier).setup();
+
+    final room = ref.read(roomControllerProvider).asData!.value!;
+    allowCamera = room.allowCamera;
+    allowMic = room.allowMic;
+    setState(() {});
   }
 
   void _onLeftNavigatorTap() {
@@ -394,12 +403,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             landscape ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _cameraButton(),
+          if (allowCamera) _cameraButton(),
           if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          _micButton(),
+          if (allowMic) _micButton(),
           if (landscape) const Spacer(),
-          _showParticipantsButton(),
           if (!landscape) _chatButton(context),
+          _showParticipantsButton(),
           if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
           _fullScreenButton(landscape),
         ],

@@ -15,6 +15,8 @@ class RoomInfoController {
     int? roomTimerBreaktime,
     int? maxParticipants,
     List<String>? tags,
+    bool? allowMic,
+    bool? allowCamera,
   }) {
     _room = _room.copyWith(
       name: name,
@@ -24,6 +26,8 @@ class RoomInfoController {
       roomTimerBreaktime: roomTimerBreaktime,
       maxParticipants: maxParticipants,
       tags: tags,
+      allowMic: allowMic,
+      allowCamera: allowCamera,
     );
   }
 

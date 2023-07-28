@@ -26,9 +26,6 @@ class FileView extends ConsumerStatefulWidget {
 }
 
 class _FileViewState extends ConsumerState<FileView> {
-  // @override
-  // bool get wantKeepAlive => true;
-
   void _updateFileType() {
     ref.read(fileTypeProvider.notifier).update((state) =>
         state == FileType.offline ? FileType.online : FileType.offline);
@@ -53,12 +50,13 @@ class _FileViewState extends ConsumerState<FileView> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-        floatingActionButton: widget.landscape ? null : _renderActions(ref),
+        floatingActionButton:
+            widget.landscape || widget.solo ? null : _renderActions(ref),
         body: Builder(
           builder: (context) {
             final isOffline = ref.watch(fileTypeProvider) == FileType.offline;
 
-            if (isOffline) {
+            if (isOffline || widget.solo) {
               final file = ref.watch(offlineFileControllerProvider);
               if (file == null) return _renderPickFileUI(offline: true);
 

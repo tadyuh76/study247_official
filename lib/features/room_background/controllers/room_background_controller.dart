@@ -19,14 +19,16 @@ const recommendYoutubeIds = [
 
 class RoomBackgroundController extends ChangeNotifier {
   final urlController = TextEditingController();
+  final backgroundColor = 'black';
   final videoController = YoutubePlayerController(
     initialVideoId: "1oahTaVIQvk",
     flags: const YoutubePlayerFlags(
-      autoPlay: true,
+      autoPlay: false,
       disableDragSeek: true,
       enableCaption: false,
       hideControls: true,
       isLive: false,
+      startAt: 60,
       loop: true,
       showLiveFullscreenButton: false,
       controlsVisibleAtStart: false,
@@ -65,6 +67,5 @@ class RoomBackgroundController extends ChangeNotifier {
   void reset() {
     urlController.dispose();
     videoController.reset();
-    // videoController.enterFullScreen()
   }
 }

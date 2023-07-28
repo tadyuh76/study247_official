@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
@@ -16,6 +15,7 @@ import 'package:study247/features/document/controllers/document_controller.dart'
 import 'package:study247/features/document/screens/document_edit_screen.dart';
 import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
+import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/utils/unfocus.dart';
 
 class DocumentControlScreen extends ConsumerStatefulWidget {
@@ -52,7 +52,12 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   }
 
   void _practiceFlashcards() {
-    context.go("/document/${widget.documentId}/flashcards");
+    // context.go("/document/${widget.documentId}/flashcards");
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const FlashcardScreen(),
+      ),
+    );
   }
 
   void _editDocument(Document document) {

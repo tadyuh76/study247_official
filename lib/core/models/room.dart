@@ -20,6 +20,8 @@ class RoomModel {
   final String roomTimerStart;
   final bool isStudying;
   final bool isPaused;
+  final bool allowMic;
+  final bool allowCamera;
 
   RoomModel({
     this.id,
@@ -40,6 +42,8 @@ class RoomModel {
     required this.roomTimerStart,
     required this.isStudying,
     required this.isPaused,
+    required this.allowMic,
+    required this.allowCamera,
   });
 
   factory RoomModel.empty() {
@@ -61,6 +65,8 @@ class RoomModel {
       roomTimerStart: "",
       isStudying: true,
       isPaused: false,
+      allowMic: false,
+      allowCamera: true,
     );
   }
 
@@ -83,6 +89,8 @@ class RoomModel {
     String? roomTimerStart,
     bool? isStudying,
     bool? isPaused,
+    bool? allowMic,
+    bool? allowCamera,
   }) {
     return RoomModel(
       id: id ?? this.id,
@@ -103,6 +111,8 @@ class RoomModel {
       roomTimerStart: roomTimerStart ?? this.roomTimerStart,
       isStudying: isStudying ?? this.isStudying,
       isPaused: isPaused ?? this.isPaused,
+      allowMic: allowMic ?? this.allowMic,
+      allowCamera: allowCamera ?? this.allowCamera,
     );
   }
 
@@ -126,6 +136,8 @@ class RoomModel {
       'roomTimerStart': roomTimerStart,
       'isStudying': isStudying,
       'isPaused': isPaused,
+      'allowMic': allowMic,
+      'allowCamera': allowCamera,
     };
   }
 
@@ -149,12 +161,14 @@ class RoomModel {
       roomTimerStart: map['roomTimerStart'] ?? '',
       isStudying: map['isStudying'] ?? false,
       isPaused: map['isPaused'] ?? false,
+      allowMic: map['allowMic'] ?? false,
+      allowCamera: map['allowCamera'] ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'Room(id: $id, meetingId: $meetingId, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid, roomTimerSessionNo: $roomTimerSessionNo, roomTimerDuration: $roomTimerDuration, roomTimerBreaktime: $roomTimerBreaktime, roomTimerStart: $roomTimerStart, isStudying: $isStudying, isPaused: $isPaused)';
+    return 'RoomModel(id: $id, meetingId: $meetingId, name: $name, bannerColor: $bannerColor, fileUrl: $fileUrl, fileType: $fileType, description: $description, tags: $tags, maxParticipants: $maxParticipants, curParticipants: $curParticipants, hostPhotoUrl: $hostPhotoUrl, hostUid: $hostUid, roomTimerSessionNo: $roomTimerSessionNo, roomTimerDuration: $roomTimerDuration, roomTimerBreaktime: $roomTimerBreaktime, roomTimerStart: $roomTimerStart, isStudying: $isStudying, isPaused: $isPaused, allowMic: $allowMic, allowCamera: $allowCamera)';
   }
 
   @override
@@ -179,7 +193,9 @@ class RoomModel {
         other.roomTimerBreaktime == roomTimerBreaktime &&
         other.roomTimerStart == roomTimerStart &&
         other.isStudying == isStudying &&
-        other.isPaused == isPaused;
+        other.isPaused == isPaused &&
+        other.allowMic == allowMic &&
+        other.allowCamera == allowCamera;
   }
 
   @override
@@ -201,6 +217,8 @@ class RoomModel {
         roomTimerBreaktime.hashCode ^
         roomTimerStart.hashCode ^
         isStudying.hashCode ^
-        isPaused.hashCode;
+        isPaused.hashCode ^
+        allowMic.hashCode ^
+        allowCamera.hashCode;
   }
 }

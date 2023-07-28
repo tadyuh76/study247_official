@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/document.dart';
@@ -19,15 +18,11 @@ class DocumentWidget extends ConsumerWidget {
   }) : super(key: key);
 
   void _onDocumentTap(BuildContext context, WidgetRef ref) {
-    if (controlable) {
-      context.go("/document/${document.id}");
-    } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DocumentControlScreen(documentId: document.id!),
-        ),
-      );
-    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DocumentControlScreen(documentId: document.id!),
+      ),
+    );
   }
 
   void _showDocumentEditDialog(BuildContext context) {
