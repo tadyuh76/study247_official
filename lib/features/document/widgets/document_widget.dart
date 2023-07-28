@@ -7,6 +7,7 @@ import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/document/screens/document_control_screen.dart';
 import 'package:study247/features/document/widgets/document_settings_dialog.dart';
+import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 
 class DocumentWidget extends ConsumerWidget {
   final Document document;
@@ -50,10 +51,13 @@ class DocumentWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.edit_document,
-                  color: Palette.white,
-                  size: 80,
+                SvgPicture.asset(
+                  width: 80,
+                  document.studyMode == StudyMode.longterm.name
+                      ? IconPaths.memory
+                      : IconPaths.fast,
+                  colorFilter:
+                      const ColorFilter.mode(Palette.white, BlendMode.srcIn),
                 ),
                 const SizedBox(width: Constants.defaultPadding),
                 Expanded(

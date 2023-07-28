@@ -76,7 +76,7 @@ class _StudyModeDialogState extends ConsumerState<StudyModeDialog> {
                   children: [
                     _renderOption(
                       selecting: _selectingLongterm,
-                      iconPath: IconPaths.people,
+                      iconPath: IconPaths.memory,
                       title: "Ghi nhớ dài hạn",
                       onTap: () => setState(
                         () => _selectingMode = StudyMode.longterm.name,
@@ -85,7 +85,7 @@ class _StudyModeDialogState extends ConsumerState<StudyModeDialog> {
                     const SizedBox(width: Constants.defaultPadding / 2),
                     _renderOption(
                       selecting: !_selectingLongterm,
-                      iconPath: IconPaths.person,
+                      iconPath: IconPaths.fast,
                       title: "Ôn tập nước rút",
                       onTap: () => setState(
                         () => _selectingMode = StudyMode.speedrun.name,

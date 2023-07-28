@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
 import 'package:study247/features/document/screens/document_control_screen.dart';
+import 'package:study247/features/document/widgets/custom_document_editor_controller.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 class ReadOnlyDocumentScreen extends StatefulWidget {
@@ -16,21 +18,22 @@ class ReadOnlyDocumentScreen extends StatefulWidget {
 
 class _ReadOnlyDocumentScreenState extends State<ReadOnlyDocumentScreen> {
   late String title;
-  late String text;
   String _documentId = "";
+  final _documentController = CustomDocumentEditorController();
 
   @override
   void initState() {
     super.initState();
     List<String> parts = widget.documentText.split("[TEXT]:");
     title = parts[0].substring("[TITLE]:".length).trim();
-    text = parts[1].trim();
+    final text = parts[1].trim();
+    _documentController.text = text;
   }
 
   Future<void> _onCopyDocument(WidgetRef ref) async {
     final copiedDocumentId = await ref
         .read(documentControllerProvider.notifier)
-        .copyDocument(title, text);
+        .copyDocument(title, _documentController.text);
     setState(() {
       _documentId = copiedDocumentId;
     });
@@ -77,9 +80,30 @@ class _ReadOnlyDocumentScreenState extends State<ReadOnlyDocumentScreen> {
               style: TextStyle(fontSize: 14, color: Palette.darkGrey),
             ),
             const SizedBox(height: 20),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 14),
+            // Text(
+            //   text,
+            //   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+            // )
+            TextField(
+              maxLengthEnforcement: MaxLengthEnforcement.none,
+              maxLength: TextField.noMaxLength,
+              controller: _documentController,
+              maxLines: null,
+
+              enabled: false,
+              // onChanged: _onDocumentChanged,
+              cursorColor: Palette.primary,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintStyle: TextStyle(color: Palette.darkGrey),
+                hintText: "Nhập nội dung...",
+              ),
+              style: const TextStyle(
+                height: 1.5,
+                color: Palette.black,
+                fontWeight: FontWeight.w300,
+                fontSize: 14,
+              ),
             )
           ],
         ),

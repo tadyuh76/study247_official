@@ -182,8 +182,6 @@ class _MessageWithDocument extends ConsumerWidget {
   const _MessageWithDocument({required this.message});
 
   void _onDocumentTap(BuildContext context, WidgetRef ref) {
-    // final userId = ref.read(authControllerProvider).asData!.value!.uid;
-
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>

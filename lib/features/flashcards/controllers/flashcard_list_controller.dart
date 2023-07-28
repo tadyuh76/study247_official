@@ -39,6 +39,7 @@ class FlashcardListController
   }
 
   void updateFlashcardList(List<Flashcard> flashcardList) {
+    // print("state: $flashcardList");
     state = AsyncData(flashcardList);
   }
 
@@ -106,5 +107,9 @@ class FlashcardListController
     if (result case Success(value: final updatedFlashcard)) {
       updateFlashcard(updatedFlashcard);
     }
+  }
+
+  void reset() {
+    state = const AsyncData([]);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/utils/show_snack_bar.dart';
@@ -52,26 +53,36 @@ class _InviteDialogState extends ConsumerState<InviteDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: kIsWeb ? 30 : 20),
-            const Text("Việc học sẽ thú vị hơn nhiều khi có bạn bè đó!"),
-            const SizedBox(height: Constants.defaultPadding),
-            TextField(
-              onChanged: (value) {},
-              controller: _urlController,
-              onTap: () => _copyUrl(context),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-              ),
+            const Text(
+              "Việc học sẽ trở nên thú vị hơn nhiềuuuuu khi có bạn bè đó!",
             ),
             const SizedBox(height: Constants.defaultPadding),
+            // TextField(
+            //   onChanged: (value) {},
+            //   controller: _urlController,
+            //   onTap: () => _copyUrl(context),
+            //   decoration: const InputDecoration(
+            //     border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     ),
+            //     enabledBorder: OutlineInputBorder(
+            //       borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     ),
+            //   ),
+            // ),
+            CustomButton(
+              text: "Nhấn để sao chép đường dẫn",
+              primary: true,
+              onTap: () => _copyUrl(context),
+            ),
+            const SizedBox(height: 10),
             if (copied)
-              const Text(
-                "Đã sao chép đường dẫn!",
-                style: TextStyle(color: Palette.primary),
+              const Center(
+                child: Text(
+                  "Đã sao chép đường dẫn!",
+                  // textAlign: TextAlign.center,
+                  style: TextStyle(color: Palette.primary),
+                ),
               )
           ],
         ),

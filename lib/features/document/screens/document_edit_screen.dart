@@ -8,6 +8,7 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
 import 'package:study247/features/document/controllers/document_controller.dart';
+import 'package:study247/features/document/widgets/custom_document_editor_controller.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
@@ -25,7 +26,7 @@ class DocumentEditScreen extends ConsumerStatefulWidget {
 
 class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   final _titleController = TextEditingController();
-  final _documentController = _DocCustomController();
+  final _documentController = CustomDocumentEditorController();
   bool saved = true;
   bool saving = false;
   int _revisableFlashcard = 0;
@@ -74,11 +75,12 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     final documentText = _documentController.text.trim();
     final documentTitle = _titleController.text.trim();
     await ref.read(documentControllerProvider.notifier).saveDocument(
-        context,
-        widget.document.id!,
-        documentTitle,
-        documentText,
-        widget.document.studyMode);
+          context,
+          widget.document.id!,
+          documentTitle,
+          documentText,
+          widget.document.studyMode,
+        );
     _revisableFlashcard = await ref
         .watch(flashcardListControllerProvider.notifier)
         .getFlashcardList();
@@ -194,7 +196,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       style: const TextStyle(
         height: 1.5,
         color: Palette.black,
-        // fontWeight: FontWeight.w300,
+        fontWeight: FontWeight.w300,
         fontSize: 14,
       ),
     );
@@ -336,77 +338,5 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
         ),
       ),
     );
-  }
-}
-
-class _DocCustomController extends TextEditingController {
-  bool _isHeadline(String line) {
-    return line.contains("#");
-  }
-
-  TextSpan _renderHeadline(String line, TextStyle style) {
-    return TextSpan(
-      text: "$line\n",
-      style: style.copyWith(fontWeight: FontWeight.w500),
-    );
-  }
-
-  bool _isFlashcard(String line) {
-    return line.contains(Constants.flashcardForward) ||
-        line.contains(Constants.flashcardBackward) ||
-        line.contains(Constants.flashcardDouble);
-  }
-
-  String _getFlashcardType(String line) {
-    if (line.contains(Constants.flashcardForward)) {
-      return Constants.flashcardForward;
-    } else if (line.contains(Constants.flashcardBackward)) {
-      return Constants.flashcardBackward;
-    } else {
-      return Constants.flashcardDouble;
-    }
-  }
-
-  TextSpan _renderFlashcard(String line, TextStyle style) {
-    final cardType = _getFlashcardType(line);
-    final cardSides = line.split(cardType);
-    final symbol = cardType == Constants.flashcardForward
-        ? Constants.flashcardForwardSymbol
-        : cardType == Constants.flashcardBackward
-            ? Constants.flashcardBackwardSymbol
-            : Constants.flashcardDoubleSymbol;
-    final frontSideText = cardSides[0];
-    final backSideText = cardSides[1];
-
-    return TextSpan(
-      children: [
-        TextSpan(text: "$frontSideText ", style: style),
-        TextSpan(
-          text: symbol.trim(),
-          style: style.copyWith(
-            color: Palette.primary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextSpan(text: " $backSideText\n", style: style),
-      ],
-    );
-  }
-
-  @override
-  TextSpan buildTextSpan({
-    required BuildContext context,
-    TextStyle? style,
-    required bool withComposing,
-  }) {
-    final texts = value.text.split("\n").map((line) {
-      if (_isHeadline(line)) return _renderHeadline(line, style!);
-      if (_isFlashcard(line)) return _renderFlashcard(line, style!);
-
-      return TextSpan(text: "$line\n", style: style);
-    });
-
-    return TextSpan(style: style, children: texts.toList());
   }
 }

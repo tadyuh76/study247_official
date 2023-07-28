@@ -14,7 +14,7 @@ import "package:study247/utils/unfocus.dart";
 
 final steps = [
   (0, "Cơ bản", const Step1()),
-  (1, "Chức năng", Step2()),
+  (1, "Chức năng", const Step2()),
   (2, "Trang trí", const Step3()),
 ];
 

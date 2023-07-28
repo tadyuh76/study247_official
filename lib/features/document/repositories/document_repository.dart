@@ -157,7 +157,10 @@ class DocumentRepository {
         folderName: "",
         studyMode: StudyMode.longterm.name,
       );
-      newRef.set(newDocument.toMap());
+      await newRef.set(newDocument.toMap());
+
+      _ref.read(flashcardListControllerProvider.notifier).reset();
+      readFlashcardsInDoc(text, title, StudyMode.longterm.name, newRef);
 
       return Success(newRef.id);
     } on Exception catch (e) {
@@ -165,7 +168,7 @@ class DocumentRepository {
     }
   }
 
-  Future<Result<int, Exception>> saveDocument(
+  Future<Result<String, Exception>> saveDocument(
     String documentId,
     String documentTitle,
     String documentText,
@@ -186,33 +189,41 @@ class DocumentRepository {
         "lastEdit": DateTime.now().toString(),
       });
 
-      // save flashcards
-      final prevFlashcardList =
-          _ref.read(flashcardListControllerProvider).asData?.value ?? [];
-      final curFlashcardList =
-          _createFlashcards(documentText, documentTitle, studyMode);
+      await readFlashcardsInDoc(documentText, documentTitle, studyMode, docRef);
 
-      final updatedFlashcardList = curFlashcardList.map((f1) {
-        for (final f2 in prevFlashcardList) {
-          if (isFlashcardRepeated(f1, f2)) {
-            return f2;
-          }
-        }
-
-        final newRef = docRef.collection(FirebaseConstants.flashcards).doc();
-        final updatedIdFlashcard = f1.copyWith(id: newRef.id);
-        newRef.set(updatedIdFlashcard.toMap());
-        return updatedIdFlashcard;
-      }).toList();
-
-      _ref
-          .read(flashcardListControllerProvider.notifier)
-          .updateFlashcardList(updatedFlashcardList);
-
-      return Success(updatedFlashcardList.length);
+      return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  Future<void> readFlashcardsInDoc(
+    String documentText,
+    String documentTitle,
+    String studyMode,
+    DocumentReference docRef,
+  ) async {
+    final prevFlashcardList =
+        _ref.read(flashcardListControllerProvider).asData?.value ?? [];
+    final curFlashcardList =
+        _createFlashcards(documentText, documentTitle, studyMode);
+
+    final updatedFlashcardList = curFlashcardList.map((f1) {
+      for (final f2 in prevFlashcardList) {
+        if (isFlashcardRepeated(f1, f2)) {
+          return f2;
+        }
+      }
+
+      final newRef = docRef.collection(FirebaseConstants.flashcards).doc();
+      final updatedIdFlashcard = f1.copyWith(id: newRef.id);
+      newRef.set(updatedIdFlashcard.toMap());
+      return updatedIdFlashcard;
+    }).toList();
+
+    _ref
+        .read(flashcardListControllerProvider.notifier)
+        .updateFlashcardList(updatedFlashcardList);
   }
 
   bool isFlashcardRepeated(Flashcard f1, Flashcard f2) {

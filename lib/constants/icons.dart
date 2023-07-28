@@ -14,6 +14,7 @@ class IconPaths {
   static const documents = "assets/icons/documents.svg";
   static const edit = "assets/icons/edit.svg";
   static const facebook = "assets/icons/facebook.svg";
+  static const fast = "assets/icons/fast.svg";
   static const fileAdd = "assets/icons/file_add.svg";
   static const fileChange = "assets/icons/file_change.svg";
   static const fileUnknown = "assets/icons/file_unknown.svg";
@@ -28,6 +29,7 @@ class IconPaths {
   static const image = "assets/icons/image.svg";
   static const info = "assets/icons/info.svg";
   static const logOut = "assets/icons/log_out.svg";
+  static const memory = "assets/icons/memory.svg";
   static const message = "assets/icons/message.svg";
   static const micOff = "assets/icons/mic_off.svg";
   static const mic = "assets/icons/mic.svg";

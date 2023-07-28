@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
@@ -16,6 +17,7 @@ import 'package:study247/features/document/screens/document_edit_screen.dart';
 import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/flashcards/screens/flashcard_screen.dart';
+import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave_dialog.dart';
 import 'package:study247/utils/unfocus.dart';
 
 class DocumentControlScreen extends ConsumerStatefulWidget {
@@ -52,7 +54,6 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   }
 
   void _practiceFlashcards() {
-    // context.go("/document/${widget.documentId}/flashcards");
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const FlashcardScreen(),
@@ -66,6 +67,27 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
         builder: (context) => DocumentEditScreen(document: document),
       ),
     );
+  }
+
+  void _onDelete() {
+    showDialog(
+      context: context,
+      builder: (context) => LeaveDialog(
+        title: "Xóa tài liệu này?",
+        onAccept: _deleteDocument,
+        child: const Text("Tài liệu sau khi xoá sẽ không thể khôi phục."),
+      ),
+    );
+  }
+
+  void _deleteDocument() {
+    ref
+        .read(documentControllerProvider.notifier)
+        .deleteDocument(context, widget.documentId);
+    if (mounted) {
+      context.pop();
+      context.pop();
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -138,7 +160,7 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
       actions: [
         IconButton(
           splashRadius: 25,
-          onPressed: () {},
+          onPressed: _onDelete,
           icon: SvgPicture.asset(IconPaths.trashBin),
         ),
         if (!_save)
@@ -258,18 +280,27 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
                 width: 100,
                 child: Column(
                   children: [
-                    SvgPicture.asset(
-                      IconPaths.bookmark,
-                      colorFilter: const ColorFilter.mode(
-                        Palette.darkGrey,
-                        BlendMode.srcIn,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          IconPaths.bookmark,
+                          colorFilter: const ColorFilter.mode(
+                            Palette.darkGrey,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          (totalFlashcard - revisableFlashcard).toString(),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                     const Text("Đang chờ"),
-                    Text(
-                      (totalFlashcard - revisableFlashcard).toString(),
-                      style: const TextStyle(fontSize: 16),
-                    )
                   ],
                 ),
               ),
@@ -277,16 +308,25 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
                 width: 100,
                 child: Column(
                   children: [
-                    SvgPicture.asset(
-                      IconPaths.academicCap,
-                      colorFilter: const ColorFilter.mode(
-                          Palette.complete, BlendMode.srcIn),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          IconPaths.academicCap,
+                          colorFilter: const ColorFilter.mode(
+                              Palette.complete, BlendMode.srcIn),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          revisableFlashcard.toString(),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                     const Text("Cần ôn tập"),
-                    Text(
-                      revisableFlashcard.toString(),
-                      style: const TextStyle(fontSize: 16),
-                    )
                   ],
                 ),
               )

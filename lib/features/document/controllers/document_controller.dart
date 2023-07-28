@@ -55,7 +55,7 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     }
   }
 
-  Future<int> saveDocument(
+  Future<void> saveDocument(
     BuildContext context,
     String documentId,
     String documentTitle,
@@ -69,14 +69,14 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
       state.asData!.value!.copyWith(title: documentTitle, text: documentText),
     );
 
-    if (result case Success(value: final totalFlashcards)) {
-      if (mounted) showSnackBar(context, "Đã lưu.");
-      return totalFlashcards;
+    if (result case Success()) {
+      if (mounted) {
+        showSnackBar(context, "Đã lưu.");
+      }
     } else {
       if (mounted) {
         showSnackBar(context, "Đã có lỗi xảy ra trong quá trình lưu tài liệu!");
       }
-      return 0;
     }
   }
 
@@ -165,27 +165,6 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     }
     return null;
   }
-
-  // Future<Document> getDocumentByUserId(String userId, String documentId) async {
-  //   final db = _ref.read(firestoreProvider);
-  //   final receiverId = _ref.read(authControllerProvider).asData!.value!.uid;
-
-  //   final document = await db
-  //       .collection(FirebaseConstants.users)
-  //       .doc(userId)
-  //       .collection(FirebaseConstants.documents)
-  //       .doc(documentId)
-  //       .get();
-  //   if (userId != receiverId) {
-  //     db
-  //         .collection(FirebaseConstants.users)
-  //         .doc(receiverId)
-  //         .collection(FirebaseConstants.documents)
-  //         .doc(documentId)
-  //         .set(document.data() as Map<String, dynamic>);
-  //   }
-  //   return Document.fromMap(document.data() as Map<String, dynamic>);
-  // }
 
   Future<void> shareDocumentToRoom(BuildContext context) async {
     final result = await _ref
