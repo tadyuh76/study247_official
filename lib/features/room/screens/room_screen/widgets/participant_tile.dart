@@ -10,8 +10,11 @@ import 'package:videosdk/videosdk.dart';
 class ParticipantTile extends StatefulWidget {
   final Participant participant;
   final UserModel user;
-  const ParticipantTile(
-      {super.key, required this.participant, required this.user});
+  const ParticipantTile({
+    super.key,
+    required this.participant,
+    required this.user,
+  });
 
   @override
   State<ParticipantTile> createState() => _ParticipantTileState();

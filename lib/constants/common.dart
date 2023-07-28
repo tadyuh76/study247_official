@@ -9,7 +9,7 @@ const bannerColors = {
   "orange": Color(0xFFD27057),
   "yellow": Palette.warning,
   "green": Color(0xFF3ABE87),
-  "grey": Palette.darkGrey,
+  "grey": Color(0xFF555555),
   "brown": Color(0xFF4B321A),
   "black": Palette.black,
 };

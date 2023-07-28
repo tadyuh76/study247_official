@@ -17,10 +17,14 @@ const recommendYoutubeIds = [
   "1oahTaVIQvk"
 ];
 
+enum BackgroundMode { color, video }
+
 class RoomBackgroundController extends ChangeNotifier {
+  BackgroundMode mode = BackgroundMode.color;
+  String backgroundColor = 'black';
+
   final urlController = TextEditingController();
-  final backgroundColor = 'black';
-  final videoController = YoutubePlayerController(
+  var videoController = YoutubePlayerController(
     initialVideoId: "1oahTaVIQvk",
     flags: const YoutubePlayerFlags(
       autoPlay: false,
@@ -37,7 +41,13 @@ class RoomBackgroundController extends ChangeNotifier {
     ),
   );
   int selectingVideoIdx = -1;
-  bool isBackgroundImage = true;
+
+  void selectColorBackground(String color) {
+    mode = BackgroundMode.color;
+    backgroundColor = color;
+    videoController.pause();
+    notifyListeners();
+  }
 
   void updateSelectingVideoIdx(int index) {
     selectingVideoIdx = index;
@@ -45,14 +55,13 @@ class RoomBackgroundController extends ChangeNotifier {
   }
 
   void loadVideoOnSelect() {
-    isBackgroundImage = false;
-    videoController.load(recommendYoutubeIds[selectingVideoIdx]);
+    videoController.load(recommendYoutubeIds[selectingVideoIdx], startAt: 30);
     videoController.play();
+    mode = BackgroundMode.video;
     notifyListeners();
   }
 
   void loadVideoByURL() {
-    isBackgroundImage = false;
     selectingVideoIdx = -1;
     final text = urlController.text.trim();
 
@@ -61,11 +70,28 @@ class RoomBackgroundController extends ChangeNotifier {
       videoController.load(videoId);
       videoController.play();
     }
+    mode = BackgroundMode.video;
     notifyListeners();
   }
 
   void reset() {
     urlController.dispose();
     videoController.reset();
+    videoController = YoutubePlayerController(
+      initialVideoId: "1oahTaVIQvk",
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        disableDragSeek: true,
+        enableCaption: false,
+        hideControls: true,
+        isLive: false,
+        startAt: 30,
+        loop: true,
+        showLiveFullscreenButton: false,
+        controlsVisibleAtStart: false,
+        hideThumbnail: true,
+        forceHD: true,
+      ),
+    );
   }
 }

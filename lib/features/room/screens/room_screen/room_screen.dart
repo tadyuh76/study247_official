@@ -141,6 +141,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
     final room = ref.read(roomControllerProvider).asData!.value!;
     allowCamera = room.allowCamera;
     allowMic = room.allowMic;
+    ref
+        .read(roomBackgroundControllerProvider)
+        .selectColorBackground(room.bannerColor);
     setState(() {});
   }
 
@@ -317,17 +320,30 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   }
 
   Widget _renderBackground() {
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: YoutubePlayer(
-          controller: ref.watch(
-            roomBackgroundControllerProvider
-                .select((value) => value.videoController),
+    final roomBackgroundController =
+        ref.watch(roomBackgroundControllerProvider);
+    final isColorBackground =
+        roomBackgroundController.mode == BackgroundMode.color;
+
+    return Stack(children: [
+      Container(
+        color: bannerColors[roomBackgroundController.backgroundColor],
+      ),
+      Opacity(
+        opacity: isColorBackground ? 0 : 1,
+        child: SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: YoutubePlayer(
+              controller: ref.watch(
+                roomBackgroundControllerProvider
+                    .select((value) => value.videoController),
+              ),
+            ),
           ),
         ),
-      ),
-    );
+      )
+    ]);
   }
 
   Widget _renderMainView(bool landscape) {
