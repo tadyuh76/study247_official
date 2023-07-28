@@ -10,7 +10,7 @@ class Document {
   final String studyMode;
 
   String get formattedStudyMode => studyMode == StudyMode.longterm.name
-      ? "Ghi nhớ dài dạn"
+      ? "Ghi nhớ dài hạn"
       : "Ôn tập nước rút";
 
   String get formattedLastEdit {

@@ -30,6 +30,20 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
     _ref.read(documentRepositoryProvider).editFolder(folder);
   }
 
+  Future<void> changeTitle(
+      BuildContext context, String documentId, String newTitle) async {
+    final userId = _ref.read(authControllerProvider).asData!.value!.uid;
+    final result = await _ref
+        .read(documentRepositoryProvider)
+        .changeTitle(userId, documentId, newTitle);
+
+    if (result case Success()) {
+      if (mounted) {
+        showSnackBar(context, "Đã cập nhật tiêu đề tài liệu.");
+      }
+    }
+  }
+
   Future<void> updateStudyMode(String studyMode) async {
     final documentId = state.asData!.value!.id!;
     final userId = _ref.read(authControllerProvider).asData!.value!.uid;

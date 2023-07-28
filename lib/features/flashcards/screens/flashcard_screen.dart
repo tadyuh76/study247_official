@@ -9,6 +9,7 @@ import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
 import 'package:study247/features/flashcards/widgets/complete_dialog.dart';
+import 'package:study247/features/flashcards/widgets/flashcard_option.dart';
 
 class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});
@@ -20,6 +21,12 @@ class FlashcardScreen extends ConsumerStatefulWidget {
 class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
   final _pageController = PageController();
 
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
   void _nextPage() async {
     final curPage = _pageController.page;
     await _pageController.nextPage(
@@ -27,8 +34,9 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
       curve: Curves.easeInOut,
     );
     final newPage = _pageController.page;
-    if (curPage == newPage && mounted) {
-      // TODO: implement saving new flashcards
+    final complete = curPage == newPage;
+
+    if (complete && mounted) {
       showDialog(
         context: context,
         builder: (context) => const CompleteDiaglog(),
@@ -36,57 +44,40 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
     }
   }
 
-  void _onAgain(Flashcard flashcard) {}
+  // longterm
+  void _onAgain(Flashcard flashcard) {
+    _nextPage();
+    ref.read(flashcardListControllerProvider.notifier).recallAgain(flashcard);
+  }
 
   void _onHard(Flashcard flashcard) {
     _nextPage();
-    // PushNotificationService().showNotification(
-    //   id: Random().nextInt(762005),
-    //   title: flashcard.title,
-    //   body: flashcard.front,
-    //   duration: Duration(
-    //     minutes: int.parse(
-    //       (flashcard.currentInterval * 60 * 1.5).toStringAsFixed(0),
-    //     ),
-    //   ),
-    // );
+    ref.read(flashcardListControllerProvider.notifier).recallHard(flashcard);
   }
 
   void _onMedium(Flashcard flashcard) {
     _nextPage();
-    // PushNotificationService().showNotification(
-    //   id: Random().nextInt(762005),
-    //   title: flashcard.title,
-    //   body: flashcard.front,
-    //   duration: Duration(
-    //     minutes: int.parse(
-    //       (flashcard.currentInterval * 60 * 1).toStringAsFixed(0),
-    //     ),
-    //   ),
-    // );
+    ref.read(flashcardListControllerProvider.notifier).recallGood(flashcard);
   }
 
   void _onEasy(Flashcard flashcard) {
     _nextPage();
-    // PushNotificationService().showNotification(
-    //   id: Random().nextInt(762005),
-    //   title: flashcard.title,
-    //   body: flashcard.front,
-    //   duration: Duration(
-    //     minutes: int.parse(
-    //       (flashcard.currentInterval * 60 * 1.3).toStringAsFixed(0),
-    //     ),
-    //   ),
-    // );
+    ref.read(flashcardListControllerProvider.notifier).recallEasy(flashcard);
   }
 
-  void _onOK(Flashcard flashcard) {}
+  // speedrun
+  void _onOK(Flashcard flashcard) {
+    _nextPage();
+    ref.read(flashcardListControllerProvider.notifier).recallOK(flashcard);
+  }
 
-  void _onNotOK(Flashcard flashcard) {}
+  void _onNotOK(Flashcard flashcard) {
+    _nextPage();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(flashcardListControllerProvider).when(
+    return ref.read(flashcardListControllerProvider).when(
           error: (err, stk) => const ErrorScreen(),
           loading: () => const LoadingScreen(),
           data: (flashcardList) {
@@ -98,7 +89,13 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
               );
             }
 
-            flashcardList.shuffle();
+            final revisableCards = flashcardList
+                .where((flashcard) => !flashcard.notInRevisableTime)
+                .toList();
+
+            revisableCards.sort((a, b) => DateTime.parse(a.revisableAfter)
+                .compareTo(DateTime.parse(b.revisableAfter)));
+
             return Scaffold(
               appBar: AppBar(
                 elevation: 0,
@@ -111,16 +108,16 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
               body: PageView.builder(
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: flashcardList.length,
+                itemCount: revisableCards.length,
                 itemBuilder: (context, index) => _FlashcardTab(
-                  curCard: flashcardList[index],
+                  curCard: revisableCards[index],
                   nextPage: () => _nextPage(),
-                  onEasy: () => _onEasy(flashcardList[index]),
-                  onHard: () => _onHard(flashcardList[index]),
-                  onGood: () => _onMedium(flashcardList[index]),
-                  onAgain: () => _onAgain(flashcardList[index]),
-                  onOK: () => _onOK(flashcardList[index]),
-                  onNotOK: () => _onNotOK(flashcardList[index]),
+                  onEasy: () => _onEasy(revisableCards[index]),
+                  onHard: () => _onHard(revisableCards[index]),
+                  onGood: () => _onMedium(revisableCards[index]),
+                  onAgain: () => _onAgain(revisableCards[index]),
+                  onOK: () => _onOK(revisableCards[index]),
+                  onNotOK: () => _onNotOK(revisableCards[index]),
                 ),
               ),
             );
@@ -169,16 +166,15 @@ class _FlashcardTabState extends State<_FlashcardTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Đang ôn tài liệu:",
-            style: TextStyle(fontSize: 14, color: Palette.darkGrey),
+          Text(
+            widget.curCard.formattedStudyMode,
+            style: const TextStyle(fontSize: 14, color: Palette.darkGrey),
           ),
           Text(
             widget.curCard.documentName,
-            style: const TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 20),
           ),
-          const SizedBox(height: Constants.defaultPadding),
-          const SizedBox(height: Constants.defaultPadding),
+          const SizedBox(height: 20),
           _renderFlashcard(),
           const SizedBox(height: Constants.defaultPadding),
           if (!showAnswer)
@@ -197,33 +193,45 @@ class _FlashcardTabState extends State<_FlashcardTab> {
   }
 
   Widget _renderLongtermActions() {
+    final curCard = widget.curCard;
+
+    final hardInterval = curCard.getFormattedRevisableTime(
+      curCard.getRevisableTimeLongterm(curCard.nextIntervalHard),
+    );
+    final goodInterval = curCard.getFormattedRevisableTime(
+      curCard.getRevisableTimeLongterm(curCard.nextIntervalGood),
+    );
+    final easyInterval = curCard.getFormattedRevisableTime(
+      curCard.getRevisableTimeLongterm(curCard.nextIntervalEasy),
+    );
+
     return SizedBox(
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomButton(
+          FlashcardOption(
             text: "Xem lại",
+            interval: "1m",
             onTap: widget.onAgain,
             color: bannerColors['black'],
-            primary: true,
           ),
-          CustomButton(
+          FlashcardOption(
             text: "Khó",
+            interval: hardInterval,
             onTap: widget.onHard,
             color: bannerColors["red"]!,
-            primary: true,
           ),
-          CustomButton(
+          FlashcardOption(
             text: "Ổn",
+            interval: goodInterval,
             onTap: widget.onGood,
             color: bannerColors["yellow"]!,
-            primary: true,
           ),
-          CustomButton(
+          FlashcardOption(
             text: "Dễ",
+            interval: easyInterval,
             onTap: widget.onEasy,
-            primary: true,
             color: bannerColors['blue']!,
           ),
         ],
@@ -232,22 +240,29 @@ class _FlashcardTabState extends State<_FlashcardTab> {
   }
 
   Widget _renderSpeedrunActions() {
+    final interval = widget.curCard
+        .getFormattedRevisableTime(widget.curCard.nextRevisableTimeSpeedrun);
+
     return SizedBox(
       width: double.infinity,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomButton(
-            text: "Cần xem lại",
-            onTap: widget.onNotOK,
-            color: bannerColors['red'],
-            primary: true,
+          Expanded(
+            child: FlashcardOption(
+              text: "Cần xem lại",
+              interval: "1p",
+              onTap: widget.onNotOK,
+              color: bannerColors['red'],
+            ),
           ),
-          CustomButton(
-            text: "Tiếp tục",
-            onTap: widget.onNotOK,
-            color: bannerColors['blue'],
-            primary: true,
+          const SizedBox(width: 20),
+          Expanded(
+            child: FlashcardOption(
+              text: "Tiếp tục",
+              interval: interval,
+              onTap: widget.onOK,
+              color: bannerColors['blue'],
+            ),
           ),
         ],
       ),

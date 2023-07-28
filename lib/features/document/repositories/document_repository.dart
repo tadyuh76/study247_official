@@ -23,6 +23,22 @@ class DocumentRepository {
   final FirebaseFirestore _db;
   DocumentRepository(this._ref, this._db);
 
+  Future<Result<String, Exception>> changeTitle(
+      String userId, String documentId, String newTitle) async {
+    try {
+      final documentRef = _db
+          .collection(FirebaseConstants.users)
+          .doc(userId)
+          .collection(FirebaseConstants.documents)
+          .doc(documentId);
+      await documentRef.update({"title": newTitle});
+
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<String, Exception>> updateStudyMode(
       String userId, String documentId, String studyMode) async {
     try {
@@ -48,9 +64,10 @@ class DocumentRepository {
           .doc(userId)
           .collection(FirebaseConstants.documents)
           .doc();
+
       final newDocument = Document(
         id: newRef.id,
-        title: "Chưa có tiêu đề",
+        title: "",
         text: "",
         lastEdit: DateTime.now().toString(),
         color: "blue",
@@ -58,6 +75,7 @@ class DocumentRepository {
         studyMode: StudyMode.longterm.name,
       );
       newRef.set(newDocument.toMap());
+
       return Success(newDocument);
     } on Exception catch (e) {
       return Failure(e);

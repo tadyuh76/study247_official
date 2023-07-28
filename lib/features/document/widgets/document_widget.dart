@@ -67,13 +67,15 @@ class DocumentWidget extends ConsumerWidget {
                     children: [
                       const SizedBox(height: 5),
                       Text(
-                        document.title,
+                        document.title.isEmpty
+                            ? "Chưa có tiêu đề"
+                            : document.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style:
                             const TextStyle(color: Palette.white, fontSize: 16),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 3),
                       Text(
                         document.folderName,
                         style: const TextStyle(
@@ -87,7 +89,6 @@ class DocumentWidget extends ConsumerWidget {
                         document.formattedStudyMode,
                         style: const TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w300,
                           color: Palette.white,
                         ),
                       ),

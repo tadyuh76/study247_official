@@ -1,3 +1,73 @@
+// speedrun algorithm use fibonacci as spaced intervals for recall.
+
+import 'dart:math';
+
+import 'package:study247/features/document/widgets/study_mode_dialog.dart';
+
+const first50FibNumbers = [
+  -1,
+  5,
+  8,
+  13,
+  21,
+  34,
+  55,
+  89,
+  144,
+  233,
+  377,
+  610,
+  987,
+  1597,
+  2584,
+  4181,
+  6765,
+  10946,
+  17711,
+  28657,
+  46368,
+  75025,
+  121393,
+  196418,
+  317811,
+  514229,
+  832040,
+  1346269,
+  2178309,
+  3524578,
+  5702887,
+  9227465,
+  14930352,
+  24157817,
+  39088169,
+  63245986,
+  102334155,
+  165580141,
+  267914296,
+  433494437,
+  701408733,
+  1134903170,
+  1836311903,
+  2971215073,
+  4807526976,
+  7778742049,
+  12586269025,
+  20365011074,
+  32951280099,
+  53316291173,
+  86267571272,
+];
+
+const aDayInMinutes = 60 * 24;
+
+const hardInterval = 1.2;
+const easyBonus = 1.3;
+
+const defaultHardInterval = 8.0;
+const defaultHardIntervals = [8.0, 15, 60 * 24, 4 * 60 * 24];
+const defaultGoodInterval = 15.0;
+const defaultEasyInterval = 4 * 24 * 60.0; // 4 days
+
 class Flashcard {
   String? id;
   final String front;
@@ -10,6 +80,76 @@ class Flashcard {
   final double currentInterval;
   final double priorityRate;
   final int level;
+
+  String get formattedStudyMode =>
+      type == StudyMode.longterm.name ? "Ghi nhớ dài hạn" : "Ôn tập nước rút";
+
+  int get nextLevelSpeedrun {
+    // 6 first steps have a
+    final jumpStep = level >= 16 || level == 0 ? 2 : 3;
+    final newFlashcardLevel = level + jumpStep;
+    return newFlashcardLevel;
+  }
+
+  String get nextRevisableTimeSpeedrun {
+    final newTime = DateTime.now().add(
+      Duration(
+        minutes: first50FibNumbers[nextLevelSpeedrun] ~/ priorityRate,
+        seconds: 1,
+        // the algorithm's comparison is buggy, added 1s for accurate result.
+      ),
+    );
+    return newTime.toString();
+  }
+
+  int get _delay => max(
+      0, DateTime.now().difference(DateTime.parse(revisableAfter)).inMinutes);
+
+  bool get notInRevisableTime =>
+      DateTime.now().isBefore(DateTime.parse(revisableAfter));
+
+  double get nextIntervalHard {
+    if (level == 0) return defaultHardInterval;
+    final delayFactor = _delay / 4;
+
+    return max(
+      currentInterval + aDayInMinutes,
+      (currentInterval + delayFactor) * hardInterval,
+    );
+  }
+
+  double get nextIntervalGood {
+    if (level == 0) return defaultGoodInterval;
+    final delayFactor = _delay / 2;
+
+    return max(
+      nextIntervalHard + aDayInMinutes,
+      (currentInterval + delayFactor) * ease,
+    );
+  }
+
+  double get nextIntervalEasy {
+    if (level == 0) return defaultEasyInterval;
+    final delayFactor = _delay;
+
+    return max(
+      nextIntervalGood + aDayInMinutes,
+      (currentInterval + delayFactor) * ease * easyBonus,
+    );
+  }
+
+  String getRevisableTimeLongterm(double time) {
+    return DateTime.now()
+        .add(Duration(minutes: time.round(), seconds: 1))
+        .toString();
+  }
+
+  String getFormattedRevisableTime(String time) {
+    final duration = DateTime.parse(time).difference(DateTime.now());
+    if (duration.inMinutes < 60) return "${duration.inMinutes}m";
+    if (duration.inHours < 24) return "${duration.inHours}h";
+    return "${duration.inDays}d";
+  }
 
   Flashcard({
     this.id,

@@ -16,6 +16,7 @@ import 'package:study247/features/document/controllers/document_controller.dart'
 import 'package:study247/features/document/screens/document_edit_screen.dart';
 import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 import 'package:study247/features/flashcards/controllers/flashcard_list_controller.dart';
+import 'package:study247/utils/unfocus.dart';
 
 class DocumentControlScreen extends ConsumerStatefulWidget {
   final String documentId;
@@ -27,6 +28,9 @@ class DocumentControlScreen extends ConsumerStatefulWidget {
 }
 
 class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
+  final _titleController = TextEditingController();
+  bool _save = true;
+
   @override
   void initState() {
     super.initState();
@@ -34,10 +38,13 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   }
 
   Future<void> _setUp() async {
-    await ref
+    final document = await ref
         .read(documentControllerProvider.notifier)
         .fetchDocumentById(widget.documentId);
+    _titleController.text = document!.title;
+
     await ref.read(flashcardListControllerProvider.notifier).getFlashcardList();
+    setState(() {});
   }
 
   void _showStudyModeDialog() {
@@ -56,6 +63,30 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    await ref.read(flashcardListControllerProvider.notifier).getFlashcardList();
+    await ref
+        .read(documentControllerProvider.notifier)
+        .fetchDocumentById(widget.documentId);
+  }
+
+  void _onTitleChanged(String newTitle) {
+    final previousSelection = _titleController.selection;
+    _titleController.text = newTitle;
+    _titleController.selection = previousSelection;
+
+    if (_save) setState(() => _save = false);
+  }
+
+  Future<void> _onSave() async {
+    if (_titleController.text.trim().isEmpty) return;
+
+    await ref
+        .read(documentControllerProvider.notifier)
+        .changeTitle(context, widget.documentId, _titleController.text.trim());
+    setState(() => _save = true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,19 +98,24 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             data: (document) {
               if (document == null) return const SizedBox.shrink();
 
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(Constants.defaultPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _renderHeader(document),
-                      const SizedBox(height: 20),
-                      _renderFlashcardStatus(),
-                      const SizedBox(height: 20),
-                      _renderDocumentStatus(document),
-                    ],
+              return RefreshIndicator(
+                onRefresh: _onRefresh,
+                child: Unfocus(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(Constants.defaultPadding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _renderHeader(document),
+                          const SizedBox(height: 20),
+                          _renderFlashcardStatus(),
+                          const SizedBox(height: 20),
+                          _renderDocumentStatus(document),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -99,7 +135,17 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
           splashRadius: 25,
           onPressed: () {},
           icon: SvgPicture.asset(IconPaths.trashBin),
-        )
+        ),
+        if (!_save)
+          IconButton(
+            splashRadius: 24,
+            onPressed: _onSave,
+            icon: const Icon(
+              Icons.check,
+              color: Palette.primary,
+              size: 24,
+            ),
+          ),
       ],
     );
   }
@@ -108,9 +154,20 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          document.title,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+        TextField(
+          maxLines: null,
+          controller: _titleController,
+          style: const TextStyle(
+            color: Palette.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+          onChanged: _onTitleChanged,
+          decoration: const InputDecoration(
+            hintText: "Nhập tiêu đề...",
+            hintStyle: TextStyle(color: Palette.darkGrey),
+            border: InputBorder.none,
+          ),
         ),
         const SizedBox(height: 5),
         Row(
@@ -143,14 +200,10 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
   Widget _renderFlashcardStatus() {
     final flashcardList =
         ref.watch(flashcardListControllerProvider).asData?.value ?? [];
-    final now = DateTime.now();
-    final totalFlashcard = flashcardList.length;
 
+    final totalFlashcard = flashcardList.length;
     final revisableFlashcard = flashcardList.fold(
-        0,
-        (revisable, f) => now.isAfter(DateTime.parse(f.revisableAfter))
-            ? revisable + 1
-            : revisable);
+        0, (revisable, f) => f.notInRevisableTime ? revisable : revisable + 1);
 
     return Container(
       decoration: const BoxDecoration(
@@ -176,7 +229,8 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
             child: CircularPercentIndicator(
               radius: 80,
               progressColor: Palette.complete,
-              percent: revisableFlashcard / totalFlashcard,
+              percent:
+                  totalFlashcard == 0 ? 0 : revisableFlashcard / totalFlashcard,
               backgroundColor: Palette.lightGrey,
               animation: true,
               circularStrokeCap: CircularStrokeCap.round,
@@ -235,6 +289,7 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
           ),
           const SizedBox(height: 20),
           CustomButton(
+            disabled: revisableFlashcard == 0,
             text: "Ôn tập",
             onTap: _practiceFlashcards,
             primary: true,

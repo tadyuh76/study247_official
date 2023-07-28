@@ -28,7 +28,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
   final _documentController = _DocCustomController();
   bool saved = true;
   bool saving = false;
-  int _flashcardsCreated = 0;
+  int _revisableFlashcard = 0;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
     _titleController.text = widget.document.title;
     _documentController.text = widget.document.text;
 
-    _flashcardsCreated = await ref
+    _revisableFlashcard = await ref
         .read(flashcardListControllerProvider.notifier)
         .getFlashcardList();
     setState(() {});
@@ -79,7 +79,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
         documentTitle,
         documentText,
         widget.document.studyMode);
-    _flashcardsCreated = await ref
+    _revisableFlashcard = await ref
         .watch(flashcardListControllerProvider.notifier)
         .getFlashcardList();
 
@@ -285,7 +285,7 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
         padding:
             const EdgeInsets.only(left: 5, right: Constants.defaultPadding),
         child: GestureDetector(
-          onTap: _flashcardsCreated == 0
+          onTap: _revisableFlashcard == 0
               ? () =>
                   showSnackBar(context, "Không tìm thấy flashcard để ôn tập")
               : () => Navigator.of(context).push(
@@ -303,8 +303,8 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
                   width: 24,
                   height: 24,
                 ),
-                if (_flashcardsCreated != 0)
-                  _renderFlashcardsBadge(_flashcardsCreated)
+                if (_revisableFlashcard != 0)
+                  _renderFlashcardsBadge(_revisableFlashcard)
               ],
             ),
           ),
