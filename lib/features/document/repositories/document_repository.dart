@@ -240,11 +240,26 @@ class DocumentRepository {
     List<String> sides = [];
 
     documentText.split("\n").forEach((line) {
+      // get priority rate
+      double priorityRate = 1;
+      if (line.startsWith('!!!')) {
+        priorityRate = 2;
+        line = line.substring(3).trim();
+      } else if (line.startsWith('!!')) {
+        priorityRate = 1.5;
+        line = line.substring(2).trim();
+      } else if (line.startsWith('!')) {
+        priorityRate = 1;
+        line = line.substring(1).trim();
+      }
+
+      // get title
       if (line.contains(Constants.documentHeadingSymbol)) {
         curTitle = line.substring(1).trim();
         return;
       }
 
+      // get card's sides
       if (line.contains(Constants.flashcardForward)) {
         sides = line.split(Constants.flashcardForward);
       } else if (line.contains(Constants.flashcardBackward)) {
@@ -255,20 +270,11 @@ class DocumentRepository {
         return;
       }
 
-      double priorityRate = 1;
-      if (line.startsWith('!')) {
-        priorityRate = 1.25;
-      } else if (line.startsWith('!!')) {
-        priorityRate = 1.5;
-      } else if (line.startsWith('!!!')) {
-        priorityRate = 2;
-      }
-
       final newFlashcard = Flashcard(
         front: sides[0].trim(),
         back: sides[1].trim(),
         ease: 2.5,
-        currentInterval: 1,
+        currentInterval: 0,
         level: 0,
         priorityRate: priorityRate,
         revisableAfter: DateTime.now().toString(),

@@ -47,6 +47,28 @@ class ProfileRepository {
     }
   }
 
+  Future<UserModel> checkUserStreak(UserModel user) async {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final today = DateTime.now();
+    final yesterdayStudyTime = user.commitBoard[yesterday.year.toString()]![
+        yesterday.month.toString()]![yesterday.day - 1];
+    final todayStudyTime = user.commitBoard[today.year.toString()]![
+        today.month.toString()]![today.day - 1];
+
+    if (yesterdayStudyTime == 0 &&
+        todayStudyTime == 0 &&
+        user.currentStreak != 0) {
+      final updatedUser = user.copyWith(currentStreak: 0);
+      await _db
+          .collection(FirebaseConstants.users)
+          .doc(user.uid)
+          .set(updatedUser.toMap());
+      return updatedUser;
+    }
+
+    return user;
+  }
+
   UserModel _checkForAchievements(UserModel user) {
     final List<String> newBadges = [];
 

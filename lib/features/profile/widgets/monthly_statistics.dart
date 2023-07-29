@@ -38,7 +38,7 @@ class MonthlyStatistics extends StatelessWidget {
           ),
           const SizedBox(height: Constants.defaultPadding),
           SizedBox(
-            height: 400,
+            height: 340,
             child: PageView.builder(
               physics: const BouncingScrollPhysics(),
               reverse: true,

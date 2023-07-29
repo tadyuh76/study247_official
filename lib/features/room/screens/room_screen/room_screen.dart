@@ -71,7 +71,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
   @override
   void initState() {
     super.initState();
-    _studyTimeTracker = Timer.periodic(const Duration(seconds: 5), (_) {
+    _studyTimeTracker = Timer.periodic(const Duration(minutes: 1), (_) {
       ref.read(profileControllerProvider).updateStudyTime();
     });
 

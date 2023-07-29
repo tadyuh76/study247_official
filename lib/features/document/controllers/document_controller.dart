@@ -38,9 +38,9 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
         .changeTitle(userId, documentId, newTitle);
 
     if (result case Success()) {
-      if (mounted) {
-        showSnackBar(context, "Đã cập nhật tiêu đề tài liệu.");
-      }
+      // if (mounted) {
+      // showSnackBar(context, "Đã cập nhật tiêu đề tài liệu.");
+      // }
     }
   }
 

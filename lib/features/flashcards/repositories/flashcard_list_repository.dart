@@ -61,7 +61,7 @@ class FlashcardListRepository {
 
       final resetFlashcardList = flashcardList.map((flashcard) {
         final resetFlashcard = flashcard.copyWith(
-          currentInterval: 1,
+          currentInterval: 0,
           ease: 2.5,
           revisableAfter: DateTime.now().toString(),
           level: 0,

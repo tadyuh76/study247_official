@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/features/auth/repositories/auth_repository.dart';
+import 'package:study247/features/profile/repository/profile_repository.dart';
+import 'package:study247/utils/show_snack_bar.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<UserModel?>>(
@@ -33,14 +34,17 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
 
     final userId = firebaseUser.uid;
     final userResult = await _ref.read(authRepositoryProvider).getUser(userId);
-    final appUser = switch (userResult) {
-      Success(value: final userModel) => userModel,
-      Failure() => null
-    };
-    state = AsyncData(appUser);
+    switch (userResult) {
+      case Success(value: final user):
+        final updatedUser =
+            await _ref.read(profileRepositoryProvider).checkUserStreak(user);
+        state = AsyncData(updatedUser);
+      case Failure():
+        state = const AsyncData(null);
+    }
   }
 
-  Future<void> updateUser([bool refresh = false]) async {
+  Future<void> updateUser({bool refresh = false}) async {
     if (refresh) state = const AsyncLoading();
 
     final userId = _ref.read(authProvider).currentUser!.uid;

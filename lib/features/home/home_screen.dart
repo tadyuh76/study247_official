@@ -118,10 +118,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _refresh() async {
-    ref.read(roomListControllerProvider.notifier).getRoomList(refresh: true);
-    ref
+    await ref
+        .read(roomListControllerProvider.notifier)
+        .getRoomList(refresh: true);
+    await ref
         .read(friendListControllerProvider.notifier)
         .getFriendList(refresh: true);
+    await ref.read(authControllerProvider.notifier).updateUser();
   }
 
   @override
