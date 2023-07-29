@@ -12,7 +12,9 @@ import 'package:study247/features/home/widgets/room_card/avatar.dart';
 class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
 
-  void onLogOut(BuildContext context) {}
+  void _signOut(BuildContext context, WidgetRef ref) {
+    ref.read(authControllerProvider.notifier).signOut(context);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,9 +55,7 @@ class CustomDrawer extends ConsumerWidget {
                       TabItem(
                         text: 'Đăng xuất',
                         iconPath: IconPaths.logOut,
-                        onTap: () => ref
-                            .read(authControllerProvider.notifier)
-                            .signOut(context),
+                        onTap: () => _signOut(context, ref),
                       ),
                     ],
                   ),

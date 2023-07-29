@@ -38,7 +38,10 @@ class MasteryAvatar extends StatelessWidget {
             radius: radius,
             child: ClipOval(
               child: photoURL.isEmpty
-                  ? SvgPicture.asset(IconPaths.defaultUser)
+                  ? SvgPicture.asset(
+                      IconPaths.defaultUser,
+                      width: radius * 2,
+                    )
                   : Image.network(
                       photoURL,
                       fit: BoxFit.cover,

@@ -210,29 +210,40 @@ class _FlashcardTabState extends State<_FlashcardTab> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          FlashcardOption(
-            text: "Xem lại",
-            interval: "1m",
-            onTap: widget.onAgain,
-            color: bannerColors['black'],
+          Expanded(
+            child: FlashcardOption(
+              text: "Xem lại",
+              interval: "1m",
+              onTap: widget.onAgain,
+              color: bannerColors['black'],
+            ),
           ),
-          FlashcardOption(
-            text: "Khó",
-            interval: hardInterval,
-            onTap: widget.onHard,
-            color: bannerColors["red"]!,
+          const SizedBox(width: 10),
+          Expanded(
+            child: FlashcardOption(
+              text: "Khó",
+              interval: hardInterval,
+              onTap: widget.onHard,
+              color: bannerColors["red"]!,
+            ),
           ),
-          FlashcardOption(
-            text: "Ổn",
-            interval: goodInterval,
-            onTap: widget.onGood,
-            color: bannerColors["yellow"]!,
+          const SizedBox(width: 10),
+          Expanded(
+            child: FlashcardOption(
+              text: "Ổn",
+              interval: goodInterval,
+              onTap: widget.onGood,
+              color: bannerColors["yellow"]!,
+            ),
           ),
-          FlashcardOption(
-            text: "Dễ",
-            interval: easyInterval,
-            onTap: widget.onEasy,
-            color: bannerColors['blue']!,
+          const SizedBox(width: 10),
+          Expanded(
+            child: FlashcardOption(
+              text: "Dễ",
+              interval: easyInterval,
+              onTap: widget.onEasy,
+              color: bannerColors['blue']!,
+            ),
           ),
         ],
       ),

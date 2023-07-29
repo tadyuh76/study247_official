@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:study247/constants/firebase.dart';
 import 'package:study247/constants/common.dart';
+import 'package:study247/constants/firebase.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
-import 'package:study247/utils/days_in_month.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final auth = ref.read(authProvider);
@@ -23,38 +22,39 @@ class AuthRepository {
       : _auth = auth,
         _db = db;
 
-  Future<Result<UserCredential, Exception>> signInWithFacebook() async {
-    try {
-      final result = await FacebookAuth.instance.login(
-        permissions: ["email", "public_profile"],
-        loginBehavior: LoginBehavior.nativeWithFallback,
-      );
-      if (result.accessToken == null) {
-        return Failure(Exception("Đã có lỗi trong quá trình đăng nhập!"));
-      }
+  // Future<Result<UserCredential, Exception>> signInWithFacebook() async {
+  //   try {
+  //     final result = await FacebookAuth.instance.login(
+  //       permissions: ["email", "public_profile"],
+  //       loginBehavior: LoginBehavior.nativeWithFallback,
+  //     );
+  //     if (result.accessToken == null) {
+  //       return Failure(Exception("Đã có lỗi trong quá trình đăng nhập!"));
+  //     }
 
-      final facebookAuthCredential =
-          FacebookAuthProvider.credential(result.accessToken!.token);
-      final cred = await _auth.signInWithCredential(facebookAuthCredential);
+  //     final facebookAuthCredential =
+  //         FacebookAuthProvider.credential(result.accessToken!.token);
+  //     final cred = await _auth.signInWithCredential(facebookAuthCredential);
 
-      if (cred.additionalUserInfo!.isNewUser) {
-        _uploadUserToDB(cred);
-      }
+  //     if (cred.additionalUserInfo!.isNewUser) {
+  //       _uploadUserToDB(cred);
+  //     }
 
-      return Success(cred);
-    } on Exception catch (e) {
-      return Failure(e);
-    }
-  }
+  //     return Success(cred);
+  //   } on Exception catch (e) {
+  //     return Failure(e);
+  //   }
+  // }
 
   Future<Result<UserCredential, Exception>> signInWithGoogle() async {
     try {
-      final googleSignIn = await GoogleSignIn().signIn();
-      if (googleSignIn == null) {
+      final googleSignInAccount = await GoogleSignIn().signIn();
+
+      if (googleSignInAccount == null) {
         return Failure(Exception(Constants.authFailedMessage));
       }
 
-      final googleAuth = await googleSignIn.authentication;
+      final googleAuth = await googleSignInAccount.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -88,6 +88,16 @@ class AuthRepository {
       if (userCred.user != null && userCred.additionalUserInfo!.isNewUser) {
         _uploadUserToDB(userCred);
       }
+      return const Success(Constants.successMessage);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<String, Exception>> signInAnonymously() async {
+    try {
+      final userCred = await _auth.signInAnonymously();
+      _uploadUserToDB(userCred);
       return const Success(Constants.successMessage);
     } on Exception catch (e) {
       return Failure(e);
@@ -142,30 +152,11 @@ class AuthRepository {
     String? photoURL,
     String? uid,
   }) async {
-    final thisYear = DateTime.now().year;
-
-    final newUser = UserModel(
+    final newUser = UserModel.empty(
       uid: uid ?? userCredential.user!.uid,
-      displayName: displayName ?? userCredential.user!.displayName ?? "",
-      email: email ?? userCredential.user!.email ?? "",
-      photoURL: photoURL ?? userCredential.user!.photoURL ?? "",
-      currentStreak: 0,
-      longestStreak: 0,
-      totalStudyTime: 0,
-      totalActiveDays: 0,
-      status: UserStatus.active.name,
-      studyingRoomId: "",
-      studyingMeetingId: "",
-      badges: [],
-      friends: [],
-      friendRequests: [],
-      commitBoard: {
-        thisYear.toString(): {
-          for (int month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-            month.toString():
-                List.generate(daysInMonth(month, thisYear), (_) => 0)
-        }
-      },
+      displayName: displayName ?? userCredential.user!.displayName,
+      email: email ?? userCredential.user!.email,
+      photoURL: photoURL ?? userCredential.user!.photoURL,
     );
 
     await _db

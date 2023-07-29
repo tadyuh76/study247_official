@@ -44,6 +44,11 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     }
   }
 
+  Future<void> signInAnonymously(BuildContext context) async {
+    // final result = await _ref.read(authRepositoryProvider).signInAnonymously();
+    state = AsyncData(UserModel.empty());
+  }
+
   Future<void> updateUser({bool refresh = false}) async {
     if (refresh) state = const AsyncLoading();
 
@@ -87,20 +92,20 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
     ));
   }
 
-  Future<void> signInWithFacebook(BuildContext context) async {
-    final result = await _ref.read(authRepositoryProvider).signInWithFacebook();
-    if (result case Success()) {
-      await updateUser();
+  // Future<void> signInWithFacebook(BuildContext context) async {
+  //   final result = await _ref.read(authRepositoryProvider).signInWithFacebook();
+  //   if (result case Success()) {
+  //     await updateUser();
 
-      if (mounted) {
-        showSnackBar(context, "Đã đăng nhập thành công!");
-      }
-    } else if (result case Failure(failure: final failure)) {
-      if (mounted) {
-        showSnackBar(context, failure.toString());
-      }
-    }
-  }
+  //     if (mounted) {
+  //       showSnackBar(context, "Đã đăng nhập thành công!");
+  //     }
+  //   } else if (result case Failure(failure: final failure)) {
+  //     if (mounted) {
+  //       showSnackBar(context, failure.toString());
+  //     }
+  //   }
+  // }
 
   Future<void> signInWithGoogle(BuildContext context) async {
     final result = await _ref.read(authRepositoryProvider).signInWithGoogle();

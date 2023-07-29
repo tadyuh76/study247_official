@@ -24,10 +24,7 @@ class FlashcardOption extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 15,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,

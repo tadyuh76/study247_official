@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,8 +51,9 @@ class _FileViewState extends ConsumerState<FileView> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-        floatingActionButton:
-            widget.landscape || widget.solo ? null : _renderActions(ref),
+        floatingActionButton: (widget.landscape && !kIsWeb) || widget.solo
+            ? null
+            : _renderActions(ref),
         body: Builder(
           builder: (context) {
             final isOffline = ref.watch(fileTypeProvider) == FileType.offline;

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
@@ -44,77 +45,82 @@ class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
 
   @override
   Widget build(BuildContext context) {
+    return Unfocus(
+      child: FeatureDialog(
+        title: "Nền",
+        iconPath: IconPaths.image,
+        child: ScrollConfiguration(
+          behavior: const ScrollBehavior().copyWith(overscroll: false),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: Constants.defaultPadding),
+                const Text(
+                  "Màu sắc",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                ColorPicker(
+                  selectingColorIdx: _selectingColorIndex,
+                  onSelect: _onColorSelect,
+                ),
+                if (!kIsWeb) ..._renderMobileOptions()
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _renderMobileOptions() {
     final provider = ref.watch(roomBackgroundControllerProvider);
     final urlController = provider.urlController;
     final selectingVideoIdx = provider.selectingVideoIdx;
 
     final size = MediaQuery.of(context).size;
 
-    return Unfocus(
-      child: FeatureDialog(
-        title: "Nền",
-        iconPath: IconPaths.image,
-        child: SizedBox(
-          height: 400,
-          child: ScrollConfiguration(
-            behavior: const ScrollBehavior().copyWith(overscroll: false),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: Constants.defaultPadding),
-                  const Text(
-                    "Màu sắc",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 10),
-                  ColorPicker(
-                      selectingColorIdx: _selectingColorIndex,
-                      onSelect: _onColorSelect),
-                  const SizedBox(height: Constants.defaultPadding),
-                  const Text(
-                    "Youtube Video",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: Constants.defaultPadding / 2),
-                  _renderYoutubeURLInput(urlController),
-                  const SizedBox(height: Constants.defaultPadding / 2),
-                  const Text(
-                    "Gợi ý",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: Constants.defaultPadding / 2),
-                  _renderRecommendedVideos(size, selectingVideoIdx),
-                  const SizedBox(height: Constants.defaultPadding),
-                  Row(
-                    children: [
-                      const Text(
-                        "Âm thanh",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Switch(
-                          value: allowSound,
-                          onChanged: (value) {
-                            setState(() => allowSound = value);
-                            if (value == true) {
-                              provider.videoController.unMute();
-                            } else {
-                              provider.videoController.mute();
-                            }
-                          }),
-                    ],
-                  ),
-                ],
-              ),
+    return [
+      const SizedBox(height: Constants.defaultPadding),
+      const Text(
+        "Youtube Video",
+        style: TextStyle(fontWeight: FontWeight.w500),
+      ),
+      const SizedBox(height: Constants.defaultPadding / 2),
+      _renderYoutubeURLInput(urlController),
+      const SizedBox(height: Constants.defaultPadding / 2),
+      const Text(
+        "Gợi ý",
+        style: TextStyle(fontWeight: FontWeight.w500),
+      ),
+      const SizedBox(height: Constants.defaultPadding / 2),
+      _renderRecommendedVideos(size, selectingVideoIdx),
+      const SizedBox(height: Constants.defaultPadding),
+      Row(
+        children: [
+          const Text(
+            "Âm thanh",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ),
+          Switch(
+            value: allowSound,
+            onChanged: (value) {
+              setState(() => allowSound = value);
+              if (value == true) {
+                provider.videoController.unMute();
+              } else {
+                provider.videoController.mute();
+              }
+            },
+          ),
+        ],
       ),
-    );
+    ];
   }
 
   SizedBox _renderRecommendedVideos(Size size, int selectingVideoIdx) {

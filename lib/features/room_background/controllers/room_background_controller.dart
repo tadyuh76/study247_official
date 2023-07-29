@@ -21,7 +21,7 @@ enum BackgroundMode { color, video }
 
 class RoomBackgroundController extends ChangeNotifier {
   BackgroundMode mode = BackgroundMode.color;
-  String backgroundColor = 'black';
+  String backgroundColor = 'grey';
 
   final urlController = TextEditingController();
   var videoController = YoutubePlayerController(

@@ -4,7 +4,7 @@ import 'package:study247/core/models/document.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 
-final documentListControllerProvider = StreamProvider(
+final documentListControllerProvider = StreamProvider.autoDispose(
   (ref) => DocumentListController(ref).getDocumentList(),
 );
 

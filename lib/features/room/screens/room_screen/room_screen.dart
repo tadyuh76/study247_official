@@ -46,8 +46,10 @@ final GlobalKey globalKey =
 class RoomScreen extends ConsumerStatefulWidget {
   final String roomId;
   final String meetingId;
-  RoomScreen({required this.roomId, required this.meetingId})
-      : super(key: globalKey);
+  RoomScreen({
+    required this.roomId,
+    required this.meetingId,
+  }) : super(key: globalKey);
 
   @override
   ConsumerState<RoomScreen> createState() => _RoomScreenState();
@@ -68,9 +70,18 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
   late Timer _studyTimeTracker;
 
+  void _checkForNonUser() {
+    final user = ref.read(authControllerProvider).asData?.value;
+    if (user == null) {
+      ref.read(authControllerProvider.notifier).signInAnonymously(context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _checkForNonUser();
+
     _studyTimeTracker = Timer.periodic(const Duration(minutes: 1), (_) {
       ref.read(profileControllerProvider).updateStudyTime();
     });
@@ -224,9 +235,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                 studyingRoomId: "",
                 studyingMeetingId: "",
               );
-          context
-            ..pop()
-            ..pop();
+          context.go('/');
           _room.leave();
         },
       ),
@@ -251,7 +260,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
   Future<void> _launchGooglePlay() async {
     final url = Uri.parse(
-      "https://play.google.com/store/apps/details?id=com.tadyuh.studie&hl=en-VN",
+      "https://play.google.com/store/apps/details?id=com.tadyuh.study247",
     );
     if (!await launchUrl(url)) {
       if (mounted) showSnackBar(context, "Không thể mở đường dẫn!");
@@ -275,7 +284,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                 floatingActionButton:
                     _renderFloatingActionButtons(landscape, context),
                 extendBodyBehindAppBar: true,
-                appBar: landscape ? null : _renderAppBar(),
+                appBar: landscape && !kIsWeb ? null : _renderAppBar(),
                 body: Stack(
                   children: [
                     _renderBackground(),
@@ -348,8 +357,12 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
 
   Widget _renderMainView(bool landscape) {
     return Padding(
-      padding: const EdgeInsets.all(Constants.defaultPadding / 2)
-          .copyWith(top: landscape ? 10 : 100),
+      padding: const EdgeInsets.all(Constants.defaultPadding / 2).copyWith(
+          top: kIsWeb
+              ? 60
+              : landscape
+                  ? 10
+                  : 100),
       child: Stack(
         children: [
           _renderParticipants(landscape),
@@ -359,8 +372,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
               const RoomTimerTab(),
               const SizedBox(width: 10),
               const SessionGoalsTab(),
-              if (!landscape) const Spacer(),
-              if (!landscape) const DotsMenu()
+              if (!landscape || kIsWeb) const Spacer(),
+              if (!landscape || kIsWeb) const DotsMenu()
             ],
           ),
         ],
@@ -378,14 +391,14 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           bottom: landscape ? 20 : 80,
         ),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(maxWidth: kIsWeb ? 700 : 400),
           child: Center(
             child: ScrollConfiguration(
               behavior: const ScrollBehavior().copyWith(overscroll: false),
               child: GridView.builder(
                 padding: const EdgeInsets.all(0),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
+                  crossAxisCount: kIsWeb ? 2 : 1,
                   crossAxisSpacing: Constants.defaultPadding,
                   mainAxisSpacing: Constants.defaultPadding,
                   mainAxisExtent: 220,

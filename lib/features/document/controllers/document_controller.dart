@@ -190,4 +190,8 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
 
     return "";
   }
+
+  void reset() {
+    state = const AsyncData(null);
+  }
 }

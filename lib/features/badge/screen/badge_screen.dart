@@ -54,6 +54,7 @@ class BadgeScreen extends ConsumerWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     color: Palette.black.withOpacity(0.7),
                   ),
+                  waitDuration: const Duration(seconds: 1),
                   triggerMode: TooltipTriggerMode.tap,
                   richMessage: WidgetSpan(
                     child: SizedBox(

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/utils/days_in_month.dart';
 
 enum UserStatus { active, inactive, studyingSolo, studyingGroup }
 
@@ -83,6 +84,39 @@ class UserModel {
     required this.totalStudyTime,
     required this.totalActiveDays,
   });
+
+  factory UserModel.empty({
+    String? uid,
+    String? displayName,
+    String? email,
+    String? photoURL,
+  }) {
+    final thisYear = DateTime.now().year;
+
+    return UserModel(
+      uid: uid ?? "",
+      displayName: displayName ?? "Khách",
+      email: email ?? "",
+      photoURL: photoURL ?? "",
+      currentStreak: 0,
+      longestStreak: 0,
+      totalStudyTime: 0,
+      totalActiveDays: 0,
+      status: UserStatus.active.name,
+      studyingRoomId: "",
+      studyingMeetingId: "",
+      badges: [],
+      friends: [],
+      friendRequests: [],
+      commitBoard: {
+        thisYear.toString(): {
+          for (int month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+            month.toString():
+                List.generate(daysInMonth(month, thisYear), (_) => 0)
+        }
+      },
+    );
+  }
 
   UserModel copyWith(
       {String? uid,

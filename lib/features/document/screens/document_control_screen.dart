@@ -39,6 +39,13 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
     _setUp();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    // ref.read(documentControllerProvider.notifier).reset();
+    // ref.read(flashcardListControllerProvider.notifier).reset();
+  }
+
   Future<void> _setUp() async {
     final document = await ref
         .read(documentControllerProvider.notifier)
