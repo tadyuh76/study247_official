@@ -13,6 +13,7 @@ import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/controllers/file_type.dart';
 import 'package:study247/features/file/controllers/offline_file_controller.dart';
+import 'package:study247/features/file/controllers/room_file_subscription.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -27,13 +28,6 @@ class FileView extends ConsumerStatefulWidget {
 }
 
 class _FileViewState extends ConsumerState<FileView> {
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
   void _updateFileType() {
     ref.read(fileTypeProvider.notifier).update((state) =>
         state == FileType.offline ? FileType.online : FileType.offline);
@@ -92,11 +86,11 @@ class _FileViewState extends ConsumerState<FileView> {
                 ref.read(roomControllerProvider).asData!.value!.hostUid;
             final isHost = userId == hostId;
 
-            return ref.watch(fileControllerProvider).when(
+            return ref.watch(roomFileSubscriptionProvider).when(
                   error: (err, stk) => const ErrorScreen(),
                   loading: () => const LoadingScreen(),
                   data: (file) {
-                    if (file == null) {
+                    if (file == null || file.url.isEmpty) {
                       return isHost ? _renderPickFileUI() : _renderEmptyFile();
                     }
 

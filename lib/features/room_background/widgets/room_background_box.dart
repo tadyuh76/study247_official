@@ -49,25 +49,28 @@ class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
       title: "Nền",
       iconPath: IconPaths.image,
       child: Unfocus(
-        child: ScrollConfiguration(
-          behavior: const ScrollBehavior().copyWith(overscroll: false),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: Constants.defaultPadding),
-                const Text(
-                  "Màu sắc",
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-                ColorPicker(
-                  selectingColorIdx: _selectingColorIndex,
-                  onSelect: _onColorSelect,
-                ),
-                if (!kIsWeb) ..._renderMobileOptions()
-              ],
+        child: SizedBox(
+          height: 400,
+          child: ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(overscroll: false),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: Constants.defaultPadding),
+                  const Text(
+                    "Màu sắc",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 10),
+                  ColorPicker(
+                    selectingColorIdx: _selectingColorIndex,
+                    onSelect: _onColorSelect,
+                  ),
+                  if (!kIsWeb) ..._renderMobileOptions()
+                ],
+              ),
             ),
           ),
         ),

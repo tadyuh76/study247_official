@@ -30,7 +30,6 @@ class FileRepository {
 
       final roomId = _ref.read(roomControllerProvider).asData?.value?.id;
       final storage = _ref.read(storageProvider);
-      // final db = _ref.read(firestoreProvider);
 
       // upload to Firebase and get download URL
       late Reference fileDir;
@@ -47,7 +46,9 @@ class FileRepository {
         db
             .collection(FirebaseConstants.rooms)
             .doc(roomId)
-            .update({"fileUrl": fileUrl, "fileType": file.extension});
+            .collection("file")
+            .doc("1")
+            .set(File(type: file.extension!, url: fileUrl).toMap());
       }
 
       return Success(File(type: file.extension!, url: fileUrl));

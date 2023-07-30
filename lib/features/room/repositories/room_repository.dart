@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/firebase.dart';
+import 'package:study247/core/models/file.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/room.dart';
 import 'package:study247/core/models/user.dart';
@@ -26,6 +27,12 @@ class RoomRepository {
     try {
       final roomId = _roomRef.doc().id;
       await _roomRef.doc(roomId).set(room.copyWith(id: roomId).toMap());
+      await _roomRef
+          .doc(roomId)
+          .collection("file")
+          .doc('1')
+          .set(File(url: "", type: "").toMap());
+
       return Success(roomId);
     } on Exception catch (e) {
       return Failure(e);
