@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
+import 'package:study247/features/room/screens/create_room_screen/create_room_screen.dart';
 
 class RoomCreateDialog extends ConsumerStatefulWidget {
   const RoomCreateDialog({super.key});
@@ -22,42 +24,61 @@ class _RoomCreateDialogState extends ConsumerState<RoomCreateDialog> {
         color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.all(Constants.defaultPadding),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Palette.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            padding: const EdgeInsets.all(Constants.defaultPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "Tạo phòng học",
-                  style: TextStyle(fontSize: 20),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _renderCreateButton(
-                      iconPath: IconPaths.people,
-                      title: "Phòng nhóm",
-                      onTap: () => context
-                        ..pop()
-                        ..go("/create"),
-                    ),
-                    const SizedBox(width: Constants.defaultPadding / 2),
-                    _renderCreateButton(
-                      iconPath: IconPaths.person,
-                      title: "Phòng cá nhân",
-                      onTap: () => context
-                        ..pop()
-                        ..go("/solo"),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: Constants.defaultPadding / 2),
-              ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Palette.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Tạo phòng học",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: Constants.defaultPadding),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _renderCreateButton(
+                        iconPath: IconPaths.people,
+                        title: "Phòng nhóm",
+                        onTap: Responsive.isDesktop(context)
+                            ? () => showDialog(
+                                  barrierColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) => const Align(
+                                    alignment: Alignment.center,
+                                    child: SizedBox(
+                                        width: 500,
+                                        height: 600,
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(16),
+                                            ),
+                                            child: CreateRoomScreen())),
+                                  ),
+                                )
+                            : () => context
+                              ..pop()
+                              ..go("/create"),
+                      ),
+                      const SizedBox(width: Constants.defaultPadding / 2),
+                      _renderCreateButton(
+                        iconPath: IconPaths.person,
+                        title: "Phòng cá nhân",
+                        onTap: () => context
+                          ..pop()
+                          ..go("/solo"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: Constants.defaultPadding / 2),
+                ],
+              ),
             ),
           ),
         ),

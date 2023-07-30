@@ -235,6 +235,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                 studyingRoomId: "",
                 studyingMeetingId: "",
               );
+          ref.read(roomListControllerProvider.notifier).getRoomList();
+
           context.go('/');
           _room.leave();
         },
@@ -391,14 +393,18 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           bottom: landscape ? 20 : 80,
         ),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: kIsWeb ? 700 : 400),
+          constraints:
+              BoxConstraints(maxWidth: kIsWeb && landscape ? 700 : 400),
           child: Center(
             child: ScrollConfiguration(
               behavior: const ScrollBehavior().copyWith(overscroll: false),
               child: GridView.builder(
-                padding: const EdgeInsets.all(0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: kIsWeb ? 2 : 1,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 0,
+                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: kIsWeb && landscape ? 2 : 1,
                   crossAxisSpacing: Constants.defaultPadding,
                   mainAxisSpacing: Constants.defaultPadding,
                   mainAxisExtent: 220,
@@ -431,18 +437,47 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         mainAxisAlignment:
             landscape ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (allowCamera) _cameraButton(),
-          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          if (allowMic) _micButton(),
-          if (landscape) const Spacer(),
-          if (!landscape) _chatButton(context),
-          _showParticipantsButton(),
-          if (landscape) const SizedBox(width: Constants.defaultPadding / 2),
-          _fullScreenButton(landscape),
-        ],
+        children: kIsWeb
+            ? _renderWebActions()
+            : landscape
+                ? _renderMobileLandscapeActions()
+                : _renderMobilePortraitActions(),
       ),
     );
+  }
+
+  List<Widget> _renderMobilePortraitActions() {
+    return [
+      if (allowCamera) _cameraButton(),
+      if (allowMic) _micButton(),
+      _showParticipantsButton(),
+      _chatButton(context),
+      _fullScreenButton(false),
+    ];
+  }
+
+  List<Widget> _renderMobileLandscapeActions() {
+    return [
+      if (allowCamera) _cameraButton(),
+      const SizedBox(width: 10),
+      if (allowMic) _micButton(),
+      const SizedBox(width: 10),
+      _showParticipantsButton(),
+      const Spacer(),
+      _fullScreenButton(true),
+    ];
+  }
+
+  List<Widget> _renderWebActions() {
+    return [
+      if (allowCamera) _cameraButton(),
+      const SizedBox(width: 10),
+      if (allowMic) _micButton(),
+      const SizedBox(width: 10),
+      _showParticipantsButton(),
+      const Spacer(),
+      _chatButton(context),
+    ];
   }
 
   Widget _renderNavigators() {
@@ -491,7 +526,6 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
       ),
       child: SvgPicture.asset(
         IconPaths.message,
-        // color: Palette.white,
         colorFilter: const ColorFilter.mode(
           Palette.white,
           BlendMode.srcIn,

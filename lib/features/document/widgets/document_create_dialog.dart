@@ -52,9 +52,10 @@ class _DocumentCreateDialogState extends ConsumerState<DocumentCreateDialog> {
       alignment: Alignment.center,
       child: Material(
         color: Colors.transparent,
-        child: Padding(
-          padding: const EdgeInsets.all(Constants.defaultPadding),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
           child: Container(
+            margin: const EdgeInsets.all(Constants.defaultPadding),
             decoration: const BoxDecoration(
               color: Palette.white,
               borderRadius: BorderRadius.all(Radius.circular(20)),

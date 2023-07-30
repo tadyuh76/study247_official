@@ -27,6 +27,13 @@ class FileView extends ConsumerStatefulWidget {
 }
 
 class _FileViewState extends ConsumerState<FileView> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   void _updateFileType() {
     ref.read(fileTypeProvider.notifier).update((state) =>
         state == FileType.offline ? FileType.online : FileType.offline);

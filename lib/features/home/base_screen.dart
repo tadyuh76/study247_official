@@ -5,7 +5,10 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/border_widget.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
+import 'package:study247/core/shared/widgets/web_app_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/screens/document_screen.dart';
 import 'package:study247/features/home/home_screen.dart';
@@ -13,16 +16,89 @@ import 'package:study247/features/home/widgets/custom_drawer.dart';
 import 'package:study247/features/profile/controller/profile_controller.dart';
 import 'package:study247/features/profile/screens/profile_screen.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
+import 'package:study247/utils/hide_scroll_bar.dart';
 import 'package:study247/utils/unfocus.dart';
 
-class BaseScreen extends ConsumerStatefulWidget {
+class BaseScreen extends StatelessWidget {
   const BaseScreen({super.key});
 
   @override
-  ConsumerState<BaseScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return const Responsive(
+      mobileLayout: BaseScreenMobile(),
+      desktopLayout: BaseScreenDesktop(),
+    );
+  }
 }
 
-class _HomeScreenState extends ConsumerState<BaseScreen>
+class BaseScreenDesktop extends StatefulWidget {
+  const BaseScreenDesktop({super.key});
+
+  @override
+  State<BaseScreenDesktop> createState() => _BaseScreenDesktopState();
+}
+
+class _BaseScreenDesktopState extends State<BaseScreenDesktop> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Palette.lightGrey,
+      body: Column(
+        children: [
+          WebAppBar(),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: BorderWidget(
+                      right: true,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                            child: CustomDrawer()),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Material(
+                          color: Palette.white,
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                          child: HideScrollBar(child: HomeScreen())),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Material(
+                        color: Palette.white,
+                        clipBehavior: Clip.hardEdge,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        child: DocumentScreen()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BaseScreenMobile extends ConsumerStatefulWidget {
+  const BaseScreenMobile({super.key});
+
+  @override
+  ConsumerState<BaseScreenMobile> createState() => _BaseScreenMobileState();
+}
+
+class _BaseScreenMobileState extends ConsumerState<BaseScreenMobile>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _menuController;
   double x = 0, y = 0;

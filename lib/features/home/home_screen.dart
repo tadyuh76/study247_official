@@ -90,7 +90,7 @@ class HomeScreen extends ConsumerWidget {
                   "Bắt đầu một phiên học mới nào!",
                   style: TextStyle(color: Palette.darkGrey),
                 ),
-                // SizedBsox(height: 10),
+                const SizedBox(height: 20),
               ],
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:study247/core/models/folder.dart';
 import 'package:study247/core/models/result.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/document/repositories/document_repository.dart';
+import 'package:study247/features/document/screens/document_control_screen.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
 final documentControllerProvider =
@@ -88,7 +89,12 @@ class DocumentController extends StateNotifier<AsyncValue<Document?>> {
       state = AsyncData(document);
       if (context.mounted) {
         context.pop();
-        context.go("/document/${document.id}");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                DocumentControlScreen(documentId: document.id!),
+          ),
+        );
       }
     } else {
       state = const AsyncData(null);

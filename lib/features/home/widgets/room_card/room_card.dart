@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/room.dart';
@@ -19,6 +20,7 @@ class RoomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Palette.white,
         borderRadius: BorderRadius.circular(Constants.defaultBorderRadius),
+        border: kIsWeb ? Border.all(width: 1, color: Palette.lightGrey) : null,
         // boxShadow: const [BoxShadow(blurRadius: 16, color: Palette.shadow)],
       ),
       child: Column(

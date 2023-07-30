@@ -1,11 +1,12 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
 
-const double baseHeight = 120; // equals to a figure of 6 hours
+const double baseHeight = kIsWeb ? 160 : 120; // equals to a figure of 6 hours
 const double maxCrossAxis = 2; // hours
 const double textSize = 25;
 
@@ -148,7 +149,7 @@ class WeeklyStatistics extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 30,
+              itemCount: 40,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return Container(

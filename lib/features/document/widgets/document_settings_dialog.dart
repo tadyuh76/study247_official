@@ -68,42 +68,45 @@ class _DocumentSettingsDialogState
           color: Palette.white,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           clipBehavior: Clip.hardEdge,
-          child: Padding(
-            padding: const EdgeInsets.all(Constants.defaultPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Chỉnh sửa ghi chú",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Palette.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Chỉnh sửa ghi chú",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Palette.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                _renderOption(
-                  _curFolder.isEmpty ? "Chọn thư mục" : _curFolder,
-                  Icons.create_new_folder_rounded,
-                  _selectFolder,
-                ),
-                _renderOption(
-                  "Đổi màu ghi chú",
-                  Icons.color_lens_rounded,
-                ),
-                ColorPicker(
-                  selectingColorIdx: _selectingColorIdx,
-                  onSelect: (index) =>
-                      setState(() => _selectingColorIdx = index),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                CustomButton(
-                  onTap: () => _onSave(context, ref),
-                  text: "Xác nhận",
-                ),
-              ],
+                  const SizedBox(height: Constants.defaultPadding),
+                  _renderOption(
+                    _curFolder.isEmpty ? "Chọn thư mục" : _curFolder,
+                    Icons.create_new_folder_rounded,
+                    _selectFolder,
+                  ),
+                  _renderOption(
+                    "Đổi màu ghi chú",
+                    Icons.color_lens_rounded,
+                  ),
+                  ColorPicker(
+                    selectingColorIdx: _selectingColorIdx,
+                    onSelect: (index) =>
+                        setState(() => _selectingColorIdx = index),
+                  ),
+                  const SizedBox(height: Constants.defaultPadding),
+                  CustomButton(
+                    onTap: () => _onSave(context, ref),
+                    text: "Xác nhận",
+                  ),
+                ],
+              ),
             ),
           ),
         ),

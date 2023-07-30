@@ -45,10 +45,10 @@ class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Unfocus(
-      child: FeatureDialog(
-        title: "Nền",
-        iconPath: IconPaths.image,
+    return FeatureDialog(
+      title: "Nền",
+      iconPath: IconPaths.image,
+      child: Unfocus(
         child: ScrollConfiguration(
           behavior: const ScrollBehavior().copyWith(overscroll: false),
           child: SingleChildScrollView(

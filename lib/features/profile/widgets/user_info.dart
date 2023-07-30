@@ -11,7 +11,13 @@ import 'package:study247/features/profile/widgets/update_user_dialog.dart';
 class UserInfo extends StatelessWidget {
   final UserModel user;
   final bool editable;
-  const UserInfo({super.key, required this.user, required this.editable});
+  final bool contain;
+  const UserInfo({
+    super.key,
+    required this.user,
+    required this.editable,
+    this.contain = false,
+  });
 
   void _showInfoEdittingBox(BuildContext context) {
     showDialog(
@@ -35,8 +41,8 @@ class UserInfo extends StatelessWidget {
               Radius.circular(Constants.defaultBorderRadius),
             ),
           ),
-          padding:
-              const EdgeInsets.all(Constants.defaultPadding).copyWith(top: 80),
+          padding: const EdgeInsets.all(Constants.defaultPadding)
+              .copyWith(top: contain ? 140 : 80),
           margin: const EdgeInsets.symmetric(
             horizontal: Constants.defaultPadding,
           ),
@@ -72,7 +78,7 @@ class UserInfo extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -30,
+          top: contain ? 20 : -30,
           left: 0,
           right: 0,
           child: Center(
@@ -85,8 +91,8 @@ class UserInfo extends StatelessWidget {
         ),
         if (editable)
           Positioned(
-            right: Constants.defaultPadding,
-            top: 0,
+            right: Constants.defaultPadding + 5,
+            top: 5,
             child: IconButton(
               splashRadius: 25,
               onPressed: () => _showInfoEdittingBox(context),

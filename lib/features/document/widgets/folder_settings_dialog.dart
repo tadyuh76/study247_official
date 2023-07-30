@@ -59,41 +59,44 @@ class _DocumentSettingsDialogState extends ConsumerState<FolderSettingsDialog> {
             color: Palette.white,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             clipBehavior: Clip.hardEdge,
-            child: Padding(
-              padding: const EdgeInsets.all(Constants.defaultPadding),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Chỉnh sửa thư mục",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Palette.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Padding(
+                padding: const EdgeInsets.all(Constants.defaultPadding),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Chỉnh sửa thư mục",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Palette.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: Constants.defaultPadding),
-                  AppTextInput(
-                    title: "Tên thư mục",
-                    hintText: "Lý chương I",
-                    controller: _folderNameController,
-                    onEditingComplete: () {},
-                  ),
-                  const SizedBox(height: Constants.defaultPadding),
-                  _renderOption("Đổi màu thư mục", Icons.color_lens_rounded),
-                  ColorPicker(
-                    selectingColorIdx: _selectingColorIdx,
-                    onSelect: (index) =>
-                        setState(() => _selectingColorIdx = index),
-                  ),
-                  const SizedBox(height: Constants.defaultPadding),
-                  CustomButton(
-                    onTap: () => _onSave(context, ref),
-                    text: "Xác nhận",
-                  ),
-                ],
+                    const SizedBox(height: Constants.defaultPadding),
+                    AppTextInput(
+                      title: "Tên thư mục",
+                      hintText: "Lý chương I",
+                      controller: _folderNameController,
+                      onEditingComplete: () {},
+                    ),
+                    const SizedBox(height: Constants.defaultPadding),
+                    _renderOption("Đổi màu thư mục", Icons.color_lens_rounded),
+                    ColorPicker(
+                      selectingColorIdx: _selectingColorIdx,
+                      onSelect: (index) =>
+                          setState(() => _selectingColorIdx = index),
+                    ),
+                    const SizedBox(height: Constants.defaultPadding),
+                    CustomButton(
+                      onTap: () => _onSave(context, ref),
+                      text: "Xác nhận",
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

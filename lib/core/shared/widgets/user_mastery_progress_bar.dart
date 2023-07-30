@@ -65,6 +65,7 @@ class UserMasteryProgressBar extends StatelessWidget {
           _maxLevel
               ? "Bạn đã đạt cấp độ cao nhất!"
               : "Học thêm ${((minutesToMastery[masteryLevel + 1] - totalStudyTime) / 60).toStringAsFixed(1)}h để đạt cấp độ tiếp theo!",
+          textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 12,
             color: Palette.darkGrey,

@@ -9,6 +9,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/document.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
@@ -139,16 +140,38 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
                     physics: const BouncingScrollPhysics(),
                     child: Padding(
                       padding: const EdgeInsets.all(Constants.defaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _renderHeader(document),
-                          const SizedBox(height: 20),
-                          _renderFlashcardStatus(),
-                          const SizedBox(height: 20),
-                          _renderDocumentStatus(document),
-                        ],
-                      ),
+                      child: Responsive.isDesktop(context)
+                          ? Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: _renderFlashcardStatus(),
+                                ),
+                                const SizedBox(width: 40),
+                                Expanded(
+                                  flex: 7,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(16)),
+                                      color: Palette.white,
+                                    ),
+                                    child:
+                                        DocumentEditScreen(document: document),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _renderHeader(document),
+                                const SizedBox(height: 20),
+                                _renderFlashcardStatus(),
+                                const SizedBox(height: 20),
+                                _renderDocumentStatus(document),
+                              ],
+                            ),
                     ),
                   ),
                 ),
@@ -165,6 +188,7 @@ class _DocumentControlScreenState extends ConsumerState<DocumentControlScreen> {
       titleSpacing: 0,
       automaticallyImplyLeading: true,
       actions: [
+        if (Responsive.isDesktop(context)) const SizedBox(width: 20),
         IconButton(
           splashRadius: 25,
           onPressed: _onDelete,

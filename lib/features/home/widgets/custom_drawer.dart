@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
@@ -21,49 +23,74 @@ class CustomDrawer extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      // backgroundColor: Palette.lightGrey,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: SafeArea(
-          child: Container(
-            clipBehavior: Clip.none,
-            padding: const EdgeInsets.all(Constants.defaultPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                renderUserInfo(ref),
-                const SizedBox(height: Constants.defaultPadding),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: size.width * 0.55),
-                  child: Column(
-                    children: [
-                      TabItem(
-                        text: 'Trang chủ',
-                        iconPath: IconPaths.home,
-                        focus: true,
-                        onTap: () {},
-                      ),
-                      TabItem(
-                        text: 'Cài đặt',
-                        iconPath: IconPaths.settings,
-                        onTap: () {},
-                      ),
-                      TabItem(
-                        text: 'Về ứng dụng',
-                        iconPath: IconPaths.info,
-                        onTap: () {},
-                      ),
-                      TabItem(
-                        text: 'Đăng xuất',
-                        iconPath: IconPaths.logOut,
-                        onTap: () => _signOut(context, ref),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Container(
+              clipBehavior: Clip.none,
+              padding: const EdgeInsets.all(Constants.defaultPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Responsive.isDesktop(context)
+                      ? _renderLogo()
+                      : renderUserInfo(ref),
+                  const SizedBox(height: Constants.defaultPadding),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: size.width * 0.55),
+                    child: Column(
+                      children: [
+                        TabItem(
+                          text: 'Trang chủ',
+                          iconPath: IconPaths.home,
+                          focus: true,
+                          onTap: () {},
+                        ),
+                        TabItem(
+                          text: 'Cài đặt',
+                          iconPath: IconPaths.settings,
+                          onTap: () {},
+                        ),
+                        TabItem(
+                          text: 'Về ứng dụng',
+                          iconPath: IconPaths.info,
+                          onTap: () {},
+                        ),
+                        TabItem(
+                          text: 'Đăng xuất',
+                          iconPath: IconPaths.logOut,
+                          onTap: () => _signOut(context, ref),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _renderLogo() {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/images/logo.png",
+            width: 120,
+          ),
+          const Text(
+            Constants.appName,
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
   }

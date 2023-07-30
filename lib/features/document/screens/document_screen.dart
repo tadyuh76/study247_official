@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/features/document/screens/document_tab.dart';
 import 'package:study247/features/document/screens/folder_tab.dart';
 import 'package:study247/features/document/widgets/document_create_dialog.dart';
@@ -40,7 +41,8 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Palette.lightGrey,
+      backgroundColor:
+          Responsive.isMobile(context) ? Palette.lightGrey : Palette.white,
       appBar: widget.navigateFromRoom ? _renderAppBar() : null,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateDialog(context),
@@ -122,7 +124,6 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
             "Quản lý tài liệu thông minh",
             style: TextStyle(color: Palette.darkGrey),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );

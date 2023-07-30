@@ -27,12 +27,12 @@ class BadgeScreen extends ConsumerWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: [
           _renderHeader(),
           Expanded(
             child: GridView.builder(
               physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 childAspectRatio: 1 / 2,

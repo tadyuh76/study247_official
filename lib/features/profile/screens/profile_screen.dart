@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:study247/constants/common.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/core/shared/widgets/app_error.dart';
 import 'package:study247/core/shared/widgets/app_loading.dart';
+import 'package:study247/core/shared/widgets/web_app_bar.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/badge/controller/badge_list_controller.dart';
 import 'package:study247/features/profile/widgets/monthly_statistics.dart';
@@ -24,25 +26,99 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return RefreshIndicator(
-      onRefresh: () => _onRefresh(ref),
-      child: SingleChildScrollView(
-        child: user != null
-            ? _renderProfileScreen(user!)
-            : ref.watch(authControllerProvider).when(
-                  error: (err, stk) => const AppError(),
-                  loading: () => const AppLoading(),
-                  data: (user) {
-                    if (user == null) return const Text("Đã có lỗi xảy ra...");
+    return Responsive(
+      desktopLayout: _renderDesktopLayout(context, ref),
+      mobileLayout: RefreshIndicator(
+        onRefresh: () => _onRefresh(ref),
+        child: SingleChildScrollView(
+          child: user != null
+              ? _renderProfileScreen(context, user!)
+              : ref.watch(authControllerProvider).when(
+                    error: (err, stk) => const AppError(),
+                    loading: () => const AppLoading(),
+                    data: (user) {
+                      if (user == null) {
+                        return const Text("Đã có lỗi xảy ra...");
+                      }
 
-                    return _renderProfileScreen(user, editable: true);
-                  },
-                ),
+                      return _renderProfileScreen(
+                        context,
+                        user,
+                        editable: true,
+                      );
+                    },
+                  ),
+        ),
       ),
     );
   }
 
-  Widget _renderProfileScreen(UserModel user, {bool editable = false}) {
+  Widget _renderDesktopLayout(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authControllerProvider).asData!.value!;
+
+    return Scaffold(
+      backgroundColor: Palette.lightGrey,
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const WebAppBar(back: true),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 0),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          UserInfo(user: user, editable: true, contain: true),
+                          const SizedBox(height: 20),
+                          UserBadges(user: user, editable: false),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          WeeklyStatistics(user: user),
+                          const SizedBox(height: 20),
+                          UserStreak(user: user)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      flex: 4,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          MonthlyStatistics(user: user),
+                        ],
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderProfileScreen(
+    BuildContext context,
+    UserModel user, {
+    bool editable = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,

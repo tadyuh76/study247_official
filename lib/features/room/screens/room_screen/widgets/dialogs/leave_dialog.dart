@@ -22,33 +22,36 @@ class LeaveDialog extends StatelessWidget {
         alignment: Alignment.center,
         child: Material(
           color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(Constants.defaultPadding + 10),
-            decoration: const BoxDecoration(
-              color: Palette.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [BoxShadow(color: Palette.darkGrey)],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 20, color: Palette.black),
-                ),
-                const SizedBox(height: Constants.defaultPadding),
-                child,
-                const SizedBox(height: Constants.defaultPadding * 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _renderButton("Đồng ý", onAccept),
-                    const SizedBox(width: Constants.defaultPadding * 2),
-                    _renderButton("Huỷ", context.pop),
-                  ],
-                )
-              ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Container(
+              padding: const EdgeInsets.all(Constants.defaultPadding + 10),
+              decoration: const BoxDecoration(
+                color: Palette.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: [BoxShadow(color: Palette.darkGrey)],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(fontSize: 20, color: Palette.black),
+                  ),
+                  const SizedBox(height: Constants.defaultPadding),
+                  child,
+                  const SizedBox(height: Constants.defaultPadding * 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _renderButton("Đồng ý", onAccept),
+                      const SizedBox(width: Constants.defaultPadding * 2),
+                      _renderButton("Huỷ", context.pop),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
