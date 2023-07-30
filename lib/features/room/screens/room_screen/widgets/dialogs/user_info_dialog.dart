@@ -6,6 +6,7 @@ import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/palette.dart';
+import 'package:study247/core/responsive/responsive.dart';
 import 'package:study247/core/shared/widgets/custom_button.dart';
 import 'package:study247/core/shared/widgets/feature_dialog.dart';
 import 'package:study247/core/shared/widgets/mastery_avatar.dart';
@@ -27,15 +28,19 @@ class UserInfoDialog extends StatelessWidget {
   bool get _isStudyingGroup => user.status == UserStatus.studyingGroup.name;
 
   void _showUserProfile(BuildContext context) {
+    if (user.uid.isEmpty) return;
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Scaffold(
           backgroundColor: Palette.lightGrey,
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Palette.lightGrey,
-            automaticallyImplyLeading: true,
-          ),
+          appBar: Responsive.isDesktop(context)
+              ? null
+              : AppBar(
+                  elevation: 0,
+                  backgroundColor: Palette.lightGrey,
+                  automaticallyImplyLeading: true,
+                ),
           body: ProfileScreen(user: user),
         ),
       ),
@@ -99,6 +104,8 @@ class UserInfoDialog extends StatelessWidget {
               final userId =
                   ref.read(authControllerProvider).asData!.value!.uid;
               final isSameUser = userId == user.uid;
+
+              if (userId.isEmpty) return const SizedBox.shrink();
 
               return isSameUser
                   ? UserMasteryProgressBar(

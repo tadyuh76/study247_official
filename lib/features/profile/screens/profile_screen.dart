@@ -27,7 +27,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Responsive(
-      desktopLayout: _renderDesktopLayout(context, ref),
+      desktopLayout: _renderDesktopLayout(context, ref, user),
       mobileLayout: RefreshIndicator(
         onRefresh: () => _onRefresh(ref),
         child: SingleChildScrollView(
@@ -53,15 +53,19 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _renderDesktopLayout(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authControllerProvider).asData!.value!;
+  Widget _renderDesktopLayout(
+    BuildContext context,
+    WidgetRef ref,
+    UserModel? user,
+  ) {
+    user ??= ref.watch(authControllerProvider).asData!.value!;
 
     return Scaffold(
       backgroundColor: Palette.lightGrey,
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const WebAppBar(back: true),
+          WebAppBar(user: user, back: true),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 20),
@@ -77,7 +81,7 @@ class ProfileScreen extends ConsumerWidget {
                         // mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          UserInfo(user: user, editable: true, contain: true),
+                          UserInfo(user: user, editable: false, contain: true),
                           const SizedBox(height: 20),
                           UserBadges(user: user, editable: false),
                         ],

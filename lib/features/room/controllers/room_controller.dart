@@ -8,6 +8,7 @@ import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/controllers/auth_controller.dart';
 import 'package:study247/features/meeting/controllers/meeting_controler.dart';
 import 'package:study247/features/room/controllers/room_info_controller.dart';
+import 'package:study247/features/room/controllers/room_list_controller.dart';
 import 'package:study247/features/room/repositories/room_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
@@ -88,6 +89,12 @@ class RoomController extends StateNotifier<AsyncValue<RoomModel?>> {
 
   Future<void> leaveRoom({bool paused = false}) async {
     final roomId = state.asData!.value!.id!;
-    await _ref.read(roomRepositoryProvider).leaveRoom(roomId, paused: paused);
+    final result = await _ref
+        .read(roomRepositoryProvider)
+        .leaveRoom(roomId, paused: paused);
+
+    if (result case Success()) {
+      _ref.read(roomListControllerProvider.notifier).getRoomList();
+    }
   }
 }

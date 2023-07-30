@@ -20,10 +20,9 @@ class AuthGate extends ConsumerWidget {
           loading: () => const LoadingScreen(),
           data: (userModel) {
             return MaterialApp.router(
-              routerConfig: userModel == null
+              routerConfig: userModel == null || userModel.uid.isEmpty
                   ? unauthenticatedRouter
                   : authenticatedRouter,
-              // builder: (context, child) => Unfocus(child: child!),
               debugShowCheckedModeBanner: false,
               scrollBehavior: const MaterialScrollBehavior().copyWith(
                 dragDevices: {

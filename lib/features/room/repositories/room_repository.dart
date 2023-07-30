@@ -58,6 +58,11 @@ class RoomRepository {
           .where("displayName", isEqualTo: name)
           .where("studyingRoomId", isEqualTo: roomId)
           .get();
+
+      if (snapshot.docs.isEmpty) {
+        return Success(UserModel.empty());
+      }
+
       final user = snapshot.docs[0].data();
       return Success(UserModel.fromMap(user));
     } on Exception catch (e) {
@@ -103,11 +108,11 @@ class RoomRepository {
       // if user is not quitting the app
       if (!paused && currentRoom.curParticipants <= 1) {
         await currentRoomRef.delete();
+        return Success(currentRoom.id!);
       } else {
         currentRoomRef.update({"curParticipants": FieldValue.increment(-1)});
       }
-
-      return const Success(Constants.successMessage);
+      return const Success("");
     } on Exception catch (e) {
       return Failure(e);
     }

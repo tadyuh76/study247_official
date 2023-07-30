@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:study247/constants/icons.dart';
@@ -78,23 +79,24 @@ class ExpandedMenu extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          BlackBackgroundButton(
-            width: 60,
-            child: SvgPicture.asset(
-              IconPaths.documents,
-              width: 24,
-              colorFilter: const ColorFilter.mode(
-                Palette.white,
-                BlendMode.srcIn,
+          if (!kIsWeb)
+            BlackBackgroundButton(
+              width: 60,
+              child: SvgPicture.asset(
+                IconPaths.documents,
+                width: 24,
+                colorFilter: const ColorFilter.mode(
+                  Palette.white,
+                  BlendMode.srcIn,
+                ),
+              ),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const DocumentScreen(navigateFromRoom: true),
+                ),
               ),
             ),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    const DocumentScreen(navigateFromRoom: true),
-              ),
-            ),
-          ),
         ],
       ),
     );

@@ -190,6 +190,8 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
         title: "Thoát phòng học",
         child: const Text("Bạn có chắc chắn muốn rời khỏi phòng học?"),
         onAccept: () {
+          ref.read(roomListControllerProvider.notifier).getRoomList();
+
           if (ref.exists(timerTypeProvider)) {
             ref.invalidate(timerTypeProvider);
           }
@@ -222,20 +224,17 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
             ref.read(roomBackgroundControllerProvider).selectingVideoIdx = -1;
             ref.read(roomBackgroundControllerProvider).videoController.reset();
           }
+          // if (ref.exists(file))
           if (ref.exists(roomControllerProvider)) {
             ref.read(roomControllerProvider.notifier)
               ..leaveRoom()
               ..reset();
           }
-          ref
-              .read(roomListControllerProvider.notifier)
-              .getRoomList(refresh: true);
           ref.read(profileControllerProvider).updateUserStatus(
                 status: UserStatus.active,
                 studyingRoomId: "",
                 studyingMeetingId: "",
               );
-          ref.read(roomListControllerProvider.notifier).getRoomList();
 
           context.go('/');
           _room.leave();
@@ -295,10 +294,10 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         _renderMainView(landscape),
-                        FileView(landscape: landscape),
+                        if (!kIsWeb) FileView(landscape: landscape),
                       ],
                     ),
-                    _renderNavigators(),
+                    if (!kIsWeb) _renderNavigators(),
                   ],
                 ),
               );
@@ -323,7 +322,7 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
           ),
           if (kIsWeb) _renderWebCTA(),
           if (kIsWeb) const SizedBox(width: Constants.defaultPadding),
-          const InviteButton(),
+          if (!kIsWeb) const InviteButton(),
           const SizedBox(width: Constants.defaultPadding),
         ],
       ),

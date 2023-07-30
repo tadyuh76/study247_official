@@ -32,7 +32,7 @@ class RoomBackgroundController extends ChangeNotifier {
       enableCaption: false,
       hideControls: true,
       isLive: false,
-      startAt: 60,
+      startAt: 10,
       loop: true,
       showLiveFullscreenButton: false,
       controlsVisibleAtStart: false,
@@ -55,7 +55,7 @@ class RoomBackgroundController extends ChangeNotifier {
   }
 
   void loadVideoOnSelect() {
-    videoController.load(recommendYoutubeIds[selectingVideoIdx], startAt: 30);
+    videoController.load(recommendYoutubeIds[selectingVideoIdx], startAt: 10);
     videoController.play();
     mode = BackgroundMode.video;
     notifyListeners();

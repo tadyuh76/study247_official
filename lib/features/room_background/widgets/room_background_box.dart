@@ -49,8 +49,8 @@ class _RoomBackgroundBoxState extends ConsumerState<RoomBackgroundBox> {
       title: "Nền",
       iconPath: IconPaths.image,
       child: Unfocus(
-        child: SizedBox(
-          height: 400,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 400),
           child: ScrollConfiguration(
             behavior: const ScrollBehavior().copyWith(overscroll: false),
             child: SingleChildScrollView(

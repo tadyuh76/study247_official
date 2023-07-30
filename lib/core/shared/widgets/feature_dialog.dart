@@ -23,9 +23,12 @@ class FeatureDialog extends StatelessWidget {
         final landscape = constraints.maxWidth > constraints.maxHeight;
 
         return Padding(
-          padding: const EdgeInsets.all(kIsWeb ? 40 : Constants.defaultPadding)
-              .copyWith(
-            top: landscape ? Constants.defaultPadding : kToolbarHeight + 100,
+          padding: const EdgeInsets.all(Constants.defaultPadding).copyWith(
+            top: kIsWeb
+                ? 50
+                : landscape
+                    ? Constants.defaultPadding
+                    : kToolbarHeight + 100,
           ),
           child: Align(
             alignment: kIsWeb ? Alignment.center : Alignment.topCenter,

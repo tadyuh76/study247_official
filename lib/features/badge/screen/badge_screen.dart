@@ -134,7 +134,6 @@ class BadgeScreen extends ConsumerWidget {
             "Huy hiệu",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),
-
           SizedBox(height: 5),
           Text(
             "Thành quả những giờ học chăm chỉ của bạn!",
