@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:study247/utils/show_snack_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:study247/constants/common.dart';
 import 'package:study247/constants/icons.dart';
 import 'package:study247/core/models/user.dart';
@@ -52,6 +56,24 @@ class UserInfoDialog extends StatelessWidget {
         .go("/room/${user.studyingRoomId}?meetingId=${user.studyingMeetingId}");
   }
 
+  Future<void> _onReport(BuildContext context, [bool mounted = true]) async {
+    final url = Uri.parse(
+      "https://docs.google.com/forms/d/e/1FAIpQLSeKvCSySL3C2qjYbYJstYpoM_9IRgjErWlhecvXAxg8Y6-elQ/viewform?usp=sf_link",
+    );
+    if (!await launchUrl(url)) {
+      if (mounted) showSnackBar(context, "Không thể mở đường dẫn!");
+    }
+  }
+
+  Future<void> _copyUserId(BuildContext context) async {
+    await Clipboard.setData(
+      ClipboardData(text: "${user.displayName}\n${user.uid}"),
+    );
+    if (context.mounted) {
+      showSnackBar(context, "Đã sao chép Tên và ID của người dùng này.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userMasteryLevel = user.getMasteryLevel();
@@ -71,12 +93,26 @@ class UserInfoDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text(
-            user.displayName,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                user.displayName,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: () => _copyUserId(context),
+                child: const Icon(
+                  Icons.copy_rounded,
+                  size: 20,
+                  color: Palette.primary,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 3),
           Text(
@@ -99,21 +135,52 @@ class UserInfoDialog extends StatelessWidget {
               primary: true,
             ),
           const SizedBox(height: 10),
-          Consumer(
-            builder: (context, ref, child) {
-              final userId =
-                  ref.read(authControllerProvider).asData!.value!.uid;
-              final isSameUser = userId == user.uid;
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final userId =
+                        ref.read(authControllerProvider).asData!.value!.uid;
+                    final isSameUser = userId == user.uid;
 
-              if (userId.isEmpty) return const SizedBox.shrink();
+                    if (userId.isEmpty) return const SizedBox.shrink();
 
-              return isSameUser
-                  ? UserMasteryProgressBar(
-                      totalStudyTime: user.totalStudyTime,
-                      masteryLevel: userMasteryLevel,
-                    )
-                  : _AddFriendButton(participantId: user.uid);
-            },
+                    return isSameUser
+                        ? UserMasteryProgressBar(
+                            totalStudyTime: user.totalStudyTime,
+                            masteryLevel: userMasteryLevel,
+                          )
+                        : Row(
+                            children: [
+                              Expanded(
+                                  child: _AddFriendButton(
+                                      participantId: user.uid)),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () => _onReport(context),
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Palette.darkGrey, width: 2),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                  ),
+                                  child: const Icon(
+                                    Icons.report,
+                                    size: 32,
+                                    color: Palette.darkGrey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
