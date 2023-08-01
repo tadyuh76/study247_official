@@ -211,7 +211,11 @@ class DocumentRepository {
     final updatedFlashcardList = curFlashcardList.map((f1) {
       for (final f2 in prevFlashcardList) {
         if (isFlashcardRepeated(f1, f2)) {
-          return f2;
+          docRef
+              .collection(FirebaseConstants.flashcards)
+              .doc(f2.id)
+              .update({"priorityRate": f1.priorityRate});
+          return f2.copyWith(priorityRate: f1.priorityRate);
         }
       }
 
@@ -249,7 +253,7 @@ class DocumentRepository {
         priorityRate = 1.5;
         line = line.substring(2).trim();
       } else if (line.startsWith('!')) {
-        priorityRate = 1;
+        priorityRate = 1.25;
         line = line.substring(1).trim();
       }
 

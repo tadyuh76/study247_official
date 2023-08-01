@@ -24,7 +24,7 @@ class RoomFileSubscription {
 
       return roomStream.map((event) => File.fromMap(event.data() ?? {}));
     } catch (e) {
-      print(e);
+      // print(e);
     }
     return Stream.value(File(type: "", url: ""));
   }

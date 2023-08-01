@@ -41,12 +41,12 @@ class BaseScreenDesktop extends StatefulWidget {
 class _BaseScreenDesktopState extends State<BaseScreenDesktop> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Palette.lightGrey,
       body: Column(
         children: [
           WebAppBar(),
-          const Expanded(
+          Expanded(
             child: Padding(
               padding: EdgeInsets.all(20),
               child: Row(

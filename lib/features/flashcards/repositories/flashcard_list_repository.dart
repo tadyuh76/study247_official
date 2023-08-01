@@ -108,6 +108,8 @@ class FlashcardListRepository {
 
       final updatedFlashcard = flashcard.copyWith(
         ease: max(1.3, flashcard.ease - 0.2),
+        revisableAfter:
+            DateTime.now().add(const Duration(minutes: 1)).toString(),
       );
       await flashcardRef.set(updatedFlashcard.toMap());
 

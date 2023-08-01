@@ -140,7 +140,7 @@ class Flashcard {
 
   String getRevisableTimeLongterm(double time) {
     return DateTime.now()
-        .add(Duration(minutes: time.round(), seconds: 1))
+        .add(Duration(minutes: time ~/ priorityRate, seconds: 1))
         .toString();
   }
 
