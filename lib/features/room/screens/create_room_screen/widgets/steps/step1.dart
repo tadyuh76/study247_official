@@ -44,7 +44,7 @@ class _Step1State extends ConsumerState<Step1> {
             controller: _participantsController,
             hintText: "5",
             title: "Số lượng thành viên tối đa",
-            maxValue: 50,
+            maxValue: 10,
             minValue: 0,
             interval: 1,
             onEditingComplete: () => ref
