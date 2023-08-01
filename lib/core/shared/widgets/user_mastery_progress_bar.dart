@@ -6,11 +6,11 @@ import 'package:study247/constants/icons.dart';
 import 'package:study247/core/palette.dart';
 
 class UserMasteryProgressBar extends StatelessWidget {
-  final int totalStudyTime;
+  final int monthStudyTime;
   final int masteryLevel;
   const UserMasteryProgressBar({
     super.key,
-    required this.totalStudyTime,
+    required this.monthStudyTime,
     required this.masteryLevel,
   });
 
@@ -39,11 +39,11 @@ class UserMasteryProgressBar extends StatelessWidget {
           ),
           percent: _maxLevel
               ? 1
-              : totalStudyTime / minutesToMastery[masteryLevel + 1] > 1
+              : monthStudyTime / minutesToMastery[masteryLevel + 1] > 1
                   ? 1
-                  : totalStudyTime / minutesToMastery[masteryLevel + 1],
+                  : monthStudyTime / minutesToMastery[masteryLevel + 1],
           leading: Text(
-            "${(totalStudyTime / 60).toStringAsFixed(1)}h ",
+            "${(monthStudyTime / 60).toStringAsFixed(1)}h ",
             style: const TextStyle(fontSize: 14),
           ),
           trailing: _maxLevel
@@ -64,7 +64,7 @@ class UserMasteryProgressBar extends StatelessWidget {
         Text(
           _maxLevel
               ? "Bạn đã đạt cấp độ cao nhất!"
-              : "Học thêm ${((minutesToMastery[masteryLevel + 1] - totalStudyTime) / 60).toStringAsFixed(1)}h để đạt cấp độ tiếp theo!",
+              : "Học thêm ${((minutesToMastery[masteryLevel + 1] - monthStudyTime) / 60).toStringAsFixed(1)}h để đạt cấp độ tiếp theo!",
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 12,

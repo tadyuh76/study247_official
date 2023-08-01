@@ -149,7 +149,7 @@ class UserInfoDialog extends StatelessWidget {
 
                     return isSameUser
                         ? UserMasteryProgressBar(
-                            totalStudyTime: user.totalStudyTime,
+                            monthStudyTime: user.getMonthStudyTime(),
                             masteryLevel: userMasteryLevel,
                           )
                         : Row(
