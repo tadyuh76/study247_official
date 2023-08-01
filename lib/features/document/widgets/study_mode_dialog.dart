@@ -163,6 +163,15 @@ class _StudyModeDialogState extends ConsumerState<StudyModeDialog> {
         ),
         const SizedBox(height: Constants.defaultPadding / 2),
         Text(title),
+        if (iconPath == IconPaths.fast)
+          const Text(
+            "(Thử nghiệm)",
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w300,
+              color: Palette.darkGrey,
+            ),
+          )
       ],
     );
   }

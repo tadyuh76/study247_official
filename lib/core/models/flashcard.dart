@@ -5,31 +5,33 @@ import 'dart:math';
 import 'package:study247/features/document/widgets/study_mode_dialog.dart';
 
 const first50FibNumbers = [
-  -1,
-  5,
+  1, // start - 0
+  2,
+  3,
+  5, // 5m - 1st
   8,
   13,
-  21,
+  21, // 21m - 2nd
   34,
   55,
-  89,
+  89, // 1h29m - 3rd
   144,
   233,
-  377,
+  377, // 6h - 4th
   610,
   987,
-  1597,
+  1597, // 1d - 5th
   2584,
   4181,
-  6765,
+  6765, // 4d - 6th
   10946,
-  17711,
+  17711, // 12d - 7th
   28657,
-  46368,
+  46368, // 32d - 8th
   75025,
-  121393,
+  121393, // 84d - 9th
   196418,
-  317811,
+  317811, // 220d - 10th
   514229,
   832040,
   1346269,
@@ -53,9 +55,6 @@ const first50FibNumbers = [
   7778742049,
   12586269025,
   20365011074,
-  32951280099,
-  53316291173,
-  86267571272,
 ];
 
 const aDayInMinutes = 60 * 24;
@@ -85,8 +84,8 @@ class Flashcard {
       type == StudyMode.longterm.name ? "Ghi nhớ dài hạn" : "Ôn tập nước rút";
 
   int get nextLevelSpeedrun {
-    // 6 first steps have a
-    final jumpStep = level >= 16 || level == 0 ? 2 : 3;
+    // 6 first steps have an interval of 3 levels to avoid annoying
+    final jumpStep = (level < 3 * 6) ? 3 : 2;
     final newFlashcardLevel = level + jumpStep;
     return newFlashcardLevel;
   }
