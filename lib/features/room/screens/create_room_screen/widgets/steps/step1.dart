@@ -45,7 +45,7 @@ class _Step1State extends ConsumerState<Step1> {
             hintText: "5",
             title: "Số lượng thành viên tối đa",
             maxValue: 10,
-            minValue: 0,
+            minValue: 1,
             interval: 1,
             onEditingComplete: () => ref
                 .read(roomInfoControllerProvider)

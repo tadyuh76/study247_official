@@ -82,7 +82,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         ),
         mobileLayout: SizedBox.expand(
           child: SafeArea(
-            child: Padding(
+            child: Container(
+              color: Palette.white,
               padding: const EdgeInsets.symmetric(
                 vertical: Constants.defaultPadding * 2,
                 horizontal: Constants.defaultPadding,
@@ -215,10 +216,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(
-          "assets/images/logo.png",
-          width: 60,
-          height: 60,
+        DecoratedBox(
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: Image.asset(
+            "assets/images/logo.png",
+            width: 60,
+            height: 60,
+          ),
         ),
         const Text(
           Constants.appName,

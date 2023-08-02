@@ -230,7 +230,7 @@ class _FlashcardTabState extends State<_FlashcardTab> {
           const SizedBox(width: 10),
           Expanded(
             child: FlashcardOption(
-              text: "Ổn",
+              text: "Thường",
               interval: goodInterval,
               onTap: widget.onGood,
               color: bannerColors["yellow"]!,

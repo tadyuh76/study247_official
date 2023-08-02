@@ -93,4 +93,8 @@ class NotificationController
         .read(notificationRepositoryProvider)
         .sendLevelUpNotification(userId, masteryLevel);
   }
+
+  void reset() {
+    state = const AsyncData([]);
+  }
 }

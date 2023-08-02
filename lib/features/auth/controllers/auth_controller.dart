@@ -5,6 +5,7 @@ import 'package:study247/core/models/result.dart';
 import 'package:study247/core/models/user.dart';
 import 'package:study247/core/providers/firebase_providers.dart';
 import 'package:study247/features/auth/repositories/auth_repository.dart';
+import 'package:study247/features/notification/controller/notification_controller.dart';
 import 'package:study247/features/profile/repository/profile_repository.dart';
 import 'package:study247/utils/show_snack_bar.dart';
 
@@ -166,6 +167,8 @@ class AuthController extends StateNotifier<AsyncValue<UserModel?>> {
 
   Future<void> signOut(BuildContext context) async {
     final result = await _ref.read(authRepositoryProvider).signOut();
+    _ref.read(notificationControllerProvider.notifier).reset();
+
     if (result case Success()) {
       state = const AsyncData(null);
     } else if (result case Failure(failure: final failure)) {

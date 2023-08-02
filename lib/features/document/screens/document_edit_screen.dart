@@ -16,6 +16,21 @@ import 'package:study247/features/room/screens/room_screen/widgets/dialogs/leave
 import 'package:study247/utils/show_snack_bar.dart';
 import 'package:study247/utils/unfocus.dart';
 
+const documentHintText =
+    """Tạo flashcard tự động bằng cách thêm kí tự ">>" hoặc "<<" hoặc "<>" tại điểm cần chia thành 2 mặt của thẻ.
+Tạo tiêu đề cho thẻ bằng cách đặt dấu "#" ở dòng trước đó.
+
+Ví dụ:
+# Sự tán sắc
+Tán sắc ánh sáng >> sự phân tách một chùm sáng phức tạp thành các chùm sáng đơn sắc
+
+Hệ thống sẽ tự động tạo một flashcard có thông tin như sau:
+- Tiêu đề: Sự tán sắc
+- Mặt trước: Tán sắc ánh sáng
+- Mặt sau: sự phân tách một chùm sáng phức tạp thành các chùm sáng đơn sắc
+
+*Bạn có thể thêm dấu "!" ở đầu dòng có flashcard để tăng tần suất lặp lại của thẻ khi ôn tập.""";
+
 class DocumentEditScreen extends ConsumerStatefulWidget {
   final Document document;
   const DocumentEditScreen({super.key, required this.document});
@@ -191,7 +206,8 @@ class _DocumentEditScreenState extends ConsumerState<DocumentEditScreen> {
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintStyle: TextStyle(color: Palette.darkGrey),
-        hintText: "Nhập nội dung...",
+        hintText: documentHintText,
+        hintMaxLines: 50,
       ),
       style: const TextStyle(
         height: 1.5,

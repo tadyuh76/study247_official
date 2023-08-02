@@ -24,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
     await ref
         .read(friendListControllerProvider.notifier)
         .getFriendList(refresh: true);
+    await ref.read(notificationControllerProvider.notifier).getNotifications();
     await ref.read(authControllerProvider.notifier).updateUser();
   }
 

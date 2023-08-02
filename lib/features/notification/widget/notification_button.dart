@@ -17,6 +17,12 @@ class NotificationButton extends ConsumerStatefulWidget {
 
 class _NotificationButtonState extends ConsumerState<NotificationButton> {
   @override
+  void initState() {
+    super.initState();
+    ref.read(notificationControllerProvider.notifier).getNotifications();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [

@@ -21,6 +21,7 @@ import 'package:study247/features/chat/widgets/chat_view.dart';
 import 'package:study247/features/file/controllers/file_controller.dart';
 import 'package:study247/features/file/widgets/file_view.dart';
 import 'package:study247/features/music/controllers/music_controller.dart';
+import 'package:study247/features/notification/controller/notification_controller.dart';
 import 'package:study247/features/profile/controller/profile_controller.dart';
 import 'package:study247/features/room/controllers/room_controller.dart';
 import 'package:study247/features/room/controllers/room_list_controller.dart';
@@ -230,6 +231,9 @@ class _RoomScreenState extends ConsumerState<RoomScreen> {
               ..leaveRoom()
               ..reset();
           }
+
+          // if (ref.exists(notificationcon))
+          ref.read(notificationControllerProvider.notifier).getNotifications();
           ref.read(profileControllerProvider).updateUserStatus(
                 status: UserStatus.active,
                 studyingRoomId: "",
