@@ -98,6 +98,26 @@ class FlashcardListRepository {
     }
   }
 
+  Future<Result<Flashcard, Exception>> recallNotOK(
+    String userId,
+    String documentId,
+    Flashcard flashcard,
+  ) async {
+    try {
+      final flashcardRef = _flashcardRef(userId, documentId, flashcard.id!);
+
+      final updatedFlashcard = flashcard.copyWith(
+        level: flashcard.level > 0 ? flashcard.level - 3 : 0,
+        revisableAfter: DateTime.now().toString(),
+      );
+      await flashcardRef.set(updatedFlashcard.toMap());
+
+      return Success(updatedFlashcard);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
   Future<Result<Flashcard, Exception>> recallAgain(
     String userId,
     String documentId,

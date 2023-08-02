@@ -73,6 +73,7 @@ class _AllFlashcardsScreenState extends ConsumerState<FlashcardScreen> {
 
   void _onNotOK(Flashcard flashcard) {
     _nextPage();
+    ref.read(flashcardListControllerProvider.notifier).recallNotOK(flashcard);
   }
 
   @override

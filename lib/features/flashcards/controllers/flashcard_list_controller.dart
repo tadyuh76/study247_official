@@ -59,6 +59,16 @@ class FlashcardListController
         .toList());
   }
 
+  Future<void> recallNotOK(Flashcard flashcard) async {
+    final result = await _ref
+        .read(flashcardListRepositoryProvider)
+        .recallNotOK(userId, documentId, flashcard);
+
+    if (result case Success(value: final updatedFlashcard)) {
+      updateFlashcard(updatedFlashcard);
+    }
+  }
+
   Future<void> recallOK(Flashcard flashcard) async {
     final result = await _ref
         .read(flashcardListRepositoryProvider)
