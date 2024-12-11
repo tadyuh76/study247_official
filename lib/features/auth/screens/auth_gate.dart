@@ -35,6 +35,7 @@ class AuthGate extends ConsumerWidget {
               ),
               theme: ThemeData(
                 fontFamily: Constants.appFontName,
+                useMaterial3: false,
                 scaffoldBackgroundColor: Colors.white,
                 appBarTheme: const AppBarTheme(foregroundColor: Palette.black),
                 colorScheme:

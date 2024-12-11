@@ -41,8 +41,11 @@ class UserModel {
     month ??= now.month;
     year ??= now.year;
 
-    return commitBoard[year.toString()]![month.toString()]!
-        .fold(0, (previousValue, element) => previousValue + element);
+    // fix this
+    return commitBoard[year.toString()]?[month.toString()]
+            ?.fold(0, (previousValue, element) => previousValue! + element) ??
+        0;
+    // return commitBoard[year.toString()]?[month.toString()]?.fold(0, (previousValue, element) => previousValue + element);
   }
 
   int getMasteryLevel({int? month, int? year}) {
